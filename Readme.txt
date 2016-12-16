@@ -1,21 +1,11 @@
 General Latent Feature Model (GLFM)
 
-Compile
-Before using the code, please add path 'C\ code' and compile the sampler function in Matlab with the command:
-mex  -lgsl -lgmp IBPsampler.cpp
-
-Table completion function
-The function matrix_completion.m completes the table with the MAP solution for the missing data. Please refer to the function for details on the inputs and outputs of the function.
-
-Reproduce experiments in the paper 
-The script simMiss.m reproduce the experiment on the QSAR biodegradation database.
-
 Description
-Please refer to Description.m
+This code implement inference on an Indian Buffet process with heterogeneous observations.   The core code is in C, but user intarfaces in both Matlab and Python are provided.
 
 Citation
 Please, cite it as detailed below:
-I. Valera and Z. Ghahramani, "General Table Completion using a Bayesian Nonparametric Model", Neural Information Processing Systems Conference 2014 (NIPS 2014). Montreal (Canada), 2014.
+I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
 Contact
-For further information or contact Isabel Valera at ivalera@mpi-sws.org.
+For further information or contact Isabel Valera at martinez@gmail.com or Melanie Fernandez Pradier at melanie.fpradier@gmail.com.

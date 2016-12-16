@@ -7,7 +7,7 @@ logN=@(x) max(log(x),-30); %To avoid -Inf
 %% Selecting missing data
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
-load databases/Wine.mat
+load ../databases/Wine.mat
 Nmiss=round(N*D*p);
 miss=randperm(N*D);
 miss=miss(1:Nmiss);
