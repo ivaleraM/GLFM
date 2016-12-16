@@ -16,23 +16,6 @@ function Xcompl= matrix_completion(Xmiss, C,s2Y, s2B, alpha, Niter, missing)
 % missing:Missing value
 
 [N D] = size(Xmiss);
-W=ones(1,D);
-for d=1:D
-   if (C(d)=='g') 
-        R(d) = 1;
-    elseif (C(d)=='p' ) 
-        R(d) = 1;
-        W(d) = 1/max(Xmiss(:,d));
-    elseif (C(d)=='c') 
-       R(d) = max(Xmiss(:,d));
-    elseif (C(d)=='o' ) 
-        R(d) = max(Xmiss(:,d));
-    elseif (C(d)=='n')     
-        R(d) = 1;
-        W(d) = 1/max(Xmiss(:,d));
-   end 
-end
-maxR=max(R);
 %% Inference
 X(isnan(X))=missing;
 Zini=double(rand(N,2)>0.8);

@@ -1,4 +1,4 @@
-missing=-999;
+missing=-1;
 p=0.1; %probability of missing
 f_1=@(x,w) log(exp(w*x)-1);
 df_1=@(x,w) w/(1-exp(-w*x));
@@ -18,7 +18,7 @@ X(isnan(X))=missing;
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
 alpha=1; % Concentration parameter of the IBP
-Nsim=1000; % Number of iterations for the gibbs sampler
+Nsim=5000; % Number of iterations for the gibbs sampler
 bias = 0;
 maxK= D;
 %% Inference
