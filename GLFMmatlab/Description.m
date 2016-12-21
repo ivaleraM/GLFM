@@ -18,12 +18,12 @@
 % alpha:   Concentration parameter of the IBP
 % Nsim:    Number of iterations for the gibbs sampler
 % maxK:    Maximum number of latent fatures allowed
-% missing: Value that the missing data are encoded to
+% missing: Value to which each missing data is encoded to
 
 %% Outputs
 % Zest:  Inferred IBP matrix
-% B:     Wighting matrix. Size D x Kest x maxR
-% Theta: Inferred thresholds for ordinal data. Size D x maxR.
+% B:     Weighting matrix. Size [D x Kest x maxR]
+% Theta: Inferred thresholds for ordinal data. Size [D x maxR].
 
 %% Compute missing data
 % Apply the corresponding f(Y) -- See function matrix_completion.m
