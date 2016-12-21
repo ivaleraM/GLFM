@@ -13,6 +13,7 @@ miss=randperm(N*D);
 miss=miss(1:Nmiss);
 Xmiss=X;        % Observation matrix
 Xmiss(miss)= missing; % Missing data are coded as missing
+X(isnan(X))=missing;
 [N, D]= size(X);
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
@@ -26,9 +27,8 @@ Zini=double(rand(N,2)>0.8);
 
 
 %% Compute test log-likelihood
-XT=Xmiss;
+XT=X;
 ii=0;
-TLK=zeros(1,sum(XT==missing));
 for i=miss
     ii=ii+1;
     if (XT(i)~=missing) 
@@ -58,13 +58,14 @@ for i=miss
                 prob(end)=-30;
                 prob=logN(exp(prob)/sum(exp(prob)));
            else
-                prob(end)=logN(1-sum(exp(prob(1:(R(d)-1)))));
+                % Question_ISA: Missing parenthesis? (R(d)-1)?
+                prob(end)=logN(1-sum(exp(prob(1:R(d)-1))));
            end
            TLK(ii) =prob(XT(i));
 
         elseif (C(d)=='o' )
             Br=squeeze(B(d,:,1));
-            if XT(i)==1
+            if XT(i)==1 % Question_ISA: Why?
                 TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1));
             elseif XT(i)==R(d)
                 TLK(ii) = logN(1- normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
