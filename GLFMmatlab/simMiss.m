@@ -1,7 +1,7 @@
 missing=-1;
 p=0.1; %probability of missing
 f_1=@(x,w) log(exp(w*x)-1);
-df_1=@(x,w) w/(1-exp(-w*x));
+df_1=@(x,w) w./(1-exp(-w*x));
 logN=@(x) max(log(x),-30); %To avoid -Inf
 
 %% Selecting missing data

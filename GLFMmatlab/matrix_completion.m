@@ -19,7 +19,7 @@ function Xcompl= matrix_completion(Xmiss, C,s2Y, s2B, alpha, Niter, missing)
 %% Inference
 X(isnan(X))=missing;
 Zini=double(rand(N,2)>0.8);
-[Kest Zest B Y Theta]= IBPsampler(Xmiss,C,R,W,maxR,Zini,s2Y,s2B,alpha,Niter, missing);
+[Zest B Theta]= IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Niter,maxK,missing);
 
 
 %% Compute test log-likelihood
