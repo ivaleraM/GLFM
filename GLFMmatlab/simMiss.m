@@ -31,7 +31,7 @@ XT=X;
 ii=0;
 for i=miss
     ii=ii+1;
-    if (XT(i)~=-1 || ~isnan(XT(i)))
+    if (XT(i)~=-1 || ~isnan(XT(i))) % Question_ISA: Why do we need this condition?
         d=ceil(i/N);
         n=mod(i,N);
         if (n==0)
@@ -39,12 +39,13 @@ for i=miss
         end
         j=j+1;
         Br=squeeze(B(d,:,1));
-        if (C(d)=='g') 
+        if (C(d)=='g')
+            % Question_ISA: TLK not initialized before loop?
             TLK(ii) = logN(normpdf(XT(i),Zest(:,n)'*Br',1));
-        elseif (C(d)=='p' ) 
+        elseif (C(d)=='p' )
             TLK(ii) = logN(normpdf(f_1(XT(i),W(d)),Zest(:,n)'*Br',2))+logN(abs(df_1(XT(i),W(d))));
-        elseif (C(d)=='c') 
-           Br=squeeze(B(d,:,:));                    
+        elseif (C(d)=='c')
+           Br=squeeze(B(d,:,:));
            prob=zeros(1,R(d));
            for r=1:R(d)-1
                for r2=1:R(d)
@@ -57,20 +58,21 @@ for i=miss
                 prob(end)=-30;
                 prob=logN(exp(prob)/sum(exp(prob)));
            else
+                % Question_ISA: Missing parenthesis? (R(d)-1)?
                 prob(end)=logN(1-sum(exp(prob(1:R(d)-1))));
            end
            TLK(ii) =prob(XT(i));
 
-        elseif (C(d)=='o' ) 
+        elseif (C(d)=='o' )
             Br=squeeze(B(d,:,1));
-            if XT(i)==1
+            if XT(i)==1 % Question_ISA: Why?
                 TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1));
             elseif XT(i)==R(d)
                 TLK(ii) = logN(1- normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
             else
                 TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1)-normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
             end
-        elseif (C(d)=='n')     
+        elseif (C(d)=='n')
              Br=squeeze(B(d,:,1));
             if XT(i)==0
                 TLK(ii) = logN(normcdf(f_1(XT(i)+1,W(d))-Zest(:,n)'*Br',0,1));
