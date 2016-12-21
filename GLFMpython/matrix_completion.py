@@ -32,50 +32,46 @@ def matrix_completion(Xmiss, C, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1):
 N = Xmiss.shape[0]
 D = Xmiss.shape[1]
 Xmiss[np.isnan(Xmiss)] = missing
-
-
+maxK=20 # maximum number of latent features for space allocation
 
 ## Inference
-Zini=double(rand(N,2)>0.8);
+Zini= = 1.0*( np.random.rand(N,2) > 0.8 )
+# Call inner C function
+[Zest B Theta]= IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Niter,maxK,missing)
 
-[Kest Zest B Y Theta]= IBPsampler(Xmiss,C,R,W,maxR,Zini,s2Y,s2B,alpha,Niter, missing);
+# Compute test log-likelihood
+# TODO: Compute test LLH?
+Xcompl=Xmiss
+idxs = (Xmiss == missing).nonzero()
+#miss=find(Xmiss==missing)';
+f_1= lambda x,w: np.log(np.exp(w*x)-1) # TODO: Verify if called element-wise or not
+f= lambda y,w:  np.log(np.exp(y)+1)/w
 
-
-%% Compute test log-likelihood
-Xcompl=Xmiss;
-miss=find(Xmiss==missing)';
-f_1=@(x,w) log(exp(w*x)-1);
-f=@(y,w) log(exp(y)+1)/w;
-for ii=miss
-    if Xmiss(ii)==missing
-        d=ceil(ii/N);
-        n=mod(ii,N);
-        if (n==0)
-            n=N;
-        end
-        Br=squeeze(B(d,:,1));
-        if (C(d)=='g') 
-            Xcompl(ii) = Zest(:,n)'*Br';
-        elseif (C(d)=='p' ) 
-            Xcompl(ii) = f(Zest(:,n)'*Br',W(d));
-        elseif (C(d)=='c') 
-           Br=squeeze(B(d,:,:));                    
-           prob=zeros(1,R(d));
-           Y=zeros(1,R(d));
-           for r=1:R(d)
-               Y(r)= Zest(:,n)'*Br(:,r);
-           end 
-           [val, Xcompl(ii)] = max(Y);
-        elseif (C(d)=='o' ) 
-            Br=squeeze(B(d,:,1));
-            Y=Zest(:,n)'*Br';
-            idx=find(Theta(d,1:R(d))>=Y);
-            Xcompl(ii) = idx(1);
-        elseif (C(d)=='n')     
-            Br=squeeze(B(d,:,1));
-            Xcompl(ii) = floor(f(Zest(:,n)'*Br',W(d)));
-        end
-    end
-end  
-
-end
+for ii in xrange(len(idxs)):
+    if Xmiss[idxs[ii][0],idxs[ii][1]] == missing: # will always be the case
+        d = idxs[ii][1] # np.ceil(ii/N)
+        n = idxs[ii][0] # np.mod(ii,N)
+        #if (n==0)
+        #    n=N;
+        #end
+        Br=np.squeeze(B[d,:,1]) # TODO: Check dimensions of matrix B
+        aux = Zest[:,n].reshape(-1,1) # Zest(:,n)'
+        if (C[d] == 'g'):
+            Xcompl[n,d] = aux * Br
+        elif (C[d] == 'p'):
+            Xcompl[n,d] = f(aux * Br,W[d])
+        elif (C[d] == 'c'):
+           Br = np.squeeze(B[d,:,:])
+           prob = np.zeros((1,R[d]))
+           Y = np.zeros((1,R[d]))
+           for r in xrange(R[d]):
+               Y[r]= aux * Br[:,r]
+           Xcompl[n,d] = np.where(Y == np.max(Y))[0]
+        elif (C[d] == 'o' ):
+            Br = np.squeeze(B[d,:,1])
+            Y = aux * Br # TODO: check dimensions
+            [idx_x, idx_y] = (Theta[d,1:R[d]]>=Y).nonzero()
+            Xcompl[n,d] = idx_x[0] # TODO: verify (x,y) and what if more els?
+        elif (C[d] == 'n'):
+            Br = np.squeeze(B[d,:,1])
+            Xcompl[n,d] = np.floor(f(aux * Br,W[d]))
