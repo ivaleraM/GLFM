@@ -21,22 +21,22 @@
 #define output_Theta plhs[2]
 
 void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
-    
+
     //..................CHECKING INPUTS AND OUTPUTS.............//
-    /* Las matrices vienen ordenadas por columnas */
-    
+    /* Matrices are arranged per column */
+
     if (nrhs!=10) {
         mexErrMsgTxt("Invalid number of arguments\n");
     }
-    
+
     const mwSize XNumDim = mxGetNumberOfDimensions(input_X);
     const mwSize ZNumDim = mxGetNumberOfDimensions(input_Z);
     const mwSize s2BNumDim = mxGetNumberOfDimensions(input_s2B);
-    
+
     const mwSize* Xdim = mxGetDimensions(input_X);
     const mwSize* Zdim = mxGetDimensions(input_Z);
     const mwSize* Cdim = mxGetDimensions(input_C);
-    
+
     int N = Xdim[0];
     int D = Xdim[1];
     int K = Zdim[1];
@@ -44,12 +44,11 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     if (Cdim[1]!=D & Cdim[0]!=1){
         mexErrMsgTxt("Invalid number of dimensions for vector C\n");
         }
-       
+
     double *X_dou = mxGetPr(input_X);
     char *C= mxArrayToString(input_C);
     double *Z_dou = mxGetPr(input_Z);
-    
-    
+
     //Inputs to the C function
     int bias = mxGetScalar(input_bias);
     double s2B = mxGetScalar(input_s2B);
@@ -58,28 +57,28 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     int maxK = mxGetScalar(input_maxK);
     int Nsim = mxGetScalar(input_Nsim);
     double missing = mxGetScalar(input_missing);
-    
+
     gsl_matrix_view Zview = gsl_matrix_view_array(Z_dou, K,N);
-    gsl_matrix *Zm = &Zview.matrix;
+    gsl_matrix *Zm = &Zview.matrix; // MEL: Why do we need Z and Zm?
     gsl_matrix *Z= gsl_matrix_calloc(maxK,N);
     for (int i=0;i<N;i++){
         for (int k=0; k<K; k++){
         gsl_matrix_set (Z, k, i,gsl_matrix_get (Zm, k, i));
         }
     }
-    
+
     gsl_matrix_view Xview = gsl_matrix_view_array(X_dou, D,N);
     gsl_matrix *X = &Xview.matrix;
     gsl_matrix **B=(gsl_matrix **) calloc(D,sizeof(gsl_matrix*));
     gsl_vector **theta=(gsl_vector **) calloc(D,sizeof(gsl_vector*));
-    
+
     //...............BODY CODE.......................//
     //Starting C function
     for (int d=0; d<D; d++){
           C[d] = tolower(C[d]);//convert to lower case
           //printf("%c ",C[d]);
          }
-           
+
     int R[D];
     double w[D], maxX[D];
     int maxR=1;
@@ -90,7 +89,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
          R[d]=1;
          w[d]=1;
           switch(C[d]){
-            case 'g':  
+            case 'g':
                 B[d] = gsl_matrix_alloc(maxK,1);
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
@@ -110,24 +109,24 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
                 B[d] = gsl_matrix_alloc(maxK,1);
                 theta[d] = gsl_vector_alloc(R[d]);
                 if (R[d]>maxR){maxR=R[d];}
-                break;    
+                break;
          }
     }
-    
+
   //...............Inference Function.......................//
    int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, w, maxR, bias, N, D, K, alpha, s2B, s2Y, maxK, Nsim);
 
    //...............SET OUTPUT POINTERS.......................//
     output_Z = mxCreateDoubleMatrix(Kest,N,mxREAL);
     double *pZ=mxGetPr(output_Z);
- 
+
     int dimB[3]={D,Kest,maxR};
     output_B = mxCreateNumericArray(3,dimB,mxDOUBLE_CLASS,mxREAL);
     double *pB=mxGetPr(output_B);
-    
+
     output_Theta = mxCreateDoubleMatrix(D, maxR,mxREAL);
     double *pT=mxGetPr(output_Theta);
-    
+
     Zview = gsl_matrix_submatrix (Z, 0, 0, Kest, N);    
     for (int i=0;i<N;i++){
         for (int k=0; k<Kest; k++){
@@ -135,7 +134,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
             //pgu[i]=xPLS[i];
         }
     }
-    
+
     for (int d=0; d<D; d++){
         gsl_matrix_view Bd_view =  gsl_matrix_submatrix (B[d], 0, 0, Kest, R[d]);
         gsl_matrix *BT=gsl_matrix_alloc(R[d],Kest);
@@ -149,7 +148,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
         }
         gsl_matrix_free(BT);
     }
-    
+
     for (int d=0; d<D; d++){
         for (int i=0;i<maxR;i++){
             if (C[d]=='o' & i<R[d]){
@@ -157,16 +156,16 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
             }
         }
     }
-    
-    
+
+
     //..... Free memory.....//
-    for (int d=0; d<D; d++){    
+    for (int d=0; d<D; d++){
         gsl_matrix_free(B[d]);
         gsl_vector_free(theta[d]);
     }
     gsl_matrix_free(Z);
     free(B);
     free(theta);
-    
+
 }
-    
+
