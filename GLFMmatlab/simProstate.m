@@ -24,8 +24,8 @@ Xmiss(miss)= missing; % Missing data are coded as missing
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
 alpha=1; % Concentration parameter of the IBP
-Nsim=100; % Number of iterations for the gibbs sampler
-bias = 0;
+Nsim=50; % Number of iterations for the gibbs sampler
+bias = 1;
 maxK= D;
 
 Xmiss(isnan(Xmiss)) = missing;
@@ -49,7 +49,7 @@ end
 
 %% Inference
 tic;
-Zini=double(rand(N,2)>0.8);
+Zini= [ones(N,1), double(rand(N,2)>0.8)];
 Zest = Zini';
 for it=1:50
     [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2B,alpha,Nsim,maxK,missing);
@@ -114,4 +114,12 @@ for i=miss
     end
 end  
 
+%% Data Exploratory Anaylisis for Prostate DB
 
+[patterns, C] = get_feature_patterns(Zest');
+
+for i=1:size(patterns,1) % for each pattern
+    numP = sum(C == i); % number of patients with that pattern
+end
+    
+    
