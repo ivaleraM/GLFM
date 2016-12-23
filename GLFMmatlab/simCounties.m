@@ -23,8 +23,8 @@ Xmiss(miss)= missing; % Missing data are coded as missing
 [N, D]= size(data.X);
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
-alpha=0; % Concentration parameter of the IBP
-Nsim=2000; % Number of iterations for the gibbs sampler
+alpha=1; % Concentration parameter of the IBP
+Nsim=2; % Number of iterations for the gibbs sampler
 bias = 0;
 maxK= D;
 
@@ -47,18 +47,16 @@ for d=1:D
     
 end
 
-data.C(data.C == 'p') = 'g';
-
 %% Inference
 tic
-Zini=double(rand(N,2)>0.8);
+Zini=[ones(N,1), double(rand(N,2)>0.8)];
 [Zest B Theta]= IBPsampler(Xmiss,data.C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing);
 time = toc
 
 %% Compute test log-likelihood
 XT=Xmiss;
 ii=0;
-TLK=zeros(1,sum(XT==missing));
+TLK=zeros(1,sum(XT(:)==missing));
 for i=miss
     ii=ii+1;
     if (XT(i)~=missing) 
