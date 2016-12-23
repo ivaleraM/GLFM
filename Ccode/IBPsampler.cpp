@@ -59,15 +59,14 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double missing = mxGetScalar(input_missing);
 
     gsl_matrix_view Zview = gsl_matrix_view_array(Z_dou, K,N);
-    gsl_matrix *Zm = &Zview.matrix;
-    gsl_matrix *Z= gsl_matrix_calloc(maxK,N); % Question_ISA: Why [K*N] instead of [N*K]?
+    gsl_matrix *Zm = &Zview.matrix; // MEL: Why do we need Z and Zm?
+    gsl_matrix *Z= gsl_matrix_calloc(maxK,N);
     for (int i=0;i<N;i++){
         for (int k=0; k<K; k++){
         gsl_matrix_set (Z, k, i,gsl_matrix_get (Zm, k, i));
         }
     }
 
-    % Question_ISA: Why not gsl_matrix...(X_dou, N,D)?
     gsl_matrix_view Xview = gsl_matrix_view_array(X_dou, D,N);
     gsl_matrix *X = &Xview.matrix;
     gsl_matrix **B=(gsl_matrix **) calloc(D,sizeof(gsl_matrix*));
@@ -85,16 +84,16 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     int maxR=1;
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
-         Xd_view = gsl_matrix_row(X, d); // Question_ISA: Why not column? X transposed?
+         Xd_view = gsl_matrix_row(X, d);
          maxX[d] = gsl_vector_max(&Xd_view.vector);
          R[d]=1;
          w[d]=1;
           switch(C[d]){
             case 'g':
-                B[d] = gsl_matrix_alloc(maxK,1); % Question_ISA: No falta un break? (aunque da un poco igual porque es la misma instrucci'on que p, pero w[d]...?
+                B[d] = gsl_matrix_alloc(maxK,1);
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
-                w[d]=2/maxX[d];
+                 w[d]=2/maxX[d];
                 break;
             case 'n':
                 B[d] = gsl_matrix_alloc(maxK,1);
