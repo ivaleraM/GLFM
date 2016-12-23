@@ -7,6 +7,13 @@ Compile
 Before using the code, please add path 'Ccode' and compile the sampler function in Matlab with the command:
 mex  -lgsl -lgmp IBPsampler.cpp
 
+Requirements:
+You need to install first the libraries gsl and gmp in your computer:
+
+UBUNTU:
+    sudo apt-get install libgsl0ldbl
+    sudo apt-get install libgmp3-dev
+
 ----- Scripts --------
 IBPsampler.cpp
 Implements in C, the inference for the IBP with heterogeneous observations. For the description of the inputs and outputs, please refer to Description.m
