@@ -60,7 +60,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
     gsl_matrix_view Zview = gsl_matrix_view_array(Z_dou, K,N);
     gsl_matrix *Zm = &Zview.matrix;
-    gsl_matrix *Z= gsl_matrix_calloc(maxK,N); % Question_ISA: Why [K*N] instead of [N*K]?
+    gsl_matrix *Z= gsl_matrix_calloc(maxK,N); // Question_ISA: Why [K*N] instead of [N*K]?
     for (int i=0;i<N;i++){
         for (int k=0; k<K; k++){
         gsl_matrix_set (Z, k, i,gsl_matrix_get (Zm, k, i));
@@ -90,7 +90,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
          w[d]=1;
           switch(C[d]){
             case 'g':
-                B[d] = gsl_matrix_alloc(maxK,1); % Question_ISA: No falta un break? (aunque da un poco i
+                B[d] = gsl_matrix_alloc(maxK,1); // Question_ISA: No falta un break? (aunque da un poco i
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
                 w[d]=2/maxX[d];

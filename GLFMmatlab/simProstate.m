@@ -11,7 +11,7 @@ logN=@(x) max(log(x),-30); %To avoid -Inf
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
 
-load ../databases/dataExploration/mat/counties.mat %../databases/Wine.mat
+load ../databases/dataExploration/mat/prostate.mat %../databases/Wine.mat
 N = size(data.X,1);
 D = size(data.X,2);
 
@@ -24,8 +24,8 @@ Xmiss(miss)= missing; % Missing data are coded as missing
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
 alpha=1; % Concentration parameter of the IBP
-Nsim=2000; % Number of iterations for the gibbs sampler
-bias = 1;
+Nsim=100; % Number of iterations for the gibbs sampler
+bias = 0;
 maxK= D;
 
 Xmiss(isnan(Xmiss)) = missing;
@@ -47,13 +47,15 @@ for d=1:D
     
 end
 
-data.C(data.C == 'p') = 'g';
-
 %% Inference
 tic;
 Zini=double(rand(N,2)>0.8);
-[Zest B Theta]= IBPsampler(Xmiss,data.C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing);
-toc;
+Zest = Zini';
+for it=1:50
+    [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2B,alpha,Nsim,maxK,missing);
+    sum(Zest')
+    toc;
+end
 
 %% Compute test log-likelihood
 XT=Xmiss;
