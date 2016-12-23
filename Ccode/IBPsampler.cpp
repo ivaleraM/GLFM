@@ -60,7 +60,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
     gsl_matrix_view Zview = gsl_matrix_view_array(Z_dou, K,N);
     gsl_matrix *Zm = &Zview.matrix;
-    gsl_matrix *Z= gsl_matrix_calloc(maxK,N); // Question_ISA: Why [K*N] instead of [N*K]?
+    gsl_matrix *Z= gsl_matrix_calloc(maxK,N);
     for (int i=0;i<N;i++){
         for (int k=0; k<K; k++){
         gsl_matrix_set (Z, k, i,gsl_matrix_get (Zm, k, i));
@@ -84,13 +84,14 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     int maxR=1;
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
-         Xd_view = gsl_matrix_row(X, d); // Question_ISA: Why not column? X transposed?
+         Xd_view = gsl_matrix_row(X, d);
          maxX[d] = gsl_vector_max(&Xd_view.vector);
          R[d]=1;
          w[d]=1;
           switch(C[d]){
             case 'g':
-                B[d] = gsl_matrix_alloc(maxK,1); // Question_ISA: No falta un break? (aunque da un poco i
+                B[d] = gsl_matrix_alloc(maxK,1);
+                break;
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
                 w[d]=2/maxX[d];
