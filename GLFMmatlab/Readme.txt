@@ -11,7 +11,7 @@ Requirements:
 You need to install first the libraries gsl and gmp in your computer:
 
 UBUNTU:
-    sudo apt-get install libgsl0ldbl
+    sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
     sudo apt-get install libgmp3-dev
 
 ----- Scripts --------

@@ -1,3 +1,6 @@
+clear
+addpath('../Ccode/');
+
 missing=-1;
 p=0.1; %probability of missing
 f_1=@(x,w) log(exp(w*x)-1);
@@ -7,28 +10,55 @@ logN=@(x) max(log(x),-30); %To avoid -Inf
 %% Selecting missing data
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
-load ../databases/Wine.mat
+
+load ../databases/dataExploration/mat/counties.mat %../databases/Wine.mat
+N = size(data.X,1);
+D = size(data.X,2);
+
 Nmiss=round(N*D*p);
 miss=randperm(N*D);
 miss=miss(1:Nmiss);
-Xmiss=X;        % Observation matrix
+Xmiss=data.X;        % Observation matrix
 Xmiss(miss)= missing; % Missing data are coded as missing
-X(isnan(X))=missing;
-[N, D]= size(X);
+[N, D]= size(data.X);
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
-alpha=1; % Concentration parameter of the IBP
-Nsim=5000; % Number of iterations for the gibbs sampler
+alpha=0; % Concentration parameter of the IBP
+Nsim=2000; % Number of iterations for the gibbs sampler
 bias = 0;
 maxK= D;
-%% Inference
-Zini=double(rand(N,2)>0.8);
-[Zest B Theta]= IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing);
 
+Xmiss(isnan(Xmiss)) = missing;
+for d=1:D
+    if (data.C(d) == 'n') && (min(data.X(:,d)) == 0)
+        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 1;
+    elseif (data.C(d) == 'p') && (min(data.X(:,d)) == 0)
+        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 10^-6;
+    end
+    
+    if (data.C(d) == 'n') && (min(data.X(:,d)) > 1)
+        idx = min(data.X(:,d));
+        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 1;
+    end
+    if (data.C(d) == 'p') && (min(data.X(:,d)) > 1)
+        idx = min(data.X(:,d));
+        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 10^-6;
+    end
+    
+end
+
+data.C(data.C == 'p') = 'g';
+
+%% Inference
+tic
+Zini=double(rand(N,2)>0.8);
+[Zest B Theta]= IBPsampler(Xmiss,data.C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing);
+time = toc
 
 %% Compute test log-likelihood
-XT=X;
+XT=Xmiss;
 ii=0;
+TLK=zeros(1,sum(XT==missing));
 for i=miss
     ii=ii+1;
     if (XT(i)~=missing) 
@@ -58,14 +88,13 @@ for i=miss
                 prob(end)=-30;
                 prob=logN(exp(prob)/sum(exp(prob)));
            else
-                % Question_ISA: Missing parenthesis? (R(d)-1)?
-                prob(end)=logN(1-sum(exp(prob(1:R(d)-1))));
+                prob(end)=logN(1-sum(exp(prob(1:(R(d)-1)))));
            end
            TLK(ii) =prob(XT(i));
 
         elseif (C(d)=='o' )
             Br=squeeze(B(d,:,1));
-            if XT(i)==1 % Question_ISA: Why?
+            if XT(i)==1
                 TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1));
             elseif XT(i)==R(d)
                 TLK(ii) = logN(1- normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
