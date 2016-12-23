@@ -2,4 +2,5 @@
 *.swo
 *.so
 *.m~
+*.mexa64
 GLFMpython/build
