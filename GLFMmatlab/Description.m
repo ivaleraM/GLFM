@@ -10,9 +10,9 @@
 % C:       Char array of length D, indicating the type of variable in each
 %          column of the observation matrix X. Here 'g' indicates Real
 %          variable, 'p' positive real variable, 'n' count data, 'o' ordinal
-%          data and 'c' categorical data.
+%          data and 'c' categorical data. % TODO: Complete dimensions!
 % bias:    Number of colums of Z not to be sampled
-% Zini:    initialization of the IBP matrix.
+% Zini:    initialization of the IBP matrix. % TODO: Complete dimensions!
 % s2Y:     Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 % s2B:     Variance of the Gaussian prior of the weigting matrices B
 % alpha:   Concentration parameter of the IBP
