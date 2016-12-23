@@ -1,4 +1,5 @@
 *.swp
 *.swo
 *.so
+*.m~
 GLFMpython/build
