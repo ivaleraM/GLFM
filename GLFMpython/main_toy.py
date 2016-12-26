@@ -1,9 +1,15 @@
 import numpy as np
 import gsl_run as gs
 
-X = np.array([[1.0,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]])
 Z = np.array([[1.0,0],[1,1],[1,1]])
-C = 'PPPPP'
+X = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 2, 4.1, 4]])
+C = 'PCGN' #'PPPPP'
+
+#X = np.array([[1.0, 2, 3, 4, -0.3],[6, 7, 8, 9, 3.8],[11, 12, 13, 14, 4.1]])
+#C = 'PPPPG' #'PPPPP'
+
+#X = np.array([[1.0,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]])
+#C = 'PPPPG'
 
 print 'First, in Python'
 print X
@@ -30,5 +36,6 @@ print "\n"
 print B
 print "\n"
 print Theta
+
 print "SUCCESSFUL"
 

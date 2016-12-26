@@ -54,7 +54,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
         raise Exception('Size of C and X are not consistent!')
     #print 'size of C = 1*%d' % len(C)
 
-    Xview = gsl_matrix_view_array(&input[0,0],D,N) #N,D)
+    Xview = gsl_matrix_view_array(&input[0,0],D,N)
     X = &Xview.matrix
 
     Zview = gsl_matrix_view_array(&Zin[0,0], K,N)
@@ -89,6 +89,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
     for d in xrange(D):
         Xd_view = gsl_matrix_row(X,d)
         maxX[d] = gsl_vector_max(&Xd_view.vector)
+        print "maxX[%d] = %f\n" % (d,maxX[d])
         R[d] = 1
         w[d] = 1
         if C[d] == 'g':
@@ -99,7 +100,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
         elif C[d] == 'n':
             B[d] = gsl_matrix_alloc(maxK,1)
             w[d] = 2/maxX[d]
-        elif 'c':
+        elif C[d] == 'c':
             R[d] = <int>maxX[d]
             B[d] = gsl_matrix_alloc(maxK,R[d])
             if (R[d] > maxR):
@@ -110,6 +111,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
             theta[d] = gsl_vector_alloc(R[d])
             if (R[d] > maxR):
                 maxR = R[d]
+    print "maxR = %d" % maxR
 
     ##...............Inference Function.......................##
     print 'Entering C function'
@@ -133,22 +135,29 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
             #print 'k=%d, i=%d' % (k,i)
             Z_out[k,i] = gsl_matrix_get(Z,k,i)
             #Z_out[k,i] = (&Zview.matrix)->data[k*N+i]
+    print "Z_out loaded"
 
     cdef gsl_matrix_view Bd_view
     cdef gsl_matrix* BT
+    print "B_out[D,Kest,maxR] where D=%d, Kest=%d, maxR=%d" % (D,Kest,maxR)
     for d in xrange(D):
+        print 'd=%d, R[d]=%d' % (d,R[d])
         Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, R[d])
         BT = gsl_matrix_alloc(R[d],Kest)
         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix)
         for k in xrange(Kest):
+            print 'k=%d' % k
             for i in xrange(maxR):
-                B_out[d,k,i] = gsl_matrix_get(BT,k,i)
+                print 'i=%d' % i
+                B_out[d,k,i] = gsl_matrix_get(BT,i,k)
         gsl_matrix_free(BT)
+    print "B_out loaded"
 
     for d in xrange(D):
         for i in xrange(maxR):
             if (C[d]=='o' and i<R[d]):
                 Theta_out[d,i] = gsl_vector_get(theta[d],i)
+    print "Theta_out loaded"
 
 
     ##..... Free memory.....##
@@ -156,7 +165,5 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
         gsl_matrix_free(B[d])
         gsl_vector_free(theta[d])
     gsl_matrix_free(Z)
-    #free(B)
-    #free(theta)
 
     return (Z_out,B_out,Theta_out)
