@@ -57,7 +57,6 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
     Xview = gsl_matrix_view_array(&input[0,0],D,N) #N,D)
     X = &Xview.matrix
 
-
     Zview = gsl_matrix_view_array(&Zin[0,0], K,N)
     Zm = &Zview.matrix # we need to allocate input matrix Z to [maxK*N] matrix
     cdef gsl_matrix* Z = gsl_matrix_calloc(maxK,N)
@@ -119,17 +118,50 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
             maxR, bias,  N, D, K, alpha, s2B, s2Y, maxK, Nsim);
     print 'Back to Python'
 
-    ##...............Set Output Pointers.......................##
-    np.ndarray[double, ndim=2, mode="fortran"] Zout = 
-
-
-
-
-
-
-
-
-
-
-
-    return None
+#    ##...............Set Output Pointers.......................##
+    cdef np.ndarray[double, ndim=2] Z_out = np.zeros((Kest,N))
+    Kest = 2
+    print "Kest=%d, N=%d" % (Kest,N)
+    #cdef np.ndarray[np.int32_t, ndim=1] result = np.zeros((len(arg)), dtype =
+    #        np.int32)
+    cdef np.ndarray[double, ndim=3] B_out = np.zeros((D,Kest,maxR))
+    cdef np.ndarray[double, ndim=2] Theta_out = np.zeros((D,maxR))
+#
+#    Zview = gsl_matrix_submatrix(Z, 0, 0, Kest, N)
+#    for i in xrange(N):
+#        for k in xrange(K):
+#            Zout[k,n] = (&Zview.matrix)->data[k*N+i]
+#        }
+#    }
+#
+#   # for d in xrange(D):
+#   #     gsl_matrix_view Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, R[d])
+#   #     gsl_matrix *BT = gsl_matrix_alloc(R[d],Kest)
+#   #     gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix)
+#   #     for i in xrange(Kest*maxR):
+#   #         if (C[d]~='c' and i<Kest):
+#   #             Bout[d,k,r] = 
+#   #             pB[D*i+d]=(BT)->data[i];
+#   #         elif (C[d]=='c' and i<(Kest*R[d])):
+#   #             pB[D*i+d]=(BT)->data[i];
+#   #     gsl_matrix_free(BT)
+#
+#   # for (int d=0; d<D; d++){
+#   #     for (int i=0;i<maxR;i++){
+#   #         if (C[d]=='o' & i<R[d]){
+#   #             pT[D*i+d]=(theta[d])->data[i];
+#   #         }
+#   #     }
+#   # }
+#
+#
+#    ##..... Free memory.....##
+#    for d in xrange(D):
+#        gsl_matrix_free(B[d])
+#        gsl_vector_free(theta[d])
+#    gsl_matrix_free(Z)
+#    free(B)
+#    free(theta)
+#
+    return (Z_out,B_out,Theta_out)
+#   return None

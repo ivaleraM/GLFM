@@ -23,7 +23,12 @@ print Z
 
 print '\nNow, inside C'
 #gs.wrapper_IBPsampler(X,C,Z)
-gs.wrapper_IBPsampler(X.transpose(),C,Z.transpose())
+(Z,B,Theta) = gs.wrapper_IBPsampler(X.transpose(),C,Z.transpose())
 
+print Z
+print "\n"
+print B
+print "\n"
+print Theta
 print "SUCCESSFUL"
 
