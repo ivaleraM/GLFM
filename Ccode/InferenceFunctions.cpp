@@ -371,6 +371,13 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
 
 int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y,int maxK,int Nsim){
 //Starting C function
+    
+    // For debugging, print input parameters
+    printf("X[0,0]=%f,X[0,1]=%f,X[1,0]=%f\n", gsl_matrix_get(X,0,0), gsl_matrix_get(X,0,1), gsl_matrix_get(X,1,0));
+    printf("Z[0,0]=%f,Z[0,1]=%f,Z[1,0]=%f\n", gsl_matrix_get(Z,0,0), gsl_matrix_get(Z,0,1), gsl_matrix_get(Z,1,0));
+    printf("C[0]=%f,C[1]=%f,C[2]=%f\n", C[0], C[1], C[2]);
+    printf("N=%d, D=%d, K=%d\n", N, D, K);
+
        //.....INIZIALIZATION........//
     double s2theta=1;
     // random numbers
