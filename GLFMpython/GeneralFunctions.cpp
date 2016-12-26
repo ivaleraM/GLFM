@@ -28,7 +28,7 @@ double f_1(double x, double w){
 double logFun(double x)
 {
 	if (x==0){return GSL_NEGINF;}
-    else if(x<0){printf("Error: logarithm is not defined for negative numbers\n");}
+    else if(x<0){fprintf(stderr, "Error: logarithm is not defined for negative numbers\n");}
     else{return gsl_sf_log(x);}
 }
 
