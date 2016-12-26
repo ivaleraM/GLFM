@@ -24,7 +24,7 @@ Xmiss(miss)= missing; % Missing data are coded as missing
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
 alpha=1; % Concentration parameter of the IBP
-Nsim=2; % Number of iterations for the gibbs sampler
+Nsim=50; % Number of iterations for the gibbs sampler
 bias = 0;
 maxK= D;
 
@@ -50,8 +50,13 @@ end
 %% Inference
 tic
 Zini=[ones(N,1), double(rand(N,2)>0.8)];
-[Zest B Theta]= IBPsampler(Xmiss,data.C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing);
-time = toc
+Zest = Zini';
+for it=1:100
+    [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2B,alpha,Nsim,maxK,missing);
+    sum(Zest')
+    save('tmp_counties_bias0.mat');
+    time = toc
+end
 
 %% Compute test log-likelihood
 XT=Xmiss;
