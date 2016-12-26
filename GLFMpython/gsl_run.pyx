@@ -112,12 +112,24 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
             if (R[d] > maxR):
                 maxR = R[d]
 
-
-    #IBPsampler_toy(missing, X, C, Z, B) #&X[0,0]) #, value, m, n)
+    ##...............Inference Function.......................##
     print 'Entering C function'
     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
             <int*> R.data, &w[0],\
             maxR, bias,  N, D, K, alpha, s2B, s2Y, maxK, Nsim);
     print 'Back to Python'
+
+    ##...............Set Output Pointers.......................##
+    np.ndarray[double, ndim=2, mode="fortran"] Zout = 
+
+
+
+
+
+
+
+
+
+
 
     return None
