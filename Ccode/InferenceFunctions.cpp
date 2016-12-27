@@ -351,16 +351,16 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
                 break; 
                 gsl_matrix_free(muy);
                 
-                //Sample Theta
-                for(int r=1; r<Rd-1; r++){
-                    double xlo;
-                    double xhi;
-                    if( gsl_vector_get (thetad, r)>gsl_vector_get(Ymax,r)){xlo=gsl_vector_get (thetad, r);}
-                    else{xlo=gsl_vector_get(Ymax,r);}
-                    if( gsl_vector_get (thetad, r+1)<gsl_vector_get(Ymin,r+1)){xhi=gsl_vector_get (thetad, r+1);}
-                    else{xhi=gsl_vector_get(Ymin,r+1);}
-                    gsl_vector_set (thetad, r, truncnormrnd(0, s2theta, xlo, xhi));
-                }
+             //   //Sample Theta
+             //   for(int r=1; r<Rd-1; r++){
+             //       double xlo;
+             //       double xhi;
+             //       if( gsl_vector_get (thetad, r)>gsl_vector_get(Ymax,r)){xlo=gsl_vector_get (thetad, r);}
+             //       else{xlo=gsl_vector_get(Ymax,r);}
+             //       if( gsl_vector_get (thetad, r+1)<gsl_vector_get(Ymin,r+1)){xhi=gsl_vector_get (thetad, r+1);}
+             //       else{xhi=gsl_vector_get(Ymin,r+1);}
+             //       gsl_vector_set (thetad, r, truncnormrnd(0, s2theta, xlo, xhi));
+             //   }
             
             
         
