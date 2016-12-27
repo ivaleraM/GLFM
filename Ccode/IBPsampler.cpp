@@ -146,33 +146,33 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
         gsl_matrix_view Bd_view =  gsl_matrix_submatrix (B[d], 0, 0, Kest, idx_tmp);
         gsl_matrix *BT=gsl_matrix_alloc(idx_tmp,Kest);
         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix);;
-#        for (int i=0;i<Kest*maxR;i++){
-#            if (C[d]!='c' & i<Kest){
-#                pB[D*i+d]=(BT)->data[i];
-#            }else if (C[d]=='c' & i<Kest*idx_tmp){
-#                pB[D*i+d]=(BT)->data[i];
-#            }
-#        }
+//        for (int i=0;i<Kest*maxR;i++){
+//            if (C[d]!='c' & i<Kest){
+//                pB[D*i+d]=(BT)->data[i];
+//            }else if (C[d]=='c' & i<Kest*idx_tmp){
+//                pB[D*i+d]=(BT)->data[i];
+//            }
+//        }
         gsl_matrix_free(BT);
     }
 
     for (int d=0; d<D; d++){
-        for (int i=0;i<maxR;i++){
-            if (C[d]=='o' & i<(R[d]-1)){
-                pT[D*i+d]=(theta[d])->data[i];
-            }
-        }
+//        for (int i=0;i<maxR;i++){
+//            if (C[d]=='o' & i<(R[d]-1)){
+//                pT[D*i+d]=(theta[d])->data[i];
+//            }
+//        }
     }
 
 
-    //..... Free memory.....//
-    for (int d=0; d<D; d++){
-        gsl_matrix_free(B[d]);
-        gsl_vector_free(theta[d]);
-    }
-    gsl_matrix_free(Z);
-    free(B);
-    free(theta);
+//    //..... Free memory.....//
+//    for (int d=0; d<D; d++){
+//        gsl_matrix_free(B[d]);
+//        gsl_vector_free(theta[d]);
+//    }
+//    gsl_matrix_free(Z);
+//    free(B);
+//    free(theta);
 
 }
 
