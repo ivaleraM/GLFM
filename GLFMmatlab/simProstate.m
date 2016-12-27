@@ -47,79 +47,74 @@ for d=1:D
     
 end
 
+drug_identifier = data.X(:,2) > 0.5;
+
+
 %% Inference
 tic;
-Zini= [ones(N,1), double(rand(N,2)>0.8)];
+Zini= [ones(N,1), drug_identifier, double(rand(N,2)>0.8)];
+bias = 2;
 Zest = Zini';
 for it=1:100
     [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2B,alpha,Nsim,maxK,missing);
     sum(Zest')
     toc;
 end
+save('tmp_prostate_bias2.mat');
 
-%% Compute test log-likelihood
-XT=Xmiss;
-ii=0;
-TLK=zeros(1,sum(XT(:)==missing));
-for i=miss
-    ii=ii+1;
-    if (XT(i)~=missing) 
-        d=ceil(i/N);
-        n=mod(i,N);
-        if (n==0)
-            n=N;
-        end
-        j=j+1;
-        Br=squeeze(B(d,:,1));
-        if (C(d)=='g')
-            % Question_ISA: TLK not initialized before loop?
-            TLK(ii) = logN(normpdf(XT(i),Zest(:,n)'*Br',1));
-        elseif (C(d)=='p' )
-            TLK(ii) = logN(normpdf(f_1(XT(i),W(d)),Zest(:,n)'*Br',2))+logN(abs(df_1(XT(i),W(d))));
-        elseif (C(d)=='c')
-           Br=squeeze(B(d,:,:));
-           prob=zeros(1,R(d));
-           for r=1:R(d)-1
-               for r2=1:R(d)
-                    if r2~=r
-                        prob(r) =prob(r)+ logN(normcdf(Zest(:,n)'*(Br(:,r)-Br(:,r2)),0,1));
-                    end
-               end
-           end 
-           if 1-sum(exp(prob(1:R(d)-1)))<0
-                prob(end)=-30;
-                prob=logN(exp(prob)/sum(exp(prob)));
-           else
-                prob(end)=logN(1-sum(exp(prob(1:(R(d)-1)))));
-           end
-           TLK(ii) =prob(XT(i));
-
-        elseif (C(d)=='o' )
-            Br=squeeze(B(d,:,1));
-            if XT(i)==1
-                TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1));
-            elseif XT(i)==R(d)
-                TLK(ii) = logN(1- normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
-            else
-                TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1)-normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
-            end
-        elseif (C(d)=='n')
-             Br=squeeze(B(d,:,1));
-            if XT(i)==0
-                TLK(ii) = logN(normcdf(f_1(XT(i)+1,W(d))-Zest(:,n)'*Br',0,1));
-            else
-                TLK(ii) = logN(normcdf(f_1(XT(i)+1,W(d))-Zest(:,n)'*Br',0,1)-normcdf(f_1(XT(i),W(d))-Zest(:,n)'*Br',0,1));
-            end
-        end
-    end
-end  
-
-%% Data Exploratory Anaylisis for Prostate DB
-
-[patterns, C] = get_feature_patterns(Zest');
-
-for i=1:size(patterns,1) % for each pattern
-    numP = sum(C == i); % number of patients with that pattern
-end
-    
-    
+%% %% Compute test log-likelihood
+% XT=Xmiss;
+% ii=0;
+% TLK=zeros(1,sum(XT(:)==missing));
+% for i=miss
+%     ii=ii+1;
+%     if (XT(i)~=missing) 
+%         d=ceil(i/N);
+%         n=mod(i,N);
+%         if (n==0)
+%             n=N;
+%         end
+%         j=j+1;
+%         Br=squeeze(B(d,:,1));
+%         if (C(d)=='g')
+%             % Question_ISA: TLK not initialized before loop?
+%             TLK(ii) = logN(normpdf(XT(i),Zest(:,n)'*Br',1));
+%         elseif (C(d)=='p' )
+%             TLK(ii) = logN(normpdf(f_1(XT(i),W(d)),Zest(:,n)'*Br',2))+logN(abs(df_1(XT(i),W(d))));
+%         elseif (C(d)=='c')
+%            Br=squeeze(B(d,:,:));
+%            prob=zeros(1,R(d));
+%            for r=1:R(d)-1
+%                for r2=1:R(d)
+%                     if r2~=r
+%                         prob(r) =prob(r)+ logN(normcdf(Zest(:,n)'*(Br(:,r)-Br(:,r2)),0,1));
+%                     end
+%                end
+%            end 
+%            if 1-sum(exp(prob(1:R(d)-1)))<0
+%                 prob(end)=-30;
+%                 prob=logN(exp(prob)/sum(exp(prob)));
+%            else
+%                 prob(end)=logN(1-sum(exp(prob(1:(R(d)-1)))));
+%            end
+%            TLK(ii) =prob(XT(i));
+% 
+%         elseif (C(d)=='o' )
+%             Br=squeeze(B(d,:,1));
+%             if XT(i)==1
+%                 TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1));
+%             elseif XT(i)==R(d)
+%                 TLK(ii) = logN(1- normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
+%             else
+%                 TLK(ii) = logN(normcdf(Theta(d,XT(i))-Zest(:,n)'*Br',0,1)-normcdf(Theta(d,XT(i)-1)-Zest(:,n)'*Br',0,1));
+%             end
+%         elseif (C(d)=='n')
+%              Br=squeeze(B(d,:,1));
+%             if XT(i)==0
+%                 TLK(ii) = logN(normcdf(f_1(XT(i)+1,W(d))-Zest(:,n)'*Br',0,1));
+%             else
+%                 TLK(ii) = logN(normcdf(f_1(XT(i)+1,W(d))-Zest(:,n)'*Br',0,1)-normcdf(f_1(XT(i),W(d))-Zest(:,n)'*Br',0,1));
+%             end
+%         end
+%     end
+% end
