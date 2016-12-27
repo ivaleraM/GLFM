@@ -107,7 +107,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
                 break;
             case 'o':
                 R[d]=(int)maxX[d];
-                B[d] = gsl_matrix_alloc(maxK,R[d]);
+                B[d] = gsl_matrix_alloc(maxK,1);
                 theta[d] = gsl_vector_alloc(R[d]);
                 if (R[d]>maxR){maxR=R[d];}
                 break;

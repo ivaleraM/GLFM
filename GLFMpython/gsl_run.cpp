@@ -3292,7 +3292,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  *     ##..... Free memory.....##
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
  *         gsl_matrix_free(B[d])
- *         #if (C[d] == 'o'):
+ *         #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
  */
   __pyx_t_13 = __pyx_v_D;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
@@ -3302,14 +3302,14 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  *     ##..... Free memory.....##
  *     for d in xrange(D):
  *         gsl_matrix_free(B[d])             # <<<<<<<<<<<<<<
- *         #if (C[d] == 'o'):
+ *         #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
  *         #    gsl_vector_free(theta[d])
  */
     gsl_matrix_free((__pyx_v_B[__pyx_v_d]));
   }
 
   /* "gsl_run.pyx":174
- *         #if (C[d] == 'o'):
+ *         #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
  *         #    gsl_vector_free(theta[d])
  *     gsl_matrix_free(Z)             # <<<<<<<<<<<<<<
  * 

@@ -1,9 +1,10 @@
 % MAIN TOY SCRIPT (to compare behavior of Matlab and Python)
 addpath('../Ccode/');
+clear
 
 X = [1.0 1 -0.3 1; 6 2 3.8 23; 11 3 4.1 4];
 Z = [1.0, 0; 1 1; 1 1];
-C = 'PCGN';
+C = 'PoGN';
 
 disp('First, in Python')
 X
@@ -25,6 +26,7 @@ bias = 1; s2Y = 1.0; s2B = 1.0; alpha = 1.0; Nsim = 50; maxK = 10; missing = -1;
 disp('Now, inside C');
 %wrapper_IBPsampler(X,C,Z)
 [Zest B Theta] = IBPsampler(X,C,Z,bias, s2Y, s2B, alpha, Nsim, maxK, missing)
+disp('Returned from C');
 
 disp('SUCCESSFUL');
 
