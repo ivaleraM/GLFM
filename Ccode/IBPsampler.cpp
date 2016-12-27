@@ -168,7 +168,9 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     //..... Free memory.....//
     for (int d=0; d<D; d++){
         gsl_matrix_free(B[d]);
-//        gsl_vector_free(theta[d]);
+        if (C[d] == 'o') {
+            gsl_vector_free(theta[d]);
+        }
     }
     gsl_matrix_free(Z);
     free(B);
