@@ -152,7 +152,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
     for (int d=0; d<D; d++){
         for (int i=0;i<maxR;i++){
-            if (C[d]=='o' & i<R[d]){
+            if (C[d]=='o' & i<(R[d]-1)){
                 pT[D*i+d]=(theta[d])->data[i];
             }
         }
