@@ -539,7 +539,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
         gsl_matrix_free(Y[d]);
         gsl_matrix_free(lambda[d]);
         gsl_matrix_free(lambdanon[d]);
-        gsl_vector_free(theta[d]);
+        //gsl_vector_free(theta[d]);
     }
     gsl_matrix_free(P);
     gsl_matrix_free(Pnon);
