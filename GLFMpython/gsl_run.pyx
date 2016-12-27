@@ -161,7 +161,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
 
     for d in xrange(D):
         for i in xrange(maxR):
-            if (C[d]=='o' and i<R[d]):
+            if (C[d]=='o' and i<(R[d]-1)):
                 Theta_out[d,i] = gsl_vector_get(theta[d],i)
     print "Theta_out loaded"
 
@@ -169,8 +169,8 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
     ##..... Free memory.....##
     for d in xrange(D):
         gsl_matrix_free(B[d])
-        #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
-        #    gsl_vector_free(theta[d])
+        if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
+            gsl_vector_free(theta[d])
     gsl_matrix_free(Z)
 
     return (Z_out,B_out,Theta_out)

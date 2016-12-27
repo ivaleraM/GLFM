@@ -3223,7 +3223,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  * 
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
  *         for i in xrange(maxR):
- *             if (C[d]=='o' and i<R[d]):
+ *             if (C[d]=='o' and i<(R[d]-1)):
  */
   __pyx_t_13 = __pyx_v_D;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
@@ -3233,7 +3233,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  * 
  *     for d in xrange(D):
  *         for i in xrange(maxR):             # <<<<<<<<<<<<<<
- *             if (C[d]=='o' and i<R[d]):
+ *             if (C[d]=='o' and i<(R[d]-1)):
  *                 Theta_out[d,i] = gsl_vector_get(theta[d],i)
  */
     __pyx_t_46 = __pyx_v_maxR;
@@ -3243,7 +3243,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       /* "gsl_run.pyx":164
  *     for d in xrange(D):
  *         for i in xrange(maxR):
- *             if (C[d]=='o' and i<R[d]):             # <<<<<<<<<<<<<<
+ *             if (C[d]=='o' and i<(R[d]-1)):             # <<<<<<<<<<<<<<
  *                 Theta_out[d,i] = gsl_vector_get(theta[d],i)
  *     print "Theta_out loaded"
  */
@@ -3257,14 +3257,14 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
         goto __pyx_L31_bool_binop_done;
       }
       __pyx_t_50 = __pyx_v_d;
-      __pyx_t_55 = ((__pyx_v_i < (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_50, __pyx_pybuffernd_R.diminfo[0].strides))) != 0);
+      __pyx_t_55 = ((__pyx_v_i < ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_50, __pyx_pybuffernd_R.diminfo[0].strides)) - 1)) != 0);
       __pyx_t_8 = __pyx_t_55;
       __pyx_L31_bool_binop_done:;
       if (__pyx_t_8) {
 
         /* "gsl_run.pyx":165
  *         for i in xrange(maxR):
- *             if (C[d]=='o' and i<R[d]):
+ *             if (C[d]=='o' and i<(R[d]-1)):
  *                 Theta_out[d,i] = gsl_vector_get(theta[d],i)             # <<<<<<<<<<<<<<
  *     print "Theta_out loaded"
  * 
@@ -3279,7 +3279,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   }
 
   /* "gsl_run.pyx":166
- *             if (C[d]=='o' and i<R[d]):
+ *             if (C[d]=='o' and i<(R[d]-1)):
  *                 Theta_out[d,i] = gsl_vector_get(theta[d],i)
  *     print "Theta_out loaded"             # <<<<<<<<<<<<<<
  * 
@@ -3292,7 +3292,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  *     ##..... Free memory.....##
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
  *         gsl_matrix_free(B[d])
- *         #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
+ *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
  */
   __pyx_t_13 = __pyx_v_D;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
@@ -3302,15 +3302,40 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  *     ##..... Free memory.....##
  *     for d in xrange(D):
  *         gsl_matrix_free(B[d])             # <<<<<<<<<<<<<<
- *         #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
- *         #    gsl_vector_free(theta[d])
+ *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
+ *             gsl_vector_free(theta[d])
  */
     gsl_matrix_free((__pyx_v_B[__pyx_v_d]));
+
+    /* "gsl_run.pyx":172
+ *     for d in xrange(D):
+ *         gsl_matrix_free(B[d])
+ *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault             # <<<<<<<<<<<<<<
+ *             gsl_vector_free(theta[d])
+ *     gsl_matrix_free(Z)
+ */
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_C, __pyx_v_d, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_8 = (__Pyx_PyString_Equals(__pyx_t_3, __pyx_n_s_o, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (__pyx_t_8) {
+
+      /* "gsl_run.pyx":173
+ *         gsl_matrix_free(B[d])
+ *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
+ *             gsl_vector_free(theta[d])             # <<<<<<<<<<<<<<
+ *     gsl_matrix_free(Z)
+ * 
+ */
+      gsl_vector_free((__pyx_v_theta[__pyx_v_d]));
+      goto __pyx_L35;
+    }
+    __pyx_L35:;
   }
 
   /* "gsl_run.pyx":174
- *         #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
- *         #    gsl_vector_free(theta[d])
+ *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
+ *             gsl_vector_free(theta[d])
  *     gsl_matrix_free(Z)             # <<<<<<<<<<<<<<
  * 
  *     return (Z_out,B_out,Theta_out)
