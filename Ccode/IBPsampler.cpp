@@ -137,13 +137,18 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     }
 
     for (int d=0; d<D; d++){
-        gsl_matrix_view Bd_view =  gsl_matrix_submatrix (B[d], 0, 0, Kest, R[d]);
-        gsl_matrix *BT=gsl_matrix_alloc(R[d],Kest);
+        if (C[d] =='o') {
+            idx_tmp = 1;
+        } else {
+            idx_tmp = R[d];
+        }
+        gsl_matrix_view Bd_view =  gsl_matrix_submatrix (B[d], 0, 0, Kest, idx_tmp);
+        gsl_matrix *BT=gsl_matrix_alloc(idx_tmp,Kest);
         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix);;
         for (int i=0;i<Kest*maxR;i++){
             if (C[d]!='c' & i<Kest){
                 pB[D*i+d]=(BT)->data[i];
-            }else if (C[d]=='c' & i<Kest*R[d]){
+            }else if (C[d]=='c' & i<Kest*idx_tmp){
                 pB[D*i+d]=(BT)->data[i];
             }
         }
