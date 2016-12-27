@@ -105,8 +105,9 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
             B[d] = gsl_matrix_alloc(maxK,R[d])
             if (R[d] > maxR):
                 maxR = R[d]
-        elif 'o':
+        elif C[d] == 'o':
             R[d] = <int>maxX[d];
+            print 'Setting R[d]=%f' % R[d]
             B[d] = gsl_matrix_alloc(maxK,1)
             theta[d] = gsl_vector_alloc(R[d])
             if (R[d] > maxR):
@@ -139,15 +140,20 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
 
     cdef gsl_matrix_view Bd_view
     cdef gsl_matrix* BT
+    cdef int idx_tmp
     print "B_out[D,Kest,maxR] where D=%d, Kest=%d, maxR=%d" % (D,Kest,maxR)
     for d in xrange(D):
         #print 'd=%d, R[d]=%d' % (d,R[d])
-        Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, R[d])
-        BT = gsl_matrix_alloc(R[d],Kest)
+        if (C[d] == 'o'):
+            idx_tmp = 1
+        else:
+            idx_tmp = R[d]
+        Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, idx_tmp)
+        BT = gsl_matrix_alloc(idx_tmp,Kest)
         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix)
         for k in xrange(Kest):
             #print 'k=%d' % k
-            for i in xrange(R[d]):
+            for i in xrange(idx_tmp):
                 #print 'i=%d' % i
                 B_out[d,k,i] = gsl_matrix_get(BT,i,k)
         gsl_matrix_free(BT)
@@ -163,7 +169,8 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
     ##..... Free memory.....##
     for d in xrange(D):
         gsl_matrix_free(B[d])
-        gsl_vector_free(theta[d])
+        #if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
+        #    gsl_vector_free(theta[d])
     gsl_matrix_free(Z)
 
     return (Z_out,B_out,Theta_out)
