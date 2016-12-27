@@ -22,8 +22,8 @@ cdef extern from "InferenceFunctions.h":
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None,\
-        Cin, np.ndarray[double, ndim=2, mode="fortran"] Zin not None, int bias=1,\
+def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
+        Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
         int maxK=10, double missing=-1):#\
     """
@@ -77,7 +77,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
 
     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)
     cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)
-    cdef np.ndarray[double, ndim=1] maxX = np.empty(D)
+    cdef np.ndarray[double, ndim=1, mode="c"] maxX = np.empty(D)
     cdef int maxR = 1
     #print 'Size of R[D]=(%d,%d)' % (R.shape[0],R.shape[1])
     #print 'Size of w[D]=(%d,%d)' % (w.shape[0],w.shape[1])
@@ -89,7 +89,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
     for d in xrange(D):
         Xd_view = gsl_matrix_row(X,d)
         maxX[d] = gsl_vector_max(&Xd_view.vector)
-        print "maxX[%d] = %f\n" % (d,maxX[d])
+        #print "maxX[%d] = %f\n" % (d,maxX[d])
         R[d] = 1
         w[d] = 1
         if C[d] == 'g':
@@ -111,7 +111,7 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
             theta[d] = gsl_vector_alloc(R[d])
             if (R[d] > maxR):
                 maxR = R[d]
-    print "maxR = %d" % maxR
+    #print "maxR = %d" % maxR
 
     ##...............Inference Function.......................##
     print 'Entering C function'
@@ -141,14 +141,14 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="fortran"] input not None
     cdef gsl_matrix* BT
     print "B_out[D,Kest,maxR] where D=%d, Kest=%d, maxR=%d" % (D,Kest,maxR)
     for d in xrange(D):
-        print 'd=%d, R[d]=%d' % (d,R[d])
+        #print 'd=%d, R[d]=%d' % (d,R[d])
         Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, R[d])
         BT = gsl_matrix_alloc(R[d],Kest)
         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix)
         for k in xrange(Kest):
-            print 'k=%d' % k
-            for i in xrange(maxR):
-                print 'i=%d' % i
+            #print 'k=%d' % k
+            for i in xrange(R[d]):
+                #print 'i=%d' % i
                 B_out[d,k,i] = gsl_matrix_get(BT,i,k)
         gsl_matrix_free(BT)
     print "B_out loaded"

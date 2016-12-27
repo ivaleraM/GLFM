@@ -1,7 +1,7 @@
 % MAIN TOY SCRIPT (to compare behavior of Matlab and Python)
 addpath('../Ccode/');
 
-X = [1.0 1 -0.3 1; 6 2 3.8 23; 11 2 4.1 4];
+X = [1.0 1 -0.3 1; 6 2 3.8 23; 11 3 4.1 4];
 Z = [1.0, 0; 1 1; 1 1];
 C = 'PCGN';
 

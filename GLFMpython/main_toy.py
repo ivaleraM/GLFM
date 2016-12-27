@@ -2,8 +2,8 @@ import numpy as np
 import gsl_run as gs
 
 Z = np.array([[1.0,0],[1,1],[1,1]])
-X = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 2, 4.1, 4]])
-C = 'PCGN' #'PPPPP'
+X = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 3, 4.1, 4]])
+C = 'PCGN'
 
 #X = np.array([[1.0, 2, 3, 4, -0.3],[6, 7, 8, 9, 3.8],[11, 12, 13, 14, 4.1]])
 #C = 'PPPPG' #'PPPPP'
@@ -25,11 +25,17 @@ print Z
 #print '\n'
 #print Z.transpose().flags
 
-#X2 = np.ascontiguousarray(X.transpose())
+#print '\nX flags'
+#print X.flags
+X2 = np.ascontiguousarray(X.transpose())
+Z2 = np.ascontiguousarray(Z.transpose())
+#print '\n'
+#print X2.flags
+#print X2
 
 print '\nNow, inside C'
 #gs.wrapper_IBPsampler(X,C,Z)
-(Z,B,Theta) = gs.wrapper_IBPsampler(X.transpose(),C,Z.transpose())
+(Z,B,Theta) = gs.wrapper_IBPsampler(X2,C,Z2)
 
 print Z
 print "\n"
