@@ -49,8 +49,27 @@ set( gca, 'XTick', 1:sum(maskD))
 set( gca,'XTickLabel', data.ylabel_long(maskD) );
 rotateticklabel(gca,45);
 grid;
-legend({'F1', 'F2', 'F3', 'F4'})
+legend({'F1', 'F2', 'F3', 'F4'});
 
+idxD = find(data.C == 'c' & data.C == 'o'); % categorical and ordinal
+figure(2); subplot(3,1,1:2); hold off
+colors = {'k', 'b', 'r', 'c', 'm'};
+for dd=1:length(idxD)
+    d = idxD(dd);
+    ma = ~isnan(data.X(:,d));
+    U = unique(data.X(ma,d));
+    aux(size(Z,2)-1,length(U));
+    for f=2:size(Z,2) % for each feature
+        
+        %fprintf('Feature %d\n', f);
+        x1 = data.X(Z(:,f) == 1,maskD);
+        x2 = data.X(Z(:,f) == 0,maskD);
+        aux(f-1,:) = hist(data.X(ma & (C == p),d),U);
+    end
+    aux = aux ./ repmat( sum(aux,2), 1, size(aux,2) );
+end
+
+%% Independent histograms for each identified pattern
 for d=1:D % for each dimension
     ma = ~isnan(data.X(:,d));
     figure; hold off;
@@ -61,20 +80,20 @@ for d=1:D % for each dimension
             aux(p,:) = hist(data.X(ma & (C == p),d),U);
         end
         aux = aux ./ repmat( sum(aux,2), 1, size(aux,2) );
-        subplot(3,1,1:2);
+        subplot(5,1,1:4);
         bar(unique(data.X(ma,d)), aux'); title(data.ylabel_long{d});
         set( gca,'XTickLabel', data.cat_labels{d}, 'FontSize', 14);
         rotateticklabel(gca,45);
         grid;
-        pause;
+        %pause;
     else % plot box plots
         boxplot(data.X(ma,d),C(ma)); title(data.ylabel_long{d});
         grid;
-        pause;
+        %pause;
     end
 
 %     for i=1:size(patterns,1) % for each pattern
-%         
+%
 %         mask = C == i;
 %         xx = data.X(mask,d);
 %         unique(xx)
@@ -83,4 +102,35 @@ for d=1:D % for each dimension
 %     end
 end
 
-%%
+%% Plot per feature prob. of category activation
+data.cat_labels{1} = data.cat_labels{1}';
+
+idxs = find(data.C == 'c');
+
+figure(3); hold off
+for k=1:size(Z,2) % for each feature
+    ticklabels = [];
+    xx = data.X(Z(:,k) == 1,:);
+    idx_plot = 0;
+    subplot(5,1,1:3);
+    for rr=1:length(idxs) % for each categorical dimension
+        if isempty(data.cat_labels{idxs(rr)})
+            continue;
+        end
+        r = idxs(rr);
+        V = xx(:,r);
+        V(V == missing) = []; % remove missing for analysis
+        h = hist(V,unique(V)) ./ length(V);
+        semilogy(idx_plot+1:(idx_plot+length(h)), h,colors{k}, 'Linewidth', 2); hold on
+        idx_plot = idx_plot+length(h);
+        ticklabels = [ticklabels; data.cat_labels{r}];
+    end
+    if (k==1)
+        legend({'F1', 'F2', 'F3', 'F4', 'F5'});
+    end
+end
+set( gca, 'XTick', 1:idx_plot)
+set( gca,'XTickLabel', ticklabels );
+rotateticklabel(gca,45);
+grid;
+%legend({'F1', 'F2', 'F3', 'F4', 'F5'});
