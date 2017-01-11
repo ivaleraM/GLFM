@@ -8,4 +8,4 @@ Please, cite it as detailed below:
 I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
 Contact
-For further information or contact Isabel Valera at martinez@gmail.com or Melanie Fernandez Pradier at melanie.fpradier@gmail.com.
+For further information or contact Isabel Valera at isabel.valera.martinez@gmail.com or Melanie Fernandez Pradier at melanie.fpradier@gmail.com.
