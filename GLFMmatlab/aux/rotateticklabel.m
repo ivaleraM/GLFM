@@ -42,10 +42,11 @@ end
 while rot<0
     rot=rot+360;
 end
-%get current tick labels
+%%get current tick labels
 a=get(h,'XTickLabel');
-%erase current tick labels from figure
+%%erase current tick labels from figure
 set(h,'XTickLabel',[]);
+
 %get tick label positions
 b=get(h,'XTick');
 c=get(h,'YTick');
