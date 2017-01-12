@@ -1,6 +1,6 @@
 %% Data Exploratory Anaylisis for Prostate DB
 addpath(genpath('./aux/'));
-load('../results/tmp_prostate.mat');
+load('../results/tmp_prostate_bias2.mat');
 data.cat_labels{1} = {'3', '4'};
 
 data.ylabel_long = {'Stage', 'Drug level', 'Months of Follow-up', 'Status', 'Age in years', ...
