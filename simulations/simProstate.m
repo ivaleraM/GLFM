@@ -52,7 +52,7 @@ drug_identifier = data.X(:,2) > 0.5;
 
 %% Inference
 tic;
-Zini= [ones(N,1), drug_identifier, double(rand(N,2)>0.8)];
+Zini= [drug_identifier, not(drug_identifier), double(rand(N,2)>0.8)];
 bias = 2;
 Zest = Zini';
 for it=1:100
@@ -60,7 +60,7 @@ for it=1:100
     sum(Zest')
     toc;
 end
-save('tmp_prostate_bias2.mat');
+save('tmp_prostate_drug_noDrug.mat');
 
 %% %% Compute test log-likelihood
 % XT=Xmiss;
