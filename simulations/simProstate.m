@@ -1,5 +1,5 @@
 clear
-addpath('../Ccode/');
+addpath(genpath('../Ccode/'));
 
 missing=-1;
 p=0.1; %probability of missing
@@ -60,7 +60,7 @@ for it=1:100
     sum(Zest')
     toc;
 end
-save('tmp_prostate_drug_noDrug.mat');
+save('tmp_prostate_drug_noDrug3.mat');
 
 %% %% Compute test log-likelihood
 % XT=Xmiss;

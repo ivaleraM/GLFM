@@ -1,6 +1,10 @@
 %% Data Exploratory Anaylisis for Prostate DB
+
+%file = '../results/tmp_prostate_bias2.mat';
+file = '../results/tmp_prostate_drug_noDrug.mat';
+
 addpath(genpath('./aux/'));
-load('../results/tmp_prostate_bias2.mat');
+load(file);
 data.cat_labels{1} = {'3', '4'};
 
 data.ylabel_long = {'Stage', 'Drug level', 'Months of Follow-up', 'Status', 'Age in years', ...
@@ -12,7 +16,11 @@ data.ylabel_long = {'Stage', 'Drug level', 'Months of Follow-up', 'Status', 'Age
 
 Z = Zest';
 %Z(:,2) = not(Z(:,2);
-drug_identifier = data.X(:,2) > 0.5;
+%drug_identifier = data.X(:,2) > 0.5;
+
+th = 0.05; % remove features whose perc of observations is below th
+idxs_to_delete = find( (sum(Z) > size(data.X,1)*(1-th)) | (sum(Z) < size(data.X,1)*th) );
+Z(:,idxs_to_delete) = [];
 
 %[patterns, C] = get_feature_patterns([drug_identifier, Z]);
 %print_patterns(1,data.X,patterns,C);
