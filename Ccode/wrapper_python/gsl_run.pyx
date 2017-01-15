@@ -7,15 +7,12 @@ from cymem.cymem cimport Pool
 import numpy as np
 cimport numpy as np
 
-#cdef extern from "gsl/gsl_sf_exp.h":
-#    double gsl_sf_exp(const double x)
-
 # declare the interface to the C code
 #cdef extern void c_multiply (double* array, double value, int m, int n)
 cdef extern from "stdio.h":
     int tolower(int c)
 
-cdef extern from "InferenceFunctions.h":
+cdef extern from "../core/InferenceFunctions.h":
     #void IBPsampler_toy(double missing, gsl_matrix* X, char *C, gsl_matrix* Z,\
     #                gsl_matrix **B)
     int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y,int maxK,int Nsim)

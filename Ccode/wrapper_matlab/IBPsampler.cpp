@@ -1,6 +1,6 @@
 #include "IBPsampler.h"
-#include "GeneralFunctions.cpp"
-#include "InferenceFunctions.cpp"
+#include "../core/GeneralFunctions.cpp"
+#include "../core/InferenceFunctions.cpp"
 
 //*********************************INPUTS**************************//
 

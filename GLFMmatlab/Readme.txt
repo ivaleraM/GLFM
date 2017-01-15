@@ -4,8 +4,9 @@ Requirements
 In order to compile, it is necessary the C++ library GSL.
 
 Compile
-Before using the code, please add path 'Ccode' and compile the sampler function in Matlab with the command:
-mex  -lgsl -lgmp IBPsampler.cpp
+Before using the code, please add path 'Ccode' and its children, and compile the sampler function in Matlab with the command:
+//mex  -lgsl -lgmp IBPsampler.cpp
+mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
 Requirements:
 You need to install first the libraries gsl and gmp in your computer:

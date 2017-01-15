@@ -1,5 +1,19 @@
 #include "GeneralFunctions.h"
 
+#include <math.h>
+#include <stdio.h>
+#include <iostream>
+#include <time.h>
+#include <gsl/gsl_sf_exp.h>
+#include <gsl/gsl_sf_log.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_math.h>
+#include "gsl/gsl_cdf.h"
+#include "gsl/gsl_randist.h"
+
 // Functions
 int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, double alpha, double s2B, double s2Y, gsl_matrix **Y, gsl_matrix *Z, int *nest, gsl_matrix *P, gsl_matrix *Pnon, gsl_matrix **lambda, gsl_matrix **lambdanon){
    int TK=2;
@@ -7,8 +21,8 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
    gsl_matrix_view Ydn;
    gsl_matrix_view Pnon_view;
    gsl_matrix_view Lnon_view;
-   gsl_matrix_view P_view;
-   gsl_matrix_view L_view;
+   //gsl_matrix_view P_view;
+   //gsl_matrix_view L_view;
    gsl_matrix *muy;
    gsl_matrix *s2y_p= gsl_matrix_alloc(1,1);
    gsl_matrix *aux;
@@ -119,7 +133,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
        int flagDel=0;
        int Kdel=0;
        for (int k=0; k<K;k++){
-           if (nest[k]==0 & K>1){
+           if ((nest[k]==0) & (K>1)){
                 Kdel++;
                 flagDel=1;
                 for (int kk=k; kk<K-1; kk++){
@@ -311,7 +325,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
                     double ytrue=gsl_matrix_get (Yd, xnd-1, n);
                     for(int r=0; r<Rd; r++){
                         double ydr= gsl_matrix_get (Yd, r, n);
-                        if (ydr!=ytrue & ydr>maxY){maxY=ydr;}
+                        if ((ydr!=ytrue) & (ydr>maxY)){maxY=ydr;}
                     }
                     gsl_matrix_set (Yd, xnd-1, n, truncnormrnd(gsl_matrix_get(muy,0,xnd-1), s2Y, maxY, GSL_POSINF));
                     for(int r=0; r<Rd; r++){

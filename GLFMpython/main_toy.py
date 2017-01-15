@@ -1,4 +1,7 @@
 import numpy as np
+import sys
+sys.path.append('../Ccode/wrapper_python/')
+
 import gsl_run as gs
 
 Z = np.array([[1.0,0],[1,1],[1,1]])

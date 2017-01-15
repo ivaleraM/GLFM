@@ -14,7 +14,7 @@ setup(
     include_dirs = [cython_gsl.get_include()],
     cmdclass = {'build_ext': build_ext},
     ext_modules = [Extension("gsl_run",
-            sources=["gsl_run.pyx","GeneralFunctions.cpp","InferenceFunctions.cpp"],
+            sources=["gsl_run.pyx","../core/GeneralFunctions.cpp","../core/InferenceFunctions.cpp"],
             language="c++",
             libraries=cython_gsl.get_libraries(),
             library_dirs=[cython_gsl.get_library_dir()],
