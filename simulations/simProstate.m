@@ -24,7 +24,7 @@ Xmiss(miss)= missing; % Missing data are coded as missing
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
 alpha=1; % Concentration parameter of the IBP
-Nsim=100; % Number of iterations for the gibbs sampler
+Nsim=1000; % Number of iterations for the gibbs sampler
 bias = 1;
 maxK= D;
 
@@ -55,12 +55,12 @@ tic;
 Zini= [drug_identifier, not(drug_identifier), double(rand(N,2)>0.8)];
 bias = 2;
 Zest = Zini';
-for it=1:100
+for it=1:10
     [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2B,alpha,Nsim,maxK,missing);
     sum(Zest')
     toc;
 end
-save('tmp_prostate_drug_noDrug3.mat');
+save('tmp_prostate_drug_noDrug_1000it_10it.mat');
 
 %% %% Compute test log-likelihood
 % XT=Xmiss;
