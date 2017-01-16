@@ -1,6 +1,5 @@
 from cython_gsl cimport *
 import cython
-#from libc.stdlib cimport malloc, free
 from cymem.cymem cimport Pool
 
 # import both numpy and the Cython declarations for numpy
@@ -15,6 +14,27 @@ cdef extern from "stdio.h":
 cdef extern from "../core/InferenceFunctions.h":
     #void IBPsampler_toy(double missing, gsl_matrix* X, char *C, gsl_matrix* Z,\
     #                gsl_matrix **B)
+    # C++ function to run inference for GLFM model
+    # Inputs:
+    #           missing: value of missings, can be nan or any integer % TODO: check
+    #           X: observation matrix
+    #           Z: binary matrix (feature activation matrix)
+    #           B: feature matrix
+    #           theta: auxiliary variables (necessary for ordinal)
+    #           R: number of categories for each variable
+    #           w: weights # TODO: complete
+    #           maxR: maximum number of categories
+    #           bias: how many columns should not be sampled
+    #           N: number of observations
+    #           D: number of dimensions
+    #           K: number of latent features
+    #           alpha: mass parameter of the IBP
+    #           s2B: variance for feature values
+    #           s2Y: variance for pseudo-observations
+    #           maxK: maximum number of latent features (to allocate memory)
+    #           Nsim: number of internal iterations (inside C++ code)
+    # Outputs:
+    #           Kest: number of active features
     int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y,int maxK,int Nsim)
 
 @cython.boundscheck(False)
@@ -24,6 +44,20 @@ def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
         int maxK=10, double missing=-1):#\
     """
+    Function to run inference for GLFM model
+    Inputs:
+        input: observation matrix ( numpy array [D*N] )
+        Cin: string array [1*D]
+        Zin: latent feature binary matrix (numpy array [K*N] )
+        
+        *** (the following are optional parameters) ***
+        bias: number of columns that should not be sampled in matrix Zin
+        s2Y: variance for pseudo-observations Y
+        s2B: variance for feature values
+        alpha: mass parameter for the IBP
+        Nsim: number of iterations
+        maxK: máximum number of latent features
+        missing: value of missings (should be an integer or nan) # TODO: check
     """
     #print input_in.flags['C_CONTIGUOUS']
     #input_in = np.ascontiguousarray(input_in)
