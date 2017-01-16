@@ -3,4 +3,4 @@
 *.so
 *.m~
 *.mexa64
-Ccode/wrapper_python/build
+./Ccode/wrapper_python/build/*
