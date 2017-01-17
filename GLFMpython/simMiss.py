@@ -2,7 +2,10 @@
 import numpy as np
 import time
 import scipy.io
-from matrix_completion import matrix_completion
+from matrix_completion import matrix_completion as complete
+import sys
+sys.path.append('../Ccode/wrapper_python/')
+import gsl_run as GLFM
 
 missing = -1
 p = 0.1 # probability of missing
@@ -43,7 +46,7 @@ maxK = D
 ## Inference
 Zini = 1.0*( np.random.rand(N,2) > 0.8 )
 # Call inner C function
-[Zest B Theta]= IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing)
+(Zest, B, Theta) = GLFM.wrapper_IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing)
 
 
 ## Compute test log-likelihood
