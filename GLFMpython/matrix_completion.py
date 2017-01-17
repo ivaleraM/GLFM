@@ -1,7 +1,12 @@
 import numpy as np
 import random
 
-def matrix_completion(Xmiss, C, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1):
+import sys
+sys.path.append('../Ccode/wrapper_python/')
+
+import gsl_run as GLFM
+
+def matrix_completion(Xmiss, C, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1):
     """
     Function to complete missing values of a certain numpy 2dim array
 
@@ -16,6 +21,7 @@ def matrix_completion(Xmiss, C, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1):
                  real variable, 'p' positive real variable, 'n' count data,
                  'o' ordinal data and 'c' categorical data.
 
+	 bias  : TODO
          s2Y   : variance of the Gaussian prior on the auxiliary variables
                  (pseudo-observations) Y (TODO: detail how to change it)
          s2B   : variance of the Gaussian prior on the elements of the
@@ -32,12 +38,12 @@ def matrix_completion(Xmiss, C, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1):
 N = Xmiss.shape[0]
 D = Xmiss.shape[1]
 Xmiss[np.isnan(Xmiss)] = missing
-maxK=20 # maximum number of latent features for space allocation
+maxK=50 # maximum number of latent features for space allocation
 
 ## Inference
-Zini= = 1.0*( np.random.rand(N,2) > 0.8 )
+Zini= 1.0*( np.random.rand(N,2) > 0.8 )
 # Call inner C function
-[Zest B Theta]= IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Niter,maxK,missing)
+(Zest, B, Theta)= GLFM.wrapper_IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Niter,maxK,missing)
 
 # Compute test log-likelihood
 # TODO: Compute test LLH?

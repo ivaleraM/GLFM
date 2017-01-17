@@ -7,7 +7,7 @@ from matrix_completion import matrix_completion
 missing = -1
 p = 0.1 # probability of missing
 f_1 = lambda x,w: np.log(np.exp(w*x)-1)
-df_1 = lambda x,w: w./(1-np.exp(-w*x))
+df_1 = lambda x,w: w/(1-np.exp(-w*x))
 logN = lambda x: np.max(np.log(x),-30) # To avoid -Inf
 
 ## Selecting missing data
