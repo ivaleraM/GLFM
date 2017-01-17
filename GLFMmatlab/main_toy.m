@@ -1,5 +1,5 @@
 % MAIN TOY SCRIPT (to compare behavior of Matlab and Python)
-addpath('../Ccode/');
+addpath(genpath('../Ccode/'));
 clear
 
 X = [1.0 1 -0.3 1; 6 2 3.8 23; 11 3 4.1 4];
