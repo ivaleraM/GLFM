@@ -249,8 +249,8 @@ class __Pyx_FakeReference {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__gsl_run
-#define __PYX_HAVE_API__gsl_run
+#define __PYX_HAVE__GLFM
+#define __PYX_HAVE_API__GLFM
 #include "math.h"
 #include "string.h"
 #include "stdio.h"
@@ -550,7 +550,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "gsl_run.pyx",
+  "GLFM.pyx",
   "__init__.pxd",
   "cymem.pxd",
   "type.pxd",
@@ -1473,13 +1473,13 @@ static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
-/* Module declarations from 'gsl_run' */
+/* Module declarations from 'GLFM' */
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_int32_t = { "int32_t", NULL, sizeof(__pyx_t_5numpy_int32_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_5numpy_int32_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_5numpy_int32_t), 0 };
-#define __Pyx_MODULE_NAME "gsl_run"
-int __pyx_module_is_main_gsl_run = 0;
+#define __Pyx_MODULE_NAME "GLFM"
+int __pyx_module_is_main_GLFM = 0;
 
-/* Implementation of 'gsl_run' */
+/* Implementation of 'GLFM' */
 static PyObject *__pyx_builtin_Exception;
 static PyObject *__pyx_builtin_xrange;
 static PyObject *__pyx_builtin_chr;
@@ -1487,7 +1487,7 @@ static PyObject *__pyx_builtin_ord;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
-static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_input, PyObject *__pyx_v_Cin, PyArrayObject *__pyx_v_Zin, int __pyx_v_bias, double __pyx_v_s2Y, double __pyx_v_s2B, double __pyx_v_alpha, int __pyx_v_Nsim, int __pyx_v_maxK, double __pyx_v_missing); /* proto */
+static PyObject *__pyx_pf_4GLFM_infer(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_input, PyObject *__pyx_v_Cin, PyArrayObject *__pyx_v_Zin, int __pyx_v_bias, double __pyx_v_s2Y, double __pyx_v_s2B, double __pyx_v_alpha, int __pyx_v_Nsim, int __pyx_v_maxK, double __pyx_v_missing); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static char __pyx_k_B[] = "B";
@@ -1532,6 +1532,7 @@ static char __pyx_k_mem[] = "mem";
 static char __pyx_k_ord[] = "ord";
 static char __pyx_k_s2B[] = "s2B";
 static char __pyx_k_s2Y[] = "s2Y";
+static char __pyx_k_GLFM[] = "GLFM";
 static char __pyx_k_Kest[] = "Kest";
 static char __pyx_k_Nsim[] = "Nsim";
 static char __pyx_k_bias[] = "bias";
@@ -1548,6 +1549,7 @@ static char __pyx_k_Zview[] = "Zview";
 static char __pyx_k_alpha[] = "alpha";
 static char __pyx_k_dtype[] = "dtype";
 static char __pyx_k_empty[] = "empty";
+static char __pyx_k_infer[] = "infer";
 static char __pyx_k_input[] = "input";
 static char __pyx_k_int32[] = "int32";
 static char __pyx_k_numpy[] = "numpy";
@@ -1559,7 +1561,6 @@ static char __pyx_k_import[] = "__import__";
 static char __pyx_k_xrange[] = "xrange";
 static char __pyx_k_Bd_view[] = "Bd_view";
 static char __pyx_k_Xd_view[] = "Xd_view";
-static char __pyx_k_gsl_run[] = "gsl_run";
 static char __pyx_k_idx_tmp[] = "idx_tmp";
 static char __pyx_k_missing[] = "missing";
 static char __pyx_k_Exception[] = "Exception";
@@ -1574,10 +1575,9 @@ static char __pyx_k_Z_out_loaded[] = "Z_out loaded";
 static char __pyx_k_Setting_R_d_f[] = "Setting R[d]=%f";
 static char __pyx_k_Back_to_Python[] = "Back to Python";
 static char __pyx_k_Theta_out_loaded[] = "Theta_out loaded";
-static char __pyx_k_wrapper_IBPsampler[] = "wrapper_IBPsampler";
 static char __pyx_k_Entering_C_function[] = "Entering C function";
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
-static char __pyx_k_Users_melanie_Documents_UC3M_Wo[] = "/Users/melanie/Documents/UC3M/Workspace/GIBP_Isabel/GLFM/Ccode/wrapper_python/gsl_run.pyx";
+static char __pyx_k_home_melanie_Documents_UC3M_Wor[] = "/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/GLFM/Ccode/wrapper_python/GLFM.pyx";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_B_out_D_Kest_maxR_where_D_d_Kest[] = "B_out[D,Kest,maxR] where D=%d, Kest=%d, maxR=%d";
 static char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
@@ -1599,6 +1599,7 @@ static PyObject *__pyx_kp_s_Entering_C_function;
 static PyObject *__pyx_n_s_Exception;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor_2;
+static PyObject *__pyx_n_s_GLFM;
 static PyObject *__pyx_n_s_K;
 static PyObject *__pyx_n_s_Kest;
 static PyObject *__pyx_kp_s_Kest_d_N_d;
@@ -1612,7 +1613,6 @@ static PyObject *__pyx_kp_s_Setting_R_d_f;
 static PyObject *__pyx_kp_s_Size_of_C_and_X_are_not_consiste;
 static PyObject *__pyx_n_s_Theta_out;
 static PyObject *__pyx_kp_s_Theta_out_loaded;
-static PyObject *__pyx_kp_s_Users_melanie_Documents_UC3M_Wo;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_X;
 static PyObject *__pyx_n_s_Xd_view;
@@ -1634,10 +1634,11 @@ static PyObject *__pyx_n_s_empty;
 static PyObject *__pyx_n_s_end;
 static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_g;
-static PyObject *__pyx_n_s_gsl_run;
+static PyObject *__pyx_kp_s_home_melanie_Documents_UC3M_Wor;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_idx_tmp;
 static PyObject *__pyx_n_s_import;
+static PyObject *__pyx_n_s_infer;
 static PyObject *__pyx_n_s_input;
 static PyObject *__pyx_n_s_int32;
 static PyObject *__pyx_n_s_k;
@@ -1664,7 +1665,6 @@ static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_theta;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
 static PyObject *__pyx_n_s_w;
-static PyObject *__pyx_n_s_wrapper_IBPsampler;
 static PyObject *__pyx_n_s_xrange;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_tuple_;
@@ -1677,19 +1677,19 @@ static PyObject *__pyx_tuple__8;
 static PyObject *__pyx_tuple__9;
 static PyObject *__pyx_codeobj__10;
 
-/* "gsl_run.pyx":42
+/* "GLFM.pyx":42
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
+ * def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
  *         Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
  *         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_7gsl_run_wrapper_IBPsampler[] = "\n    Function to run inference for GLFM model\n    Inputs:\n        input: observation matrix ( numpy array [N*D] )\n        Cin: numpy array of chars\n        Zin: latent feature binary matrix (numpy array [N*K] )\n        \n        *** (the following are optional parameters) ***\n        bias: number of columns that should not be sampled in matrix Zin\n        s2Y: variance for pseudo-observations Y\n        s2B: variance for feature values\n        alpha: mass parameter for the IBP\n        Nsim: number of iterations\n        maxK: m\303\241ximum number of latent features\n        missing: value of missings (should be an integer or nan) # TODO: check\n    ";
-static PyMethodDef __pyx_mdef_7gsl_run_1wrapper_IBPsampler = {"wrapper_IBPsampler", (PyCFunction)__pyx_pw_7gsl_run_1wrapper_IBPsampler, METH_VARARGS|METH_KEYWORDS, __pyx_doc_7gsl_run_wrapper_IBPsampler};
-static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_4GLFM_1infer(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_4GLFM_infer[] = "\n    Function to run inference for GLFM model\n    Inputs:\n        input: observation matrix ( numpy array [D*N] )\n        Cin: string array [1*D]\n        Zin: latent feature binary matrix (numpy array [K*N] )\n        \n        *** (the following are optional parameters) ***\n        bias: number of columns that should not be sampled in matrix Zin\n        s2Y: variance for pseudo-observations Y\n        s2B: variance for feature values\n        alpha: mass parameter for the IBP\n        Nsim: number of iterations\n        maxK: m\303\241ximum number of latent features\n        missing: value of missings (should be an integer or nan) # TODO: check\n    ";
+static PyMethodDef __pyx_mdef_4GLFM_1infer = {"infer", (PyCFunction)__pyx_pw_4GLFM_1infer, METH_VARARGS|METH_KEYWORDS, __pyx_doc_4GLFM_infer};
+static PyObject *__pyx_pw_4GLFM_1infer(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_input = 0;
   PyObject *__pyx_v_Cin = 0;
   PyArrayObject *__pyx_v_Zin = 0;
@@ -1705,7 +1705,7 @@ static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyO
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("wrapper_IBPsampler (wrapper)", 0);
+  __Pyx_RefNannySetupContext("infer (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_input,&__pyx_n_s_Cin,&__pyx_n_s_Zin,&__pyx_n_s_bias,&__pyx_n_s_s2Y,&__pyx_n_s_s2B,&__pyx_n_s_alpha,&__pyx_n_s_Nsim,&__pyx_n_s_maxK,&__pyx_n_s_missing,0};
     PyObject* values[10] = {0,0,0,0,0,0,0,0,0,0};
@@ -1734,12 +1734,12 @@ static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyO
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_Cin)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("wrapper_IBPsampler", 0, 3, 10, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("infer", 0, 3, 10, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_Zin)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("wrapper_IBPsampler", 0, 3, 10, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("infer", 0, 3, 10, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (kw_args > 0) {
@@ -1778,7 +1778,7 @@ static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyO
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wrapper_IBPsampler") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "infer") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -1837,15 +1837,15 @@ static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyO
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("wrapper_IBPsampler", 0, 3, 10, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("infer", 0, 3, 10, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("gsl_run.wrapper_IBPsampler", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("GLFM.infer", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_input), __pyx_ptype_5numpy_ndarray, 0, "input", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_Zin), __pyx_ptype_5numpy_ndarray, 0, "Zin", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_7gsl_run_wrapper_IBPsampler(__pyx_self, __pyx_v_input, __pyx_v_Cin, __pyx_v_Zin, __pyx_v_bias, __pyx_v_s2Y, __pyx_v_s2B, __pyx_v_alpha, __pyx_v_Nsim, __pyx_v_maxK, __pyx_v_missing);
+  __pyx_r = __pyx_pf_4GLFM_infer(__pyx_self, __pyx_v_input, __pyx_v_Cin, __pyx_v_Zin, __pyx_v_bias, __pyx_v_s2Y, __pyx_v_s2B, __pyx_v_alpha, __pyx_v_Nsim, __pyx_v_maxK, __pyx_v_missing);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1856,7 +1856,7 @@ static PyObject *__pyx_pw_7gsl_run_1wrapper_IBPsampler(PyObject *__pyx_self, PyO
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_input, PyObject *__pyx_v_Cin, PyArrayObject *__pyx_v_Zin, int __pyx_v_bias, double __pyx_v_s2Y, double __pyx_v_s2B, double __pyx_v_alpha, int __pyx_v_Nsim, int __pyx_v_maxK, double __pyx_v_missing) {
+static PyObject *__pyx_pf_4GLFM_infer(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_input, PyObject *__pyx_v_Cin, PyArrayObject *__pyx_v_Zin, int __pyx_v_bias, double __pyx_v_s2Y, double __pyx_v_s2B, double __pyx_v_alpha, int __pyx_v_Nsim, int __pyx_v_maxK, double __pyx_v_missing) {
   int __pyx_v_N;
   int __pyx_v_D;
   int __pyx_v_K;
@@ -1961,7 +1961,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("wrapper_IBPsampler", 0);
+  __Pyx_RefNannySetupContext("infer", 0);
   __pyx_pybuffer_R.pybuffer.buf = NULL;
   __pyx_pybuffer_R.refcount = 0;
   __pyx_pybuffernd_R.data = NULL;
@@ -2005,7 +2005,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   }
   __pyx_pybuffernd_Zin.diminfo[0].strides = __pyx_pybuffernd_Zin.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_Zin.diminfo[0].shape = __pyx_pybuffernd_Zin.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_Zin.diminfo[1].strides = __pyx_pybuffernd_Zin.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_Zin.diminfo[1].shape = __pyx_pybuffernd_Zin.rcbuffer->pybuffer.shape[1];
 
-  /* "gsl_run.pyx":74
+  /* "GLFM.pyx":74
  *     #N, D = input.shape[0], input.shape[1]
  *     #K = Zin.shape[0]
  *     N, D = input.shape[1], input.shape[0]             # <<<<<<<<<<<<<<
@@ -2017,7 +2017,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_N = __pyx_t_1;
   __pyx_v_D = __pyx_t_2;
 
-  /* "gsl_run.pyx":75
+  /* "GLFM.pyx":75
  *     #K = Zin.shape[0]
  *     N, D = input.shape[1], input.shape[0]
  *     K = Zin.shape[0]             # <<<<<<<<<<<<<<
@@ -2026,7 +2026,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_K = (__pyx_v_Zin->dimensions[0]);
 
-  /* "gsl_run.pyx":76
+  /* "GLFM.pyx":76
  *     N, D = input.shape[1], input.shape[0]
  *     K = Zin.shape[0]
  *     print 'N=%d, D=%d, K=%d\n' % (N, D, K)             # <<<<<<<<<<<<<<
@@ -2056,7 +2056,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   if (__Pyx_PrintOne(0, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "gsl_run.pyx":77
+  /* "GLFM.pyx":77
  *     K = Zin.shape[0]
  *     print 'N=%d, D=%d, K=%d\n' % (N, D, K)
  *     print input             # <<<<<<<<<<<<<<
@@ -2065,7 +2065,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, ((PyObject *)__pyx_v_input)) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":78
+  /* "GLFM.pyx":78
  *     print 'N=%d, D=%d, K=%d\n' % (N, D, K)
  *     print input
  *     print Zin             # <<<<<<<<<<<<<<
@@ -2074,7 +2074,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, ((PyObject *)__pyx_v_Zin)) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":84
+  /* "GLFM.pyx":84
  *     #cdef np.ndarray[double, ndim=2, mode="c"] Zin = Zin_in.transpose()
  * 
  *     if len(Cin) != D:             # <<<<<<<<<<<<<<
@@ -2085,7 +2085,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_t_8 = ((__pyx_t_7 != __pyx_v_D) != 0);
   if (__pyx_t_8) {
 
-    /* "gsl_run.pyx":85
+    /* "GLFM.pyx":85
  * 
  *     if len(Cin) != D:
  *         raise Exception('Size of C and X are not consistent!')             # <<<<<<<<<<<<<<
@@ -2099,7 +2099,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "gsl_run.pyx":88
+  /* "GLFM.pyx":88
  *     #print 'size of C = 1*%d' % len(C)
  * 
  *     Xview = gsl_matrix_view_array(&input[0,0],D,N)             # <<<<<<<<<<<<<<
@@ -2110,7 +2110,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_t_10 = 0;
   __pyx_v_Xview = gsl_matrix_view_array((&(*__Pyx_BufPtrCContig2d(double *, __pyx_pybuffernd_input.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_input.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_input.diminfo[1].strides))), __pyx_v_D, __pyx_v_N);
 
-  /* "gsl_run.pyx":89
+  /* "GLFM.pyx":89
  * 
  *     Xview = gsl_matrix_view_array(&input[0,0],D,N)
  *     X = &Xview.matrix             # <<<<<<<<<<<<<<
@@ -2119,7 +2119,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_X = (&__pyx_v_Xview.matrix);
 
-  /* "gsl_run.pyx":91
+  /* "GLFM.pyx":91
  *     X = &Xview.matrix
  * 
  *     Zview = gsl_matrix_view_array(&Zin[0,0], K,N)             # <<<<<<<<<<<<<<
@@ -2130,7 +2130,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_t_12 = 0;
   __pyx_v_Zview = gsl_matrix_view_array((&(*__Pyx_BufPtrCContig2d(double *, __pyx_pybuffernd_Zin.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_Zin.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_Zin.diminfo[1].strides))), __pyx_v_K, __pyx_v_N);
 
-  /* "gsl_run.pyx":92
+  /* "GLFM.pyx":92
  * 
  *     Zview = gsl_matrix_view_array(&Zin[0,0], K,N)
  *     Zm = &Zview.matrix # we need to allocate input matrix Z to [maxK*N] matrix             # <<<<<<<<<<<<<<
@@ -2139,7 +2139,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_Zm = (&__pyx_v_Zview.matrix);
 
-  /* "gsl_run.pyx":93
+  /* "GLFM.pyx":93
  *     Zview = gsl_matrix_view_array(&Zin[0,0], K,N)
  *     Zm = &Zview.matrix # we need to allocate input matrix Z to [maxK*N] matrix
  *     cdef gsl_matrix* Z = gsl_matrix_calloc(maxK,N)             # <<<<<<<<<<<<<<
@@ -2148,7 +2148,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_Z = gsl_matrix_calloc(__pyx_v_maxK, __pyx_v_N);
 
-  /* "gsl_run.pyx":94
+  /* "GLFM.pyx":94
  *     Zm = &Zview.matrix # we need to allocate input matrix Z to [maxK*N] matrix
  *     cdef gsl_matrix* Z = gsl_matrix_calloc(maxK,N)
  *     for i in xrange(N):             # <<<<<<<<<<<<<<
@@ -2159,7 +2159,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
-    /* "gsl_run.pyx":95
+    /* "GLFM.pyx":95
  *     cdef gsl_matrix* Z = gsl_matrix_calloc(maxK,N)
  *     for i in xrange(N):
  *         for k in xrange(K):             # <<<<<<<<<<<<<<
@@ -2170,7 +2170,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_k = __pyx_t_16;
 
-      /* "gsl_run.pyx":96
+      /* "GLFM.pyx":96
  *     for i in xrange(N):
  *         for k in xrange(K):
  *              gsl_matrix_set (Z, k, i,gsl_matrix_get (Zm, k, i))             # <<<<<<<<<<<<<<
@@ -2181,7 +2181,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     }
   }
 
-  /* "gsl_run.pyx":99
+  /* "GLFM.pyx":99
  * 
  *     #B = <gsl_matrix **>malloc(sizeof(gsl_matrix*));
  *     cdef Pool mem = Pool()             # <<<<<<<<<<<<<<
@@ -2193,7 +2193,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_mem = ((struct __pyx_obj_5cymem_5cymem_Pool *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "gsl_run.pyx":100
+  /* "GLFM.pyx":100
  *     #B = <gsl_matrix **>malloc(sizeof(gsl_matrix*));
  *     cdef Pool mem = Pool()
  *     cdef gsl_matrix** B = <gsl_matrix**>mem.alloc(D, sizeof(gsl_matrix*));             # <<<<<<<<<<<<<<
@@ -2203,7 +2203,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_t_17 = ((struct __pyx_vtabstruct_5cymem_5cymem_Pool *)__pyx_v_mem->__pyx_vtab)->alloc(__pyx_v_mem, __pyx_v_D, (sizeof(gsl_matrix *))); if (unlikely(__pyx_t_17 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_B = ((gsl_matrix **)__pyx_t_17);
 
-  /* "gsl_run.pyx":101
+  /* "GLFM.pyx":101
  *     cdef Pool mem = Pool()
  *     cdef gsl_matrix** B = <gsl_matrix**>mem.alloc(D, sizeof(gsl_matrix*));
  *     cdef gsl_vector** theta = <gsl_vector**>mem.alloc(D, sizeof(gsl_vector*));             # <<<<<<<<<<<<<<
@@ -2213,7 +2213,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_t_17 = ((struct __pyx_vtabstruct_5cymem_5cymem_Pool *)__pyx_v_mem->__pyx_vtab)->alloc(__pyx_v_mem, __pyx_v_D, (sizeof(gsl_vector *))); if (unlikely(__pyx_t_17 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_theta = ((gsl_vector **)__pyx_t_17);
 
-  /* "gsl_run.pyx":105
+  /* "GLFM.pyx":105
  *     ##...............BODY CODE.......................##
  * 
  *     C = ''             # <<<<<<<<<<<<<<
@@ -2223,7 +2223,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __Pyx_INCREF(__pyx_kp_s__2);
   __pyx_v_C = __pyx_kp_s__2;
 
-  /* "gsl_run.pyx":106
+  /* "GLFM.pyx":106
  * 
  *     C = ''
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
@@ -2234,7 +2234,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_d = __pyx_t_14;
 
-    /* "gsl_run.pyx":107
+    /* "GLFM.pyx":107
  *     C = ''
  *     for d in xrange(D):
  *         C += chr( tolower(ord(Cin[d])) ) # convert to lower case             # <<<<<<<<<<<<<<
@@ -2270,7 +2270,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __pyx_t_6 = 0;
   }
 
-  /* "gsl_run.pyx":109
+  /* "GLFM.pyx":109
  *         C += chr( tolower(ord(Cin[d])) ) # convert to lower case
  * 
  *     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)             # <<<<<<<<<<<<<<
@@ -2317,7 +2317,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_R = ((PyArrayObject *)__pyx_t_18);
   __pyx_t_18 = 0;
 
-  /* "gsl_run.pyx":110
+  /* "GLFM.pyx":110
  * 
  *     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)
  *     cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)             # <<<<<<<<<<<<<<
@@ -2371,7 +2371,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_w = ((PyArrayObject *)__pyx_t_18);
   __pyx_t_18 = 0;
 
-  /* "gsl_run.pyx":111
+  /* "GLFM.pyx":111
  *     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)
  *     cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)
  *     cdef np.ndarray[double, ndim=1, mode="c"] maxX = np.empty(D)             # <<<<<<<<<<<<<<
@@ -2425,7 +2425,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_maxX = ((PyArrayObject *)__pyx_t_18);
   __pyx_t_18 = 0;
 
-  /* "gsl_run.pyx":112
+  /* "GLFM.pyx":112
  *     cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)
  *     cdef np.ndarray[double, ndim=1, mode="c"] maxX = np.empty(D)
  *     cdef int maxR = 1             # <<<<<<<<<<<<<<
@@ -2434,7 +2434,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_maxR = 1;
 
-  /* "gsl_run.pyx":120
+  /* "GLFM.pyx":120
  * 
  *     cdef gsl_vector_view Xd_view
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
@@ -2445,7 +2445,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_d = __pyx_t_14;
 
-    /* "gsl_run.pyx":121
+    /* "GLFM.pyx":121
  *     cdef gsl_vector_view Xd_view
  *     for d in xrange(D):
  *         Xd_view = gsl_matrix_row(X,d)             # <<<<<<<<<<<<<<
@@ -2454,7 +2454,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
     __pyx_v_Xd_view = gsl_matrix_row(__pyx_v_X, __pyx_v_d);
 
-    /* "gsl_run.pyx":122
+    /* "GLFM.pyx":122
  *     for d in xrange(D):
  *         Xd_view = gsl_matrix_row(X,d)
  *         maxX[d] = gsl_vector_max(&Xd_view.vector)             # <<<<<<<<<<<<<<
@@ -2464,7 +2464,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __pyx_t_15 = __pyx_v_d;
     *__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_maxX.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_maxX.diminfo[0].strides) = gsl_vector_max((&__pyx_v_Xd_view.vector));
 
-    /* "gsl_run.pyx":124
+    /* "GLFM.pyx":124
  *         maxX[d] = gsl_vector_max(&Xd_view.vector)
  *         #print "maxX[%d] = %f\n" % (d,maxX[d])
  *         R[d] = 1             # <<<<<<<<<<<<<<
@@ -2474,7 +2474,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __pyx_t_16 = __pyx_v_d;
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_R.diminfo[0].strides) = 1;
 
-    /* "gsl_run.pyx":125
+    /* "GLFM.pyx":125
  *         #print "maxX[%d] = %f\n" % (d,maxX[d])
  *         R[d] = 1
  *         w[d] = 1             # <<<<<<<<<<<<<<
@@ -2484,7 +2484,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __pyx_t_22 = __pyx_v_d;
     *__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_w.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_w.diminfo[0].strides) = 1.0;
 
-    /* "gsl_run.pyx":126
+    /* "GLFM.pyx":126
  *         R[d] = 1
  *         w[d] = 1
  *         if C[d] == 'g':             # <<<<<<<<<<<<<<
@@ -2497,7 +2497,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":127
+      /* "GLFM.pyx":127
  *         w[d] = 1
  *         if C[d] == 'g':
  *             B[d] = gsl_matrix_alloc(maxK,1)             # <<<<<<<<<<<<<<
@@ -2508,7 +2508,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       goto __pyx_L12;
     }
 
-    /* "gsl_run.pyx":128
+    /* "GLFM.pyx":128
  *         if C[d] == 'g':
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *         elif C[d] == 'p':             # <<<<<<<<<<<<<<
@@ -2521,7 +2521,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":129
+      /* "GLFM.pyx":129
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *         elif C[d] == 'p':
  *             B[d] = gsl_matrix_alloc(maxK,1)             # <<<<<<<<<<<<<<
@@ -2530,7 +2530,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
       (__pyx_v_B[__pyx_v_d]) = gsl_matrix_alloc(__pyx_v_maxK, 1);
 
-      /* "gsl_run.pyx":130
+      /* "GLFM.pyx":130
  *         elif C[d] == 'p':
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *             w[d]=2/maxX[d]             # <<<<<<<<<<<<<<
@@ -2554,7 +2554,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       goto __pyx_L12;
     }
 
-    /* "gsl_run.pyx":131
+    /* "GLFM.pyx":131
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *             w[d]=2/maxX[d]
  *         elif C[d] == 'n':             # <<<<<<<<<<<<<<
@@ -2567,7 +2567,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":132
+      /* "GLFM.pyx":132
  *             w[d]=2/maxX[d]
  *         elif C[d] == 'n':
  *             B[d] = gsl_matrix_alloc(maxK,1)             # <<<<<<<<<<<<<<
@@ -2576,7 +2576,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
       (__pyx_v_B[__pyx_v_d]) = gsl_matrix_alloc(__pyx_v_maxK, 1);
 
-      /* "gsl_run.pyx":133
+      /* "GLFM.pyx":133
  *         elif C[d] == 'n':
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *             w[d] = 2/maxX[d]             # <<<<<<<<<<<<<<
@@ -2600,7 +2600,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       goto __pyx_L12;
     }
 
-    /* "gsl_run.pyx":134
+    /* "GLFM.pyx":134
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *             w[d] = 2/maxX[d]
  *         elif C[d] == 'c':             # <<<<<<<<<<<<<<
@@ -2613,7 +2613,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":135
+      /* "GLFM.pyx":135
  *             w[d] = 2/maxX[d]
  *         elif C[d] == 'c':
  *             R[d] = <int>maxX[d]             # <<<<<<<<<<<<<<
@@ -2624,7 +2624,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_t_29 = __pyx_v_d;
       *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_29, __pyx_pybuffernd_R.diminfo[0].strides) = ((int)(*__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_maxX.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_maxX.diminfo[0].strides)));
 
-      /* "gsl_run.pyx":136
+      /* "GLFM.pyx":136
  *         elif C[d] == 'c':
  *             R[d] = <int>maxX[d]
  *             B[d] = gsl_matrix_alloc(maxK,R[d])             # <<<<<<<<<<<<<<
@@ -2634,7 +2634,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_t_30 = __pyx_v_d;
       (__pyx_v_B[__pyx_v_d]) = gsl_matrix_alloc(__pyx_v_maxK, (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_30, __pyx_pybuffernd_R.diminfo[0].strides)));
 
-      /* "gsl_run.pyx":137
+      /* "GLFM.pyx":137
  *             R[d] = <int>maxX[d]
  *             B[d] = gsl_matrix_alloc(maxK,R[d])
  *             if (R[d] > maxR):             # <<<<<<<<<<<<<<
@@ -2645,7 +2645,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_t_8 = (((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_31, __pyx_pybuffernd_R.diminfo[0].strides)) > __pyx_v_maxR) != 0);
       if (__pyx_t_8) {
 
-        /* "gsl_run.pyx":138
+        /* "GLFM.pyx":138
  *             B[d] = gsl_matrix_alloc(maxK,R[d])
  *             if (R[d] > maxR):
  *                 maxR = R[d]             # <<<<<<<<<<<<<<
@@ -2660,7 +2660,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       goto __pyx_L12;
     }
 
-    /* "gsl_run.pyx":139
+    /* "GLFM.pyx":139
  *             if (R[d] > maxR):
  *                 maxR = R[d]
  *         elif C[d] == 'o':             # <<<<<<<<<<<<<<
@@ -2673,7 +2673,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":140
+      /* "GLFM.pyx":140
  *                 maxR = R[d]
  *         elif C[d] == 'o':
  *             R[d] = <int>maxX[d];             # <<<<<<<<<<<<<<
@@ -2684,7 +2684,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_t_34 = __pyx_v_d;
       *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_34, __pyx_pybuffernd_R.diminfo[0].strides) = ((int)(*__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_maxX.rcbuffer->pybuffer.buf, __pyx_t_33, __pyx_pybuffernd_maxX.diminfo[0].strides)));
 
-      /* "gsl_run.pyx":141
+      /* "GLFM.pyx":141
  *         elif C[d] == 'o':
  *             R[d] = <int>maxX[d];
  *             print 'Setting R[d]=%f' % R[d]             # <<<<<<<<<<<<<<
@@ -2700,7 +2700,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       if (__Pyx_PrintOne(0, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "gsl_run.pyx":142
+      /* "GLFM.pyx":142
  *             R[d] = <int>maxX[d];
  *             print 'Setting R[d]=%f' % R[d]
  *             B[d] = gsl_matrix_alloc(maxK,1)             # <<<<<<<<<<<<<<
@@ -2709,7 +2709,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
       (__pyx_v_B[__pyx_v_d]) = gsl_matrix_alloc(__pyx_v_maxK, 1);
 
-      /* "gsl_run.pyx":143
+      /* "GLFM.pyx":143
  *             print 'Setting R[d]=%f' % R[d]
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *             theta[d] = gsl_vector_alloc(R[d])             # <<<<<<<<<<<<<<
@@ -2719,7 +2719,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_t_36 = __pyx_v_d;
       (__pyx_v_theta[__pyx_v_d]) = gsl_vector_alloc((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_36, __pyx_pybuffernd_R.diminfo[0].strides)));
 
-      /* "gsl_run.pyx":144
+      /* "GLFM.pyx":144
  *             B[d] = gsl_matrix_alloc(maxK,1)
  *             theta[d] = gsl_vector_alloc(R[d])
  *             if (R[d] > maxR):             # <<<<<<<<<<<<<<
@@ -2730,7 +2730,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_t_8 = (((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_37, __pyx_pybuffernd_R.diminfo[0].strides)) > __pyx_v_maxR) != 0);
       if (__pyx_t_8) {
 
-        /* "gsl_run.pyx":145
+        /* "GLFM.pyx":145
  *             theta[d] = gsl_vector_alloc(R[d])
  *             if (R[d] > maxR):
  *                 maxR = R[d]             # <<<<<<<<<<<<<<
@@ -2747,7 +2747,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __pyx_L12:;
   }
 
-  /* "gsl_run.pyx":149
+  /* "GLFM.pyx":149
  * 
  *     ##...............Inference Function.......................##
  *     print 'Entering C function'             # <<<<<<<<<<<<<<
@@ -2756,7 +2756,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, __pyx_kp_s_Entering_C_function) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 149; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":150
+  /* "GLFM.pyx":150
  *     ##...............Inference Function.......................##
  *     print 'Entering C function'
  *     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\             # <<<<<<<<<<<<<<
@@ -2765,7 +2765,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_t_39 = __Pyx_PyObject_AsString(__pyx_v_C); if (unlikely((!__pyx_t_39) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 150; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":151
+  /* "GLFM.pyx":151
  *     print 'Entering C function'
  *     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
  *             <int*> R.data, &w[0],\             # <<<<<<<<<<<<<<
@@ -2774,7 +2774,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_t_40 = 0;
 
-  /* "gsl_run.pyx":150
+  /* "GLFM.pyx":150
  *     ##...............Inference Function.......................##
  *     print 'Entering C function'
  *     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\             # <<<<<<<<<<<<<<
@@ -2783,7 +2783,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_Kest = IBPsampler_func(__pyx_v_missing, __pyx_v_X, __pyx_t_39, __pyx_v_Z, __pyx_v_B, __pyx_v_theta, ((int *)__pyx_v_R->data), (&(*__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_w.rcbuffer->pybuffer.buf, __pyx_t_40, __pyx_pybuffernd_w.diminfo[0].strides))), __pyx_v_maxR, __pyx_v_bias, __pyx_v_N, __pyx_v_D, __pyx_v_K, __pyx_v_alpha, __pyx_v_s2B, __pyx_v_s2Y, __pyx_v_maxK, __pyx_v_Nsim);
 
-  /* "gsl_run.pyx":153
+  /* "GLFM.pyx":153
  *             <int*> R.data, &w[0],\
  *             maxR, bias,  N, D, K, alpha, s2B, s2Y, maxK, Nsim);
  *     print 'Back to Python'             # <<<<<<<<<<<<<<
@@ -2792,7 +2792,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, __pyx_kp_s_Back_to_Python) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 153; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":156
+  /* "GLFM.pyx":156
  * 
  *     ##...............Set Output Pointers.......................##
  *     cdef np.ndarray[double, ndim=2] Z_out = np.zeros((Kest,N))             # <<<<<<<<<<<<<<
@@ -2856,7 +2856,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_Z_out = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "gsl_run.pyx":157
+  /* "GLFM.pyx":157
  *     ##...............Set Output Pointers.......................##
  *     cdef np.ndarray[double, ndim=2] Z_out = np.zeros((Kest,N))
  *     cdef np.ndarray[double, ndim=3] B_out = np.zeros((D,Kest,maxR))             # <<<<<<<<<<<<<<
@@ -2925,7 +2925,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_B_out = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "gsl_run.pyx":158
+  /* "GLFM.pyx":158
  *     cdef np.ndarray[double, ndim=2] Z_out = np.zeros((Kest,N))
  *     cdef np.ndarray[double, ndim=3] B_out = np.zeros((D,Kest,maxR))
  *     cdef np.ndarray[double, ndim=2] Theta_out = np.zeros((D,maxR))             # <<<<<<<<<<<<<<
@@ -2989,7 +2989,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_v_Theta_out = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "gsl_run.pyx":161
+  /* "GLFM.pyx":161
  *     #cdef np.ndarray[np.int32_t, ndim=1] result = np.zeros((len(arg)), dtype =
  *     #        np.int32)
  *     print "Kest=%d, N=%d" % (Kest,N)             # <<<<<<<<<<<<<<
@@ -3014,7 +3014,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   if (__Pyx_PrintOne(0, __pyx_t_6) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 161; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "gsl_run.pyx":165
+  /* "GLFM.pyx":165
  *     # #Zview = gsl_matrix_submatrix(Z, 0, 0, Kest, N)
  *     #print 'N=%d, K=%d, Kest=%d' % (N,K,Kest)
  *     for i in xrange(N):             # <<<<<<<<<<<<<<
@@ -3025,7 +3025,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
-    /* "gsl_run.pyx":166
+    /* "GLFM.pyx":166
  *     #print 'N=%d, K=%d, Kest=%d' % (N,K,Kest)
  *     for i in xrange(N):
  *         for k in xrange(Kest):             # <<<<<<<<<<<<<<
@@ -3036,7 +3036,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     for (__pyx_t_46 = 0; __pyx_t_46 < __pyx_t_45; __pyx_t_46+=1) {
       __pyx_v_k = __pyx_t_46;
 
-      /* "gsl_run.pyx":168
+      /* "GLFM.pyx":168
  *         for k in xrange(Kest):
  *             #print 'k=%d, i=%d' % (k,i)
  *             Z_out[k,i] = gsl_matrix_get(Z,k,i)             # <<<<<<<<<<<<<<
@@ -3049,7 +3049,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     }
   }
 
-  /* "gsl_run.pyx":170
+  /* "GLFM.pyx":170
  *             Z_out[k,i] = gsl_matrix_get(Z,k,i)
  *             #Z_out[k,i] = (&Zview.matrix)->data[k*N+i]
  *     print "Z_out loaded"             # <<<<<<<<<<<<<<
@@ -3058,7 +3058,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, __pyx_kp_s_Z_out_loaded) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":175
+  /* "GLFM.pyx":175
  *     cdef gsl_matrix* BT
  *     cdef int idx_tmp
  *     print "B_out[D,Kest,maxR] where D=%d, Kest=%d, maxR=%d" % (D,Kest,maxR)             # <<<<<<<<<<<<<<
@@ -3088,7 +3088,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   if (__Pyx_PrintOne(0, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 175; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "gsl_run.pyx":176
+  /* "GLFM.pyx":176
  *     cdef int idx_tmp
  *     print "B_out[D,Kest,maxR] where D=%d, Kest=%d, maxR=%d" % (D,Kest,maxR)
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
@@ -3099,7 +3099,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_d = __pyx_t_14;
 
-    /* "gsl_run.pyx":178
+    /* "GLFM.pyx":178
  *     for d in xrange(D):
  *         #print 'd=%d, R[d]=%d' % (d,R[d])
  *         if (C[d] == 'o'):             # <<<<<<<<<<<<<<
@@ -3112,7 +3112,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":179
+      /* "GLFM.pyx":179
  *         #print 'd=%d, R[d]=%d' % (d,R[d])
  *         if (C[d] == 'o'):
  *             idx_tmp = 1             # <<<<<<<<<<<<<<
@@ -3124,7 +3124,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     }
     /*else*/ {
 
-      /* "gsl_run.pyx":181
+      /* "GLFM.pyx":181
  *             idx_tmp = 1
  *         else:
  *             idx_tmp = R[d]             # <<<<<<<<<<<<<<
@@ -3136,7 +3136,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     }
     __pyx_L21:;
 
-    /* "gsl_run.pyx":182
+    /* "GLFM.pyx":182
  *         else:
  *             idx_tmp = R[d]
  *         Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, idx_tmp)             # <<<<<<<<<<<<<<
@@ -3145,7 +3145,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
     __pyx_v_Bd_view = gsl_matrix_submatrix((__pyx_v_B[__pyx_v_d]), 0, 0, __pyx_v_Kest, __pyx_v_idx_tmp);
 
-    /* "gsl_run.pyx":183
+    /* "GLFM.pyx":183
  *             idx_tmp = R[d]
  *         Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, idx_tmp)
  *         BT = gsl_matrix_alloc(idx_tmp,Kest)             # <<<<<<<<<<<<<<
@@ -3154,7 +3154,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
     __pyx_v_BT = gsl_matrix_alloc(__pyx_v_idx_tmp, __pyx_v_Kest);
 
-    /* "gsl_run.pyx":184
+    /* "GLFM.pyx":184
  *         Bd_view =  gsl_matrix_submatrix(B[d], 0, 0, Kest, idx_tmp)
  *         BT = gsl_matrix_alloc(idx_tmp,Kest)
  *         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix)             # <<<<<<<<<<<<<<
@@ -3163,7 +3163,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
     gsl_matrix_transpose_memcpy(__pyx_v_BT, (&__pyx_v_Bd_view.matrix));
 
-    /* "gsl_run.pyx":185
+    /* "GLFM.pyx":185
  *         BT = gsl_matrix_alloc(idx_tmp,Kest)
  *         gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix)
  *         for k in xrange(Kest):             # <<<<<<<<<<<<<<
@@ -3174,7 +3174,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     for (__pyx_t_49 = 0; __pyx_t_49 < __pyx_t_46; __pyx_t_49+=1) {
       __pyx_v_k = __pyx_t_49;
 
-      /* "gsl_run.pyx":187
+      /* "GLFM.pyx":187
  *         for k in xrange(Kest):
  *             #print 'k=%d' % k
  *             for i in xrange(idx_tmp):             # <<<<<<<<<<<<<<
@@ -3185,7 +3185,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       for (__pyx_t_51 = 0; __pyx_t_51 < __pyx_t_50; __pyx_t_51+=1) {
         __pyx_v_i = __pyx_t_51;
 
-        /* "gsl_run.pyx":189
+        /* "GLFM.pyx":189
  *             for i in xrange(idx_tmp):
  *                 #print 'i=%d' % i
  *                 B_out[d,k,i] = gsl_matrix_get(BT,i,k)             # <<<<<<<<<<<<<<
@@ -3199,7 +3199,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       }
     }
 
-    /* "gsl_run.pyx":190
+    /* "GLFM.pyx":190
  *                 #print 'i=%d' % i
  *                 B_out[d,k,i] = gsl_matrix_get(BT,i,k)
  *         gsl_matrix_free(BT)             # <<<<<<<<<<<<<<
@@ -3209,7 +3209,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     gsl_matrix_free(__pyx_v_BT);
   }
 
-  /* "gsl_run.pyx":191
+  /* "GLFM.pyx":191
  *                 B_out[d,k,i] = gsl_matrix_get(BT,i,k)
  *         gsl_matrix_free(BT)
  *     print "B_out loaded"             # <<<<<<<<<<<<<<
@@ -3218,7 +3218,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, __pyx_kp_s_B_out_loaded) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":193
+  /* "GLFM.pyx":193
  *     print "B_out loaded"
  * 
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
@@ -3229,7 +3229,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_d = __pyx_t_14;
 
-    /* "gsl_run.pyx":194
+    /* "GLFM.pyx":194
  * 
  *     for d in xrange(D):
  *         for i in xrange(maxR):             # <<<<<<<<<<<<<<
@@ -3240,7 +3240,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     for (__pyx_t_49 = 0; __pyx_t_49 < __pyx_t_46; __pyx_t_49+=1) {
       __pyx_v_i = __pyx_t_49;
 
-      /* "gsl_run.pyx":195
+      /* "GLFM.pyx":195
  *     for d in xrange(D):
  *         for i in xrange(maxR):
  *             if (C[d]=='o' and i<(R[d]-1)):             # <<<<<<<<<<<<<<
@@ -3262,7 +3262,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
       __pyx_L31_bool_binop_done:;
       if (__pyx_t_8) {
 
-        /* "gsl_run.pyx":196
+        /* "GLFM.pyx":196
  *         for i in xrange(maxR):
  *             if (C[d]=='o' and i<(R[d]-1)):
  *                 Theta_out[d,i] = gsl_vector_get(theta[d],i)             # <<<<<<<<<<<<<<
@@ -3278,7 +3278,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     }
   }
 
-  /* "gsl_run.pyx":197
+  /* "GLFM.pyx":197
  *             if (C[d]=='o' and i<(R[d]-1)):
  *                 Theta_out[d,i] = gsl_vector_get(theta[d],i)
  *     print "Theta_out loaded"             # <<<<<<<<<<<<<<
@@ -3287,7 +3287,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   if (__Pyx_PrintOne(0, __pyx_kp_s_Theta_out_loaded) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 197; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "gsl_run.pyx":201
+  /* "GLFM.pyx":201
  * 
  *     ##..... Free memory.....##
  *     for d in xrange(D):             # <<<<<<<<<<<<<<
@@ -3298,7 +3298,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_d = __pyx_t_14;
 
-    /* "gsl_run.pyx":202
+    /* "GLFM.pyx":202
  *     ##..... Free memory.....##
  *     for d in xrange(D):
  *         gsl_matrix_free(B[d])             # <<<<<<<<<<<<<<
@@ -3307,7 +3307,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
     gsl_matrix_free((__pyx_v_B[__pyx_v_d]));
 
-    /* "gsl_run.pyx":203
+    /* "GLFM.pyx":203
  *     for d in xrange(D):
  *         gsl_matrix_free(B[d])
  *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault             # <<<<<<<<<<<<<<
@@ -3320,7 +3320,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_8) {
 
-      /* "gsl_run.pyx":204
+      /* "GLFM.pyx":204
  *         gsl_matrix_free(B[d])
  *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
  *             gsl_vector_free(theta[d])             # <<<<<<<<<<<<<<
@@ -3333,7 +3333,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __pyx_L35:;
   }
 
-  /* "gsl_run.pyx":205
+  /* "GLFM.pyx":205
  *         if (C[d] == 'o'): # TODO: Verify why this line gives segmentation fault
  *             gsl_vector_free(theta[d])
  *     gsl_matrix_free(Z)             # <<<<<<<<<<<<<<
@@ -3342,7 +3342,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
  */
   gsl_matrix_free(__pyx_v_Z);
 
-  /* "gsl_run.pyx":207
+  /* "GLFM.pyx":207
  *     gsl_matrix_free(Z)
  * 
  *     return (Z_out,B_out,Theta_out)             # <<<<<<<<<<<<<<
@@ -3363,10 +3363,10 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "gsl_run.pyx":42
+  /* "GLFM.pyx":42
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
+ * def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
  *         Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
  *         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
  */
@@ -3390,7 +3390,7 @@ static PyObject *__pyx_pf_7gsl_run_wrapper_IBPsampler(CYTHON_UNUSED PyObject *__
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_maxX.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_w.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("gsl_run.wrapper_IBPsampler", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("GLFM.infer", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5430,7 +5430,7 @@ static struct PyModuleDef __pyx_moduledef = {
   #else
     PyModuleDef_HEAD_INIT,
   #endif
-    "gsl_run",
+    "GLFM",
     0, /* m_doc */
     -1, /* m_size */
     __pyx_methods /* m_methods */,
@@ -5456,6 +5456,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Exception, __pyx_k_Exception, sizeof(__pyx_k_Exception), 0, 0, 1, 1},
   {&__pyx_kp_u_Format_string_allocated_too_shor, __pyx_k_Format_string_allocated_too_shor, sizeof(__pyx_k_Format_string_allocated_too_shor), 0, 1, 0, 0},
   {&__pyx_kp_u_Format_string_allocated_too_shor_2, __pyx_k_Format_string_allocated_too_shor_2, sizeof(__pyx_k_Format_string_allocated_too_shor_2), 0, 1, 0, 0},
+  {&__pyx_n_s_GLFM, __pyx_k_GLFM, sizeof(__pyx_k_GLFM), 0, 0, 1, 1},
   {&__pyx_n_s_K, __pyx_k_K, sizeof(__pyx_k_K), 0, 0, 1, 1},
   {&__pyx_n_s_Kest, __pyx_k_Kest, sizeof(__pyx_k_Kest), 0, 0, 1, 1},
   {&__pyx_kp_s_Kest_d_N_d, __pyx_k_Kest_d_N_d, sizeof(__pyx_k_Kest_d_N_d), 0, 0, 1, 0},
@@ -5469,7 +5470,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Size_of_C_and_X_are_not_consiste, __pyx_k_Size_of_C_and_X_are_not_consiste, sizeof(__pyx_k_Size_of_C_and_X_are_not_consiste), 0, 0, 1, 0},
   {&__pyx_n_s_Theta_out, __pyx_k_Theta_out, sizeof(__pyx_k_Theta_out), 0, 0, 1, 1},
   {&__pyx_kp_s_Theta_out_loaded, __pyx_k_Theta_out_loaded, sizeof(__pyx_k_Theta_out_loaded), 0, 0, 1, 0},
-  {&__pyx_kp_s_Users_melanie_Documents_UC3M_Wo, __pyx_k_Users_melanie_Documents_UC3M_Wo, sizeof(__pyx_k_Users_melanie_Documents_UC3M_Wo), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_X, __pyx_k_X, sizeof(__pyx_k_X), 0, 0, 1, 1},
   {&__pyx_n_s_Xd_view, __pyx_k_Xd_view, sizeof(__pyx_k_Xd_view), 0, 0, 1, 1},
@@ -5491,10 +5491,11 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
   {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_g, __pyx_k_g, sizeof(__pyx_k_g), 0, 0, 1, 1},
-  {&__pyx_n_s_gsl_run, __pyx_k_gsl_run, sizeof(__pyx_k_gsl_run), 0, 0, 1, 1},
+  {&__pyx_kp_s_home_melanie_Documents_UC3M_Wor, __pyx_k_home_melanie_Documents_UC3M_Wor, sizeof(__pyx_k_home_melanie_Documents_UC3M_Wor), 0, 0, 1, 0},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_idx_tmp, __pyx_k_idx_tmp, sizeof(__pyx_k_idx_tmp), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+  {&__pyx_n_s_infer, __pyx_k_infer, sizeof(__pyx_k_infer), 0, 0, 1, 1},
   {&__pyx_n_s_input, __pyx_k_input, sizeof(__pyx_k_input), 0, 0, 1, 1},
   {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
   {&__pyx_n_s_k, __pyx_k_k, sizeof(__pyx_k_k), 0, 0, 1, 1},
@@ -5521,7 +5522,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_theta, __pyx_k_theta, sizeof(__pyx_k_theta), 0, 0, 1, 1},
   {&__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_k_unknown_dtype_code_in_numpy_pxd, sizeof(__pyx_k_unknown_dtype_code_in_numpy_pxd), 0, 1, 0, 0},
   {&__pyx_n_s_w, __pyx_k_w, sizeof(__pyx_k_w), 0, 0, 1, 1},
-  {&__pyx_n_s_wrapper_IBPsampler, __pyx_k_wrapper_IBPsampler, sizeof(__pyx_k_wrapper_IBPsampler), 0, 0, 1, 1},
   {&__pyx_n_s_xrange, __pyx_k_xrange, sizeof(__pyx_k_xrange), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
@@ -5547,7 +5547,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "gsl_run.pyx":85
+  /* "GLFM.pyx":85
  * 
  *     if len(Cin) != D:
  *         raise Exception('Size of C and X are not consistent!')             # <<<<<<<<<<<<<<
@@ -5624,17 +5624,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
-  /* "gsl_run.pyx":42
+  /* "GLFM.pyx":42
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
+ * def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
  *         Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
  *         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
  */
   __pyx_tuple__9 = PyTuple_Pack(37, __pyx_n_s_input, __pyx_n_s_Cin, __pyx_n_s_Zin, __pyx_n_s_bias, __pyx_n_s_s2Y, __pyx_n_s_s2B, __pyx_n_s_alpha, __pyx_n_s_Nsim, __pyx_n_s_maxK, __pyx_n_s_missing, __pyx_n_s_N, __pyx_n_s_D, __pyx_n_s_K, __pyx_n_s_Xview, __pyx_n_s_Zview, __pyx_n_s_X, __pyx_n_s_Zm, __pyx_n_s_Z, __pyx_n_s_i, __pyx_n_s_k, __pyx_n_s_mem, __pyx_n_s_B, __pyx_n_s_theta, __pyx_n_s_C, __pyx_n_s_d, __pyx_n_s_R, __pyx_n_s_w, __pyx_n_s_maxX, __pyx_n_s_maxR, __pyx_n_s_Xd_view, __pyx_n_s_Kest, __pyx_n_s_Z_out, __pyx_n_s_B_out, __pyx_n_s_Theta_out, __pyx_n_s_Bd_view, __pyx_n_s_BT, __pyx_n_s_idx_tmp); if (unlikely(!__pyx_tuple__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(10, 0, 37, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_melanie_Documents_UC3M_Wo, __pyx_n_s_wrapper_IBPsampler, 42, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(10, 0, 37, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_melanie_Documents_UC3M_Wor, __pyx_n_s_infer, 42, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5650,11 +5650,11 @@ static int __Pyx_InitGlobals(void) {
 }
 
 #if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC initgsl_run(void); /*proto*/
-PyMODINIT_FUNC initgsl_run(void)
+PyMODINIT_FUNC initGLFM(void); /*proto*/
+PyMODINIT_FUNC initGLFM(void)
 #else
-PyMODINIT_FUNC PyInit_gsl_run(void); /*proto*/
-PyMODINIT_FUNC PyInit_gsl_run(void)
+PyMODINIT_FUNC PyInit_GLFM(void); /*proto*/
+PyMODINIT_FUNC PyInit_GLFM(void)
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
@@ -5671,7 +5671,7 @@ PyMODINIT_FUNC PyInit_gsl_run(void)
           Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_gsl_run(void)", 0);
+  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_GLFM(void)", 0);
   if ( __Pyx_check_binary_version() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -5693,7 +5693,7 @@ PyMODINIT_FUNC PyInit_gsl_run(void)
   #endif
   /*--- Module creation code ---*/
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("gsl_run", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("GLFM", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -5710,14 +5710,14 @@ PyMODINIT_FUNC PyInit_gsl_run(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_gsl_run) {
+  if (__pyx_module_is_main_GLFM) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "gsl_run")) {
-      if (unlikely(PyDict_SetItemString(modules, "gsl_run", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "GLFM")) {
+      if (unlikely(PyDict_SetItemString(modules, "GLFM", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -5749,7 +5749,7 @@ PyMODINIT_FUNC PyInit_gsl_run(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "gsl_run.pyx":6
+  /* "GLFM.pyx":6
  * 
  * # import both numpy and the Cython declarations for numpy
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -5761,19 +5761,19 @@ PyMODINIT_FUNC PyInit_gsl_run(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "gsl_run.pyx":42
+  /* "GLFM.pyx":42
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
+ * def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\             # <<<<<<<<<<<<<<
  *         Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
  *         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_7gsl_run_1wrapper_IBPsampler, NULL, __pyx_n_s_gsl_run); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_4GLFM_1infer, NULL, __pyx_n_s_GLFM); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wrapper_IBPsampler, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_infer, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "gsl_run.pyx":1
+  /* "GLFM.pyx":1
  * from cython_gsl cimport *             # <<<<<<<<<<<<<<
  * import cython
  * from cymem.cymem cimport Pool
@@ -5798,11 +5798,11 @@ PyMODINIT_FUNC PyInit_gsl_run(void)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init gsl_run", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init GLFM", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init gsl_run");
+    PyErr_SetString(PyExc_ImportError, "init GLFM");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

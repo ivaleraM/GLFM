@@ -14,8 +14,8 @@ for key, value in cfg_vars.items():
 setup(
     include_dirs = [cython_gsl.get_include(), numpy.get_include()],
     cmdclass = {'build_ext': build_ext},
-    ext_modules = [Extension("gsl_run",
-            sources=["gsl_run.pyx","../core/GeneralFunctions.cpp","../core/InferenceFunctions.cpp"],
+    ext_modules = [Extension("GLFM",
+            sources=["GLFM.pyx","../core/GeneralFunctions.cpp","../core/InferenceFunctions.cpp"],
             language="c++",
             libraries=cython_gsl.get_libraries(),
             library_dirs=[cython_gsl.get_library_dir()],
