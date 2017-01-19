@@ -25,6 +25,7 @@ time = toc
 
 %% Compute test log-likelihood
 Xcompl=Xmiss;
+W = 2./max(Xcompl,[],1);
 miss=find(Xmiss==missing)';
 f_1=@(x,w) log(exp(w*x)-1);
 f=@(y,w) log(exp(y)+1)/w;
