@@ -38,7 +38,6 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-
 
     N = Xmiss.shape[0]
     D = Xmiss.shape[1]
-    pdb.set_trace()
     Xmiss[np.isnan(Xmiss)] = missing
     maxK=50 # maximum number of latent features for space allocation
 
@@ -52,11 +51,11 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-
     # Compute test log-likelihood
     # TODO: Compute test LLH?
     Xcompl=Xmiss
-    idxs = (Xmiss == missing).nonzero()
+    idxs = (Xmiss == missing).nonzero()[0]
     #miss=find(Xmiss==missing)';
     f_1= lambda x,w: np.log(np.exp(w*x)-1) # TODO: Verify if called element-wise or not
     f= lambda y,w:  np.log(np.exp(y)+1)/w
-
+    W = 2 / Xmiss.max(0) # TODO: Take care of missing values
     for ii in xrange(len(idxs)):
         if Xmiss[idxs[ii][0],idxs[ii][1]] == missing: # will always be the case
             d = idxs[ii][1] # np.ceil(ii/N)

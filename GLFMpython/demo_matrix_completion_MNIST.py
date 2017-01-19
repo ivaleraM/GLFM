@@ -37,10 +37,18 @@ with open(file, 'r') as csv_file:
 X = np.array(images).transpose() # D*N
 
 N = 100
-Xmiss = X[:,sample(xrange(X.shape[1]),N)]
-C = np.tile('g',(1,Xmiss.shape[0]))[0].tostring()
+Xtrue = X[:,sample(xrange(X.shape[1]),N)] + 1.0 # add one, since 'n' type cannot start in zero
+C = np.tile('g',(1,Xtrue.shape[0]))[0].tostring()
+print 'Add missing values...'
+
+perc_missing = 0.2
+missing_val = -1
+mask_missing = np.random.rand(Xtrue.shape[0],Xtrue.shape[1]) < perc_missing
+Xmiss = Xtrue
+Xmiss[mask_missing] = missing_val
 
 ## visualization of a random image
+print 'Visualizing a single example...'
 # Reshape the array into 28 x 28 array (2-dimensional array)
 pixels = X[:,np.random.randint(0,X.shape[1])]
 pixels = np.array(pixels, dtype='uint8')
@@ -53,12 +61,11 @@ plt.show()
 ## Run algorithm (inference + estimation of missing values)
 print 'Complete matrix...'
 Kinit = 10
-missing_val = -1
 Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64') )
-Xmiss = np.ascontiguousarray(Xmiss) + 1.0
+Xmiss = np.ascontiguousarray(Xmiss)
 
 #pdb.set_trace()
 #(Z_out,B_out,Theta_out) = GLFM.infer(Xmiss,C,Z)
 #pdb.set_trace()
-Xcompl = MC.complete_matrix(Xmiss, C) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
+Xcompl = MC.complete_matrix(Xmiss, C, Niter=5, missing=missing_val) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
 
