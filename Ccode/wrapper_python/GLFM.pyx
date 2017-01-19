@@ -39,10 +39,10 @@ cdef extern from "../core/InferenceFunctions.h":
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def wrapper_IBPsampler(np.ndarray[double, ndim=2, mode="c"] input not None,\
+def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
         Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
-        int maxK=10, double missing=-1):#\
+        int maxK=50, double missing=-1):#\
     """
     Function to run inference for GLFM model
     Inputs:

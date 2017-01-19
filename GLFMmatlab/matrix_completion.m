@@ -1,4 +1,4 @@
-function Xcompl= matrix_completion(Xmiss, C,s2Y, s2B, alpha, Niter, missing)
+function Xcompl= matrix_completion(Xmiss, C, s2Y, s2B, alpha, Niter, maxK, missing)
 %% Inputs
 % X:     Observation matrix of size $N x D$ where N is number of observations and
 %        D is the dimension of the observations. Here missing data should
@@ -14,16 +14,18 @@ function Xcompl= matrix_completion(Xmiss, C,s2Y, s2B, alpha, Niter, missing)
 % alpha: Concentration parameter of the IBP
 % Niter:  Number of iterations for the gibbs sampler
 % missing:Missing value
-
+bias = 0;
 [N D] = size(Xmiss);
 %% Inference
-X(isnan(X))=missing;
+Xmiss(isnan(Xmiss))=missing;
 Zini=double(rand(N,2)>0.8);
+tic;
 [Zest B Theta]= IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Niter,maxK,missing);
-
+time = toc
 
 %% Compute test log-likelihood
 Xcompl=Xmiss;
+W = 2./max(Xcompl,[],1);
 miss=find(Xmiss==missing)';
 f_1=@(x,w) log(exp(w*x)-1);
 f=@(y,w) log(exp(y)+1)/w;

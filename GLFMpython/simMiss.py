@@ -46,7 +46,7 @@ maxK = D
 ## Inference
 Zini = 1.0*( np.random.rand(N,2) > 0.8 )
 # Call inner C function
-(Zest, B, Theta) = GLFM.wrapper_IBPsampler(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing)
+(Zest, B, Theta) = GLFM.infer(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Nsim,maxK,missing)
 
 
 ## Compute test log-likelihood
