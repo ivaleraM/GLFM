@@ -12,6 +12,7 @@ import matrix_completion as MC # import General Latent Feature Model Package
 
 ## load input data + add perc. of missings
 print 'Loading data...'
+# DB can be downloaded here: http://pjreddie.com/projects/mnist-in-csv/
 file = '../databases/mnist_train.csv'
 images = []
 with open(file, 'r') as csv_file:

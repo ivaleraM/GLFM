@@ -4,6 +4,7 @@
 *.m~
 *.py~
 *.pyc
+*.csv
 *.o
 *.mexa64
 ./Ccode/wrapper_python/build/*
