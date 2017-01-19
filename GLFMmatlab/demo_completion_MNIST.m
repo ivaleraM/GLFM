@@ -3,7 +3,7 @@ addpath(genpath('../Ccode/'));
 addpath('./aux/');
 
 % Define parameter default values for algorithm
-bias = 1; s2Y = 1.0; s2B = 1.0; alpha = 1.0; Niter = 50; maxK = 50; missing_val = -100;
+bias = 1; s2Y = 1.0; s2B = 1.0; alpha = 1.0; Niter = 5; maxK = 50; missing_val = -100;
 
 % load MNIST dataset
 % This DB can be downloaded here: http://yann.lecun.com/exdb/mnist/
