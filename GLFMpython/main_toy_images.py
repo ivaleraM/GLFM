@@ -35,7 +35,7 @@ N = 500 # number of images to be generated
 D = Btrue.shape[1]
 K = Btrue.shape[0] # number of Binary images
 Ztrue = np.ascontiguousarray( np.random.randint(0,2,size=(K,N)).astype('float64') )
-s2x = 0.05
+s2x = 0.5
 
 X = np.sqrt(s2x) * np.random.randn(D,N) + np.inner(Btrue.transpose(),Ztrue.transpose())
 X = np.ascontiguousarray(X)
@@ -46,7 +46,7 @@ Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64'
 
 print 'Infering latent features...'
 tic = time.time()
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=10000,s2Y=s2x, s2B=1, maxK=50)
+(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=1000,s2Y=s2x/5, s2B=1, maxK=10)
 toc = time.time()
 time = tic - toc
 print 'Elapsed: %.2f seconds' % (toc-tic)
