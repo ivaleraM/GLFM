@@ -1,4 +1,6 @@
-function y = fpos_1(y,W)
-    y = log( exp( y ) + 1) ./ W;
+function y = fpos_1(x,w)
+    % w: scalar
+    
+    y = log( exp( x ) + 1) / w;
     
 end
