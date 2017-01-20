@@ -3,6 +3,7 @@ import sys
 sys.path.append('../Ccode/wrapper_python/')
 import GLFM
 import matplotlib.pyplot as plt
+import time
 
 import pdb
 
@@ -15,7 +16,7 @@ Btrue = np.array([[0,1.0,0,0,0,0,  1,1,1,0,0,0, 0,1,0,0,0,0, \
         1,0,0,0,0,0, 1,1,0,0,0,0, 1,1,1,0,0,0], \
         [0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, \
         0,0,0,1,1,1, 0,0,0,0,1,0, 0,0,0,0,1,0]])
-Btrue = 10*Btrue
+Btrue = Btrue
 
 f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
 V = [ax1, ax2, ax3, ax4]
@@ -34,17 +35,22 @@ N = 500 # number of images to be generated
 D = Btrue.shape[1]
 K = Btrue.shape[0] # number of Binary images
 Ztrue = np.ascontiguousarray( np.random.randint(0,2,size=(K,N)).astype('float64') )
-s2x = 1 #0.05
+s2x = 0.05
 
 X = np.sqrt(s2x) * np.random.randn(D,N) + np.inner(Btrue.transpose(),Ztrue.transpose())
 X = np.ascontiguousarray(X)
-X = X - 5 # center data
+#X = X - 0.5 # center data
 C = np.tile('g',(1,X.shape[0]))[0].tostring()
-Kinit = 5
+Kinit = 1
 Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64') )
 
 print 'Infering latent features...'
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=100,s2Y=s2x, s2B=10)
+tic = time.time()
+(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=10000,s2Y=s2x, s2B=1, maxK=50)
+toc = time.time()
+time = tic - toc
+print 'Elapsed: %.2f seconds' % (toc-tic)
+
 Kest = B_out.shape[1]
 D = B_out.shape[0]
 
@@ -57,7 +63,7 @@ for k in xrange(B_out.shape[1]):
     # visualize each inferred dimension
     B_out[:,k]
     pixels = B_out[:,k].reshape((np.sqrt(D),np.sqrt(D)))
-    pixels + 5
+    pixels
     # Plot
     V[k].imshow(pixels, cmap='gray',interpolation='none')
     V[k].set_ylim(0,5)
