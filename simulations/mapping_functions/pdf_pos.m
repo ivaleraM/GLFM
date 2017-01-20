@@ -9,4 +9,4 @@ function pdf = pdf_pos(X,Zn,Bd,w,s2y,s2u)
     % s2u: scalar, variance of auxiliary noise
     
     pdf = 1/sqrt(2*pi*(s2u+s2y)) .* exp( -1/(2*(s2y+s2u)) * (fpos_1(X,w) - Zn*Bd).^2 ) ...
-        .* abs( dfpos_1(X) );
+        .* abs( dfpos_1(X,w) );
