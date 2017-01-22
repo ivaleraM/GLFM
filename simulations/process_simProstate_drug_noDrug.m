@@ -3,7 +3,7 @@
 file = '../results/tmp_prostate_drug_noDrug3.mat';
 disp('First column is the drug_identifier = 1, second column is not(drug_identifier)');
 
-addpath(genpath('./aux/'));
+addpath(genpath('./'));
 load(file);
 data.cat_labels{1} = {'3', '4'};
 
@@ -21,9 +21,47 @@ Z = Zest';
 th = 0.05; % remove features whose perc of observations is below th
 idxs_to_delete = find( (sum(Z) > size(data.X,1)*(1-th)) | (sum(Z) < size(data.X,1)*th) );
 Z(:,idxs_to_delete) = [];
+B(:,idxs_to_delete,:) = [];
 
 [patterns, C] = get_feature_patterns(Z);
 print_patterns(1,data.X(:,13),patterns,C,data.ylabel_long{13});
+
+%% Plot theoretical distribution for each dimension
+relevantPatterns = [5,11, 3,10];
+s2u = 1;
+colors = {'k--', 'b', 'r', 'c', 'm'};
+for d=1:size(data.X,2) % for each dimension
+    figure(d); hold off;
+    for p=1:length(relevantPatterns) % for each feature activation pattern to compare
+        pp = relevantPatterns(p);
+        switch data.C(d)
+            case 'g',
+                xx = min(data.X(:,d)):0.01:max(data.X(:,d));
+                Zn = patterns(pp,:);
+                Bd = B(d,:,1);
+                pdf = pdf_real(xx, Zn,Bd,s2Y,s2u);
+                plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
+            case 'p',
+                xx = min(data.X(:,d)):0.01:max(data.X(:,d));
+                Zn = patterns(pp,:);
+                Bd = B(d,:,1)';
+                w = 2 ./ max(data.X(:,d));
+                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u);
+                plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
+            case 'c',
+                continue;
+                Zn = patterns(pp,:);
+                Bd = squeeze(B(d,:,:)); % TODO: Review that size = [K*R]
+                pdf = pdf_cat(Zn,Bd,s2u);
+                bar(xx,pdf, colors{p}); hold on;
+            case 'o',
+            case 'n',
+            otherwise
+                error('Unknown type of variable');
+        end
+    end
+    legend({'placebo + F3 active','treatment + F3 active', 'placebo + F4 active','treatment + F4 active'});
+end
 
 
 % Let us first plot continuous, positive real and count data

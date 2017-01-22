@@ -17,7 +17,7 @@ function pdf = pdf_cat(Zn,B,s2u)
             if (j==r)
                 continue;
             end
-            tmp = tmp .* normcdf(uV + repmat( Zn * (B(:,d,r)-B(:,d,j)), 1, numMC_samples) );            
+            tmp = tmp .* normcdf(uV + repmat( Zn * (B(:,d,r)-B(:,d,j)), 1, numMC_samples) );
         end
         pdf(r) = mean(tmp,2);
     end

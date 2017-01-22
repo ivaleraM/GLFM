@@ -12,6 +12,7 @@ import matrix_completion as MC # import General Latent Feature Model Package
 
 ## load input data + add perc. of missings
 print 'Loading data...'
+# DB can be downloaded here: http://pjreddie.com/projects/mnist-in-csv/
 file = '../databases/mnist_train.csv'
 images = []
 with open(file, 'r') as csv_file:
@@ -36,28 +37,57 @@ with open(file, 'r') as csv_file:
 X = np.array(images).transpose() # D*N
 
 N = 100
-Xmiss = X[:,sample(xrange(X.shape[1]),N)]
-C = np.tile('g',(1,Xmiss.shape[0]))[0].tostring()
+Xtrue = X[:,sample(xrange(X.shape[1]),N)] + 1.0 # add one, since 'n' type cannot start in zero
+C = np.tile('n',(1,Xtrue.shape[0]))[0].tostring()
+print 'Add missing values...'
+
+perc_missing = 0.2
+missing_val = -1
+mask_missing = np.random.rand(Xtrue.shape[0],Xtrue.shape[1]) < perc_missing
+Xmiss = np.copy(Xtrue)
+Xmiss[mask_missing] = missing_val
 
 ## visualization of a random image
+print 'Visualizing a single example with missings...'
+f, ((ax1, ax2, ax3)) = plt.subplots(1, 3, sharex='col', sharey='row')
+V = [ax1, ax2, ax3]
 # Reshape the array into 28 x 28 array (2-dimensional array)
-pixels = X[:,np.random.randint(0,X.shape[1])]
+idx_ran = np.random.randint(0,Xmiss.shape[1])
+
+pixels = Xtrue[:,idx_ran]
 pixels = np.array(pixels, dtype='uint8')
 pixels = pixels.reshape((28, 28))
 # Plot
-plt.imshow(pixels, cmap='gray',interpolation='none')
+V[0].imshow(pixels, cmap='gray',interpolation='none')
+
+pixels = Xmiss[:,idx_ran]
+pixels = np.array(pixels, dtype='uint8')
+pixels = pixels.reshape((28, 28))
+# Plot
+V[1].imshow(pixels, cmap='gray',interpolation='none')
+#V[k].set_ylim(0,5)
+#V[k].set_xlim(0,5)
+#V[k].set_title('Feature %d' % (k+1))
 plt.ion() # interactive mode for plotting (script continues)
 plt.show()
 
 ## Run algorithm (inference + estimation of missing values)
 print 'Complete matrix...'
 Kinit = 10
-missing_val = -1
 Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64') )
-Xmiss = np.ascontiguousarray(Xmiss) + 1.0
+Xmiss = np.ascontiguousarray(Xmiss)
 
 #pdb.set_trace()
 #(Z_out,B_out,Theta_out) = GLFM.infer(Xmiss,C,Z)
 #pdb.set_trace()
-Xcompl = MC.complete_matrix(Xmiss, C) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
+Xcompl = MC.complete_matrix(Xmiss, C, Niter=50, missing=missing_val) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
+
+print 'Visualizing a single example without missing...'
+pixels = Xcompl[:,idx_ran]
+pixels = np.array(pixels, dtype='uint8')
+pixels = pixels.reshape((28, 28))
+# Plot
+V[2].imshow(pixels, cmap='gray',interpolation='none')
+plt.ion() # interactive mode for plotting (script continues)
+plt.show()
 

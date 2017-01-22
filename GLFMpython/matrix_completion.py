@@ -38,50 +38,50 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-
 
     N = Xmiss.shape[0]
     D = Xmiss.shape[1]
-    pdb.set_trace()
     Xmiss[np.isnan(Xmiss)] = missing
     maxK=50 # maximum number of latent features for space allocation
 
     ## Inference
-    Zini= 1.0*( np.random.rand(N,2) > 0.8 )
+    #Zini= 1.0*( np.random.rand(N,2) > 0.8 )
+    Kinit = 3
+    Zini = np.ascontiguousarray( (np.random.rand(Kinit,N) > 0.8).astype('float64') )
     # Call inner C function
     (Zest, B, Theta)= GLFM.infer(Xmiss,C,Zini,bias,s2Y,s2B,alpha,Niter,maxK,missing)
 
     # Compute test log-likelihood
     # TODO: Compute test LLH?
-    Xcompl=Xmiss
-    idxs = (Xmiss == missing).nonzero()
-    #miss=find(Xmiss==missing)';
-    f_1= lambda x,w: np.log(np.exp(w*x)-1) # TODO: Verify if called element-wise or not
-    f= lambda y,w:  np.log(np.exp(y)+1)/w
 
-    for ii in xrange(len(idxs)):
-        if Xmiss[idxs[ii][0],idxs[ii][1]] == missing: # will always be the case
-            d = idxs[ii][1] # np.ceil(ii/N)
-            n = idxs[ii][0] # np.mod(ii,N)
-            #if (n==0)
-            #    n=N;
-            #end
-            Br=np.squeeze(B[d,:,1]) # TODO: Check dimensions of matrix B
+    Xcompl=np.copy(Xmiss)
+    [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
+    #miss=find(Xmiss==missing)';
+    f_1= lambda x,w: np.log(np.exp(w*x)-1) # called element-wise 
+    f= lambda y,w:  np.log(np.exp(y)+1)/w
+    W = 2 / Xmiss.max(1) # D*1 # TODO: Take care of missing values when taking max
+    for ii in xrange(len(idxs_n)):
+        if Xmiss[idxs_d[ii],idxs_n[ii]] == missing: # will always be the case
+            d = idxs_d[ii] # np.ceil(ii/N)
+            n = idxs_n[ii] # np.mod(ii,N)
+            Br=np.squeeze(B[d,:])
             aux = Zest[:,n].reshape(-1,1) # Zest(:,n)'
+            if (C[d] != 'c'):
+                M = np.inner(aux.transpose(),Br)
             if (C[d] == 'g'):
-                Xcompl[n,d] = aux * Br
+                # branch checked, working
+                Xcompl[d,n] = M
             elif (C[d] == 'p'):
-                Xcompl[n,d] = f(aux * Br,W[d])
+                Xcompl[d,n] = f(M,W[d])
             elif (C[d] == 'c'):
                Br = np.squeeze(B[d,:,:])
                prob = np.zeros((1,R[d]))
                Y = np.zeros((1,R[d]))
                for r in xrange(R[d]):
-                   Y[r]= aux * Br[:,r]
-               Xcompl[n,d] = np.where(Y == np.max(Y))[0]
+                   Y[r]= np.inner(aux.transpose(),Br[:,r]) # TODO: check
+               Xcompl[d,n] = np.where(Y == np.max(Y))[0]
             elif (C[d] == 'o' ):
-                Br = np.squeeze(B[d,:,1])
-                Y = aux * Br # TODO: check dimensions
-                [idx_x, idx_y] = (Theta[d,1:R[d]]>=Y).nonzero()
-                Xcompl[n,d] = idx_x[0] # TODO: verify (x,y) and what if more els?
+                #Y = aux * Br # TODO: check dimensions
+                [idx_x, idx_y] = (Theta[d,1:R[d]]>=M).nonzero()
+                Xcompl[d,n] = idx_x[0] # TODO: verify (x,y) and what if more els?
             elif (C[d] == 'n'):
-                Br = np.squeeze(B[d,:,1])
-                Xcompl[n,d] = np.floor(f(aux * Br,W[d]))
+                Xcompl[d,n] = np.floor(f(M,W[d]))
 
     return Xcompl

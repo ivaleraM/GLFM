@@ -16,13 +16,14 @@ cdef extern from "../core/InferenceFunctions.h":
     #                gsl_matrix **B)
     # C++ function to run inference for GLFM model
     # Inputs:
-    #           missing: value of missings, can be nan or any integer % TODO: check
+    #           missing: value of missings, can be nan or any integer # TODO: check
     #           X: observation matrix
     #           Z: binary matrix (feature activation matrix)
     #           B: feature matrix
     #           theta: auxiliary variables (necessary for ordinal)
     #           R: number of categories for each variable
-    #           w: weights # TODO: complete
+    #           w: normalization weights in the transformation function # Make
+    #           these weights input dependent
     #           maxR: maximum number of categories
     #           bias: how many columns should not be sampled
     #           N: number of observations
@@ -40,7 +41,7 @@ cdef extern from "../core/InferenceFunctions.h":
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
-        Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=1,\
+        Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=0,\
         double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
         int maxK=50, double missing=-1):#\
     """
