@@ -5,7 +5,7 @@ file = '../results/tmp_prostate_drug_noDrug_it10000.mat';
 %file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_bis3.mat';
 %file = '../results/tmp_prostate_drug_noDrug_it10x1000.mat';
 
-file = '../results/tmp_prostate_drug_noDrug_it1000_noDrugLevel.mat';
+file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel.mat';
 
 fpos_1_handler = @(x,w) fpos_1(x,w);
 dfpos_1_handler = @(x,w) dfpos_1(x,w);
@@ -44,7 +44,7 @@ print_patterns(1,data.X(:,13),patterns,C,data.ylabel_long{13});
 relevantPatterns = [1,5, 3,7, 2, 6];%, 4, 8]; %[1, 9, 5,11, 3,10, 7, 12]; %[1, 9, 7, 12]; %[1, 9, 5,11, 3,10];
 leg = {'placebo', 'treatment', 'placebo + F3 active','treatment + F3 active', ...
     'placebo + F4 active','treatment + F4 active'};% 'placebo + F3 + F4','treatment + F3 + F4'};
-s2u = 0.1;
+s2u = 1;
 colors = {'k--', 'k', 'b--', 'b', 'r--', 'r'};%, 'm--', 'm'};
 for d=1:size(data.X,2) % for each dimension
     figure(d); subplot(5,1,1:4); hold off;
