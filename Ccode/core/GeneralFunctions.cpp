@@ -21,7 +21,7 @@
 }*/
 double f_1(double x, double w){
     //return logFun(gsl_sf_exp(w*x)-1);
-    return  2*sqrt(x);
+    return  sqrt(w*x);
     //f_1=@(x) (1/a)*sqrt(x);    
 }
 
