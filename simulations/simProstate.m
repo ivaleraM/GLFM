@@ -29,9 +29,9 @@ miss=miss(1:Nmiss);
 Xmiss=data.X;        % Observation matrix
 Xmiss(miss)= missing; % Missing data are coded as missing
 [N, D]= size(data.X);
-s2Y=0.5;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+s2Y=1;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;      % Variance of the Gaussian prior of the weigting matrices B
-alpha=1;    % Concentration parameter of the IBP
+alpha=5;    % Concentration parameter of the IBP
 Nsim=10000; % Number of iterations for the gibbs sampler
 bias = 1;
 maxK= D;
@@ -65,7 +65,7 @@ for it=1:1
     sum(Zest')
     toc;
 end
-save('../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2.mat');
+save('../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_bis.mat');
 
 %% %% Compute test log-likelihood
 % XT=Xmiss;
