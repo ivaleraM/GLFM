@@ -1,5 +1,5 @@
 clear
-addpath('../Ccode/');
+addpath(genpath('../Ccode/'));
 
 missing=-1;
 p=0.1; %probability of missing
@@ -24,7 +24,7 @@ Xmiss(miss)= missing; % Missing data are coded as missing
 s2Y=1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2B=1;   % Variance of the Gaussian prior of the weigting matrices B
 alpha=1; % Concentration parameter of the IBP
-Nsim=50; % Number of iterations for the gibbs sampler
+Nsim=1000; % Number of iterations for the gibbs sampler
 bias = 0;
 maxK= D;
 
@@ -51,10 +51,11 @@ end
 tic
 Zini=[ones(N,1), double(rand(N,2)>0.8)];
 Zest = Zini';
-for it=1:100
+disp('Starting Inference...')
+for it=1:10
     [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2B,alpha,Nsim,maxK,missing);
     sum(Zest')
-    save('tmp_counties_bias0.mat');
+    save('tmp_counties_bias0_10x1000.mat');
     time = toc
 end
 

@@ -1,6 +1,8 @@
 %% Data Exploratory Anaylisis for Prostate DB
-addpath(genpath('./aux/'));
-load('tmp_counties.mat');
+%addpath(genpath('./aux/'));
+addpath(genpath('./'));
+
+load('../results/tmp_counties.mat');
 
 data.ylabel_long = {'County', 'State', 'Msa', 'Pmsa', ...
     '1992 pop per 1990 miles^2', '1990 population', ...
@@ -17,6 +19,7 @@ Z = Zest';
 th = 0.05; % remove features whose perc of observations is below th
 idxs_to_delete = find( (sum(Z) > size(data.X,1)*(1-th)) | (sum(Z) < size(data.X,1)*th) );
 Z(:,idxs_to_delete(2:end)) = [];
+B(:,idxs_to_delete(2:end),:) = [];
 
 %Z(:,2) = not(Z(:,2);
 
@@ -29,6 +32,71 @@ print_patterns(1,data.X(~isnan(data.X(:,idx)),idx),patterns,C,data.ylabel_long{i
 
 %G1 = (C < 5);
 %G2 = (C == 5) | (C == 6) | (C == 7);
+
+%%
+
+%% Plot theoretical distribution for each dimension
+patterns = [ones(7,1), [zeros(1,6); eye(6)]];
+relevantPatterns = 1:6;
+leg = {'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'};
+s2u = 1;
+colors = {'k--', 'g', 'b--', 'b', 'r--', 'r', 'm--', 'm'};
+for d=5:size(data.X,2) % for each dimension
+    figure(d); subplot(5,1,1:4); hold off;
+    if (data.C(d) == 'c')
+        R = length(data.cat_labels{d});
+        pdfV = zeros(length(relevantPatterns),R);
+    end
+    for p=1:length(relevantPatterns) % for each feature activation pattern to compare
+        pp = relevantPatterns(p);
+        switch data.C(d)
+            case 'g',
+                xx = min(data.X(:,d)):0.01:max(data.X(:,d));
+                Zn = patterns(pp,:);
+                Bd = B(d,:,1)';
+                pdf = pdf_real(xx, Zn,Bd,s2Y,s2u);
+                plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
+            case 'p',
+                %xx = min(Xmiss(Xmiss(:,d)~=missing,d)):0.01:max(Xmiss(Xmiss(:,d)~=missing,d));
+                xx = min(data.X(:,d)):0.1:max(data.X(:,d));
+                Zn = patterns(pp,:);
+                Bd = B(d,:,1)';
+                w = 2 ./ max(data.X(:,d));
+                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u);
+                plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
+            case 'c',
+                Zn = patterns(pp,:);
+                Bd = squeeze(B(d,:,:)); % TODO: Review that size = [K*R]
+                pdf = pdf_cat(Zn,Bd,s2u,R);
+                pdfV(p,:) = pdf;
+            case 'o',
+            case 'n',
+                %xx = min(data.X(:,d)):1:max(data.X(:,d));
+                xx = linspace(min(data.X(:,d)), max(data.X(:,d)),5000 );
+                Zn = patterns(pp,:);
+                Bd = B(d,:,1)';
+                w = 2 ./ max(data.X(:,d));
+                pdf = pdf_count(xx,Zn,Bd,w,s2Y);
+                semilogx(xx,pdf, colors{p}, 'linewidth', 2); hold on;
+            otherwise
+                error('Unknown type of variable');
+        end
+    end
+    if (data.C(d) == 'c')
+        bar(1:R,pdfV', 'grouped');
+%         set(gca,'XTick',[])
+%         set(gca,'XTicklabel',[])
+%         set( gca, 'XTick', 1:p)
+        set( gca,'XTickLabel', data.cat_labels{d} );
+        rotateticklabel(gca,45);
+    end
+    title(data.ylabel_long{d});
+    legend(leg);
+    grid;
+end
+
+
+%%
 
 maskD = (data.C ~= 'c' & data.C ~= 'o'); % all dimensions excluding categorical and ordinal
 figure(1); subplot(3,1,1:2); hold off

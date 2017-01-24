@@ -2,7 +2,7 @@
 
 file = '../results/tmp_prostate_drug_noDrug3.mat';
 file = '../results/tmp_prostate_drug_noDrug_it10000.mat';
-%file = 'tmp_prostate_drug_noDrug_it10000_noDrugLevel.mat';
+file = 'tmp_prostate_drug_noDrug_it10000_noDrugLevel.mat';
 %file = '../results/tmp_prostate_drug_noDrug_it10x1000.mat';
 
 disp('First column is the drug_identifier = 1, second column is not(drug_identifier)');
@@ -35,7 +35,7 @@ B(:,idxs_to_delete,:) = [];
 print_patterns(1,data.X(:,13),patterns,C,data.ylabel_long{13});
 
 %% Plot theoretical distribution for each dimension
-relevantPatterns = [1, 9, 5,11, 3,10, 7, 12]; %[1, 9, 7, 12]; %[1, 9, 5,11, 3,10];
+relevantPatterns = [1,5, 2, 6, 3,7, 4, 8]; %[1, 9, 5,11, 3,10, 7, 12]; %[1, 9, 7, 12]; %[1, 9, 5,11, 3,10];
 leg = {'placebo', 'treatment', 'placebo + F3 active','treatment + F3 active', ...
     'placebo + F4 active','treatment + F4 active', 'placebo + F3 + F4','treatment + F3 + F4'};
 s2u = 1;

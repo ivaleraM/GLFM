@@ -12,6 +12,14 @@ randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
 
 load ../databases/dataExploration/mat/prostate.mat %../databases/Wine.mat
+
+drug_identifier = data.X(:,2) > 0.5;
+
+data.X(:,2) = [];
+data.C(2) = [];
+data.cat_labels(2) = [];
+data.ylabel(2) = [];
+
 N = size(data.X,1);
 D = size(data.X,2);
 
@@ -47,9 +55,6 @@ for d=1:D
     
 end
 
-drug_identifier = data.X(:,2) > 0.5;
-
-
 %% Inference
 tic;
 Zini= [drug_identifier, not(drug_identifier), double(rand(N,2)>0.8)];
@@ -60,7 +65,7 @@ for it=1:1
     sum(Zest')
     toc;
 end
-save('tmp_prostate_drug_noDrug_it10000.mat');
+save('tmp_prostate_drug_noDrug_it10000_noDrugLevel_bis.mat');
 
 %% %% Compute test log-likelihood
 % XT=Xmiss;
