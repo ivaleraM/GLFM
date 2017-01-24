@@ -70,11 +70,12 @@ for d=1:size(data.X,2) % for each dimension
                 pdfV(p,:) = pdf;
             case 'o',
             case 'n',
-                xx = min(data.X(:,d)):1:max(data.X(:,d));
+                xx = min(Xmiss(Xmiss(:,d)~=missing,d)):1:max(Xmiss(Xmiss(:,d)~=missing,d));
+                %min(data.X(:,d)):1:max(data.X(:,d));
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_count(xx,Zn,Bd,w,s2Y);
+                pdf = pdf_count(xx+min(data.X(data.X(:,d) ~= missing,d),Zn,Bd,w,s2Y);
                 plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             otherwise
                 error('Unknown type of variable');

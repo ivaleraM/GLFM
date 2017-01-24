@@ -253,7 +253,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
 
 //Sample Y
 void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, double s2Y, double s2theta, gsl_matrix *X, gsl_matrix *Z, gsl_matrix *Yd,  gsl_matrix *Bd, gsl_vector *thetad, const gsl_rng *seed){
-    double s2u=1;
+    double s2u=10^-3;
     gsl_matrix_view Zn;
     gsl_matrix_view Bd_view;
     gsl_matrix *muy;
