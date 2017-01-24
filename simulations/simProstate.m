@@ -44,14 +44,14 @@ for d=1:D
         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 10^-6;
     end
     
-    if ((data.C(d) == 'n') || (data.C(d) == 'c'))   && (min(data.X(:,d)) > 1)
-        idx = min(data.X(:,d));
-        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 1;
-    end
-    if (data.C(d) == 'p') && (min(data.X(:,d)) > 1)
-        idx = min(data.X(:,d));
-        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 10^-6;
-    end
+%     if ((data.C(d) == 'n') || (data.C(d) == 'c'))   && (min(data.X(:,d)) > 1)
+%         idx = min(data.X(:,d));
+%         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 1;
+%     end
+%     if (data.C(d) == 'p') && (min(data.X(:,d)) > 1)
+%         idx = min(data.X(:,d));
+%         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 10^-6;
+%     end
     
 end
 
