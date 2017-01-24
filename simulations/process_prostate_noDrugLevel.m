@@ -2,8 +2,12 @@
 
 file = '../results/tmp_prostate_drug_noDrug3.mat';
 file = '../results/tmp_prostate_drug_noDrug_it10000.mat';
-file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_bis3.mat';
+%file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_bis3.mat';
 %file = '../results/tmp_prostate_drug_noDrug_it10x1000.mat';
+
+fpos_1_handler = @(x,w) fpos_1(x,w);
+dfpos_1_handler = @(x,w) dfpos_1(x,w);
+fpos_handler = @(y, w) fpos(y,w);
 
 disp('First column is the drug_identifier = 1, second column is not(drug_identifier)');
 
@@ -61,7 +65,7 @@ for d=1:size(data.X,2) % for each dimension
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u);
+                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u, fpos_1_handler, dfpos_1_handler);
                 plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             case 'c',
                 Zn = patterns(pp,:);
@@ -74,7 +78,7 @@ for d=1:size(data.X,2) % for each dimension
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_count(xx,Zn,Bd,w,s2Y);
+                pdf = pdf_count(xx,Zn,Bd,w,s2Y, fpos_1_handler);
                 plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             otherwise
                 error('Unknown type of variable');
