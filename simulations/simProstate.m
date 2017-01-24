@@ -65,7 +65,7 @@ for it=1:1
     sum(Zest')
     toc;
 end
-save('../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_bis.mat');
+save('../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_a2.mat');
 
 %% %% Compute test log-likelihood
 % XT=Xmiss;
