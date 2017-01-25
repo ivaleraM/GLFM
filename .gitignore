@@ -9,5 +9,5 @@
 *.mexa64
 ./Ccode/wrapper_python/build/*
 GLFMpython/.ipynb_checkpoints/*
-./results/*.mat
+./results/tmp_*.mat
 ./databases/*
