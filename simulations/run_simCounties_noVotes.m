@@ -15,7 +15,7 @@ rand('seed',round(sum(1e5*clock)));
 load ../databases/dataExploration/mat/counties.mat %../databases/Wine.mat
 
 % for data exploration, remove nan
-idx_unknownCounties = find( sum(isnan(data.X),2) ); 
+idx_unknownCounties = find( sum(isnan(data.X(:,14)),2) ); 
 data.X(idx_unknownCounties,:) = [];
 
 mask_noMiss = ~isnan( data.X(:,14) );
