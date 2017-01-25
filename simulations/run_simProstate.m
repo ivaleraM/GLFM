@@ -1,5 +1,5 @@
 
-function run_simProstate(Niter_in,Niter_out, s2Y, s2u, alpha)
+function run_simProstate(Niter_in,Niter_out, s2Y, s2u, alpha, simId)
 
 	addpath(genpath('../Ccode/'));
 	
@@ -46,7 +46,7 @@ function run_simProstate(Niter_in,Niter_out, s2Y, s2u, alpha)
 	    end
 	    W(d) = 2/max( Xmiss(Xmiss(:,d) ~= missing,d) );
 	
-	    if ((data.C(d) == 'n' || (data.C(d) == 'c') || (data.C(d) == 'o')) && (min(data.X(:,d)) == 0)
+	    if ((data.C(d) == 'n' || (data.C(d) == 'c') || (data.C(d) == 'o')) && (min(data.X(:,d)) == 0))
 	        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 1;
 	    elseif (data.C(d) == 'p') && (min(data.X(:,d)) == 0)
 	        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 10^-6;
@@ -60,11 +60,11 @@ function run_simProstate(Niter_in,Niter_out, s2Y, s2u, alpha)
 	Zini= [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
 	bias = 2;
 	Zest = Zini';
-	for it=1:1
-	    [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',W,bias,s2Y,s2u,s2B,alpha,Nsim,maxK,missing);
+	for it=1:Niter_out
+	    [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,W,s2Y,s2u,s2B,alpha,Niter_in,maxK,missing);
 	    sum(Zest')
 	    toc;
 	end
-	save(sprintf( '../results/prostate_Niter%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',Niter_in,Niter_out, s2Y, s2u, alpha) );
+	save(sprintf( '../results/prostate_simId%d_%dx%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',simId,Niter_in,Niter_out, s2Y, s2u, alpha) );
 
 end

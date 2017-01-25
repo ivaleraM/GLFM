@@ -1,8 +1,6 @@
-clear
-
+function run_simCounties(Niter_in,Niter_out, s2Y, s2u, alpha, simId)
 addpath(genpath('../Ccode/'));
-
-Niter_in = 100;
+Niter_in = 1;
 Niter_out = 1;
 s2Y = 1;
 s2u = 1;
@@ -14,15 +12,7 @@ missing=-1;
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
 
-load ../databases/dataExploration/mat/prostate.mat %../databases/Wine.mat
-
-drug_identifier = data.X(:,2) > 0.5;
-
-% remove drug levels
-data.X(:,2) = [];
-data.C(2) = [];
-data.cat_labels(2) = [];
-data.ylabel(2) = [];
+load ../databases/dataExploration/mat/counties.mat %../databases/Wine.mat
 
 N = size(data.X,1);
 D = size(data.X,2);
@@ -59,20 +49,14 @@ for d=1:D
     
 end
 
-
 %% Inference
 tic;
-Zini= [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
-bias = 2;
+Zini= [ones(N,1), double(rand(N,1)>0.8)];
+bias = 1;
 Zest = Zini';
 for it=1:Niter_out
-    disp('Im here...');
-    pause;
     [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,W,s2Y,s2u,s2B,alpha,Niter_in,maxK,missing);
     sum(Zest')
     toc;
 end
-save(sprintf( '../results/prostate_Niter%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',Niter_in,Niter_out, s2Y, s2u, alpha) );
-
-
-
+save(sprintf( '../results/counties_Niter%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',Niter_in,Niter_out, s2Y, s2u, alpha) );
