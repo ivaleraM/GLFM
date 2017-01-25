@@ -59,4 +59,4 @@ for it=1:Niter_out
     sum(Zest')
     toc;
 end
-save(sprintf( '../results/counties_Niter%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',Niter_in,Niter_out, s2Y, s2u, alpha) );
+save(sprintf( '../results/counties_simId%d_%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',simId, Niter_in,Niter_out, s2Y, s2u, alpha) );
