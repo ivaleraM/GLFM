@@ -1,10 +1,10 @@
 function run_simCounties(Niter_in,Niter_out, s2Y, s2u, alpha, simId)
 addpath(genpath('../Ccode/'));
-Niter_in = 1;
-Niter_out = 1;
-s2Y = 1;
-s2u = 1;
-alpha = 1;
+%Niter_in = 1;
+%Niter_out = 1;
+%s2Y = 1;
+%s2u = 1;
+%alpha = 1;
 
 missing=-1;
 
