@@ -24,11 +24,11 @@ data.ylabel(2) = [];
 N = size(data.X,1);
 D = size(data.X,2);
 
-Nmiss=round(N*D*p);
-miss=randperm(N*D);
-miss=miss(1:Nmiss);
+%Nmiss=round(N*D*p);
+%miss=randperm(N*D);
+%miss=miss(1:Nmiss);
 Xmiss=data.X;        % Observation matrix
-Xmiss(miss)= missing; % Missing data are coded as missing
+%Xmiss(miss)= missing; % Missing data are coded as missing
 [N, D]= size(data.X);
 s2Y=.5;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 s2u=.5;
