@@ -2,7 +2,11 @@
 %addpath(genpath('./aux/'));
 addpath(genpath('./'));
 
-load('../results/tmp_counties.mat');
+load('../results_old/tmp_counties.mat');
+
+fpos_1_handler = @(x,w) fpos_1(x,w);
+dfpos_1_handler = @(x,w) dfpos_1(x,w);
+fpos_handler = @(y, w) fpos(y,w);
 
 data.ylabel_long = {'County', 'State', 'Msa', 'Pmsa', ...
     '1992 pop per 1990 miles^2', '1990 population', ...
@@ -62,7 +66,7 @@ for d=5:size(data.X,2) % for each dimension
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u);
+                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u, fpos_1_handler, dfpos_1_handler);
                 plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             case 'c',
                 Zn = patterns(pp,:);
@@ -76,7 +80,7 @@ for d=5:size(data.X,2) % for each dimension
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_count(xx,Zn,Bd,w,s2Y);
+                pdf = pdf_count(xx,Zn,Bd,w,s2Y, fpos_1_handler);
                 semilogx(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             otherwise
                 error('Unknown type of variable');
