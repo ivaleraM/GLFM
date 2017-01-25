@@ -5,7 +5,8 @@ file = '../results/tmp_prostate_drug_noDrug_it10000.mat';
 %file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel_Xi2_bis3.mat';
 %file = '../results/tmp_prostate_drug_noDrug_it10x1000.mat';
 
-file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel.mat';
+%file = '../results/tmp_prostate_drug_noDrug_it10000_noDrugLevel.mat';
+file = '../results/prostate_simId2_10000x1_s2Y0.50_s2u0.50_alpha1.00.mat';
 
 fpos_1_handler = @(x,w) fpos_1(x,w);
 dfpos_1_handler = @(x,w) dfpos_1(x,w);
@@ -48,14 +49,14 @@ s2u = 1;
 colors = {'k--', 'k', 'b--', 'b', 'r--', 'r'};%, 'm--', 'm'};
 for d=1:size(data.X,2) % for each dimension
     figure(d); subplot(5,1,1:4); hold off;
-    mask_noMissing = ~isnan( data.X(:,d) ) && data.X(:,d) ~= missing;
-    if ((data.C(d) == 'n') || (data.C(d) == 'c') || (data.C(d) == 'o'))   && (min(data.X(:,d)) > 1)
-        offset = min(data.X(mask_noMissing,d)) + 1;
-    elseif (data.C(d) == 'p') && (min(data.X(:,d)) > 0)
-        offset = min(data.X(mask_noMissing,d)) + 10^-6;
+    mask_noMissing = ~isnan( data.X(:,d) ) & data.X(:,d) ~= missing;
+    if ((data.C(d) == 'n') || (data.C(d) == 'c') || (data.C(d) == 'o'))
+        offset = min(data.X(mask_noMissing,d)) - 1;
+    elseif (data.C(d) == 'p')
+        offset = min(data.X(mask_noMissing,d)) - 10^-6;
     end
     if (data.C(d) == 'c')
-        R = length(data.cat_labels{d});
+        R = max(Xmiss(:,d));
         pdfV = zeros(length(relevantPatterns),R);
     end
     for p=1:length(relevantPatterns) % for each feature activation pattern to compare
