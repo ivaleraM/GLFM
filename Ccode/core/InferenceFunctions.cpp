@@ -252,8 +252,8 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
 
 
 //Sample Y
-void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, double s2Y, double s2theta, gsl_matrix *X, gsl_matrix *Z, gsl_matrix *Yd,  gsl_matrix *Bd, gsl_vector *thetad, const gsl_rng *seed){
-    double s2u=1;
+void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, double s2Y, double s2u, double s2theta, gsl_matrix *X, gsl_matrix *Z, gsl_matrix *Yd,  gsl_matrix *Bd, gsl_vector *thetad, const gsl_rng *seed){
+    //double s2u=1;
     gsl_matrix_view Zn;
     gsl_matrix_view Bd_view;
     gsl_matrix *muy;
@@ -383,7 +383,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
     
 }
 
-int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y,int maxK,int Nsim){
+int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y, double s2u,int maxK,int Nsim){
 //Starting C function
     
     // For debugging, print input parameters
@@ -540,7 +540,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
              }
              
          //Sample Y  
-         SampleY (missing, N, d, Kest, C[d],  R[d], w[d], s2Y, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
+         SampleY (missing, N, d, Kest, C[d],  R[d], w[d], s2Y, s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
          
          //Update lambda
          matrix_multiply(Z,Y[d],lambda[d],1,0,CblasNoTrans,CblasTrans);     

@@ -8,12 +8,14 @@
 #define input_C prhs[1]
 #define input_Z prhs[2]
 #define input_bias prhs[3]
-#define input_s2Y prhs[4]
-#define input_s2B prhs[5]
-#define input_alpha prhs[6]
-#define input_Nsim prhs[7]
-#define input_maxK prhs[8]
-#define input_missing prhs[9]
+#define input_W prhs[4]
+#define input_s2Y prhs[5]
+#define input_s2u prhs[6]
+#define input_s2B prhs[7]
+#define input_alpha prhs[8]
+#define input_Nsim prhs[9]
+#define input_maxK prhs[10]
+#define input_missing prhs[11]
 
 //*********************************OUTPUTS**************************//
 #define output_Z plhs[0]
@@ -25,7 +27,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     //..................CHECKING INPUTS AND OUTPUTS.............//
     /* Matrices are arranged per column */
 
-    if (nrhs!=10) {
+    if (nrhs!=12) {
         mexErrMsgTxt("Invalid number of arguments\n");
     }
 
@@ -48,11 +50,13 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double *X_dou = mxGetPr(input_X);
     char *C= mxArrayToString(input_C);
     double *Z_dou = mxGetPr(input_Z);
+    double *w_dou = mxGetPr(input_W);
 
     //Inputs to the C function
     int bias = mxGetScalar(input_bias);
     double s2B = mxGetScalar(input_s2B);
     double s2Y = mxGetScalar(input_s2Y);
+    double s2u = mxGetScalar(input_s2u);
     double alpha = mxGetScalar(input_alpha);
     int maxK = mxGetScalar(input_maxK);
     int Nsim = mxGetScalar(input_Nsim);
@@ -74,31 +78,33 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
     //...............BODY CODE.......................//
     //Starting C function
+    double w[D];
     for (int d=0; d<D; d++){
           C[d] = tolower(C[d]);//convert to lower case
+          w[d]=w_dou[d];
           //printf("%c ",C[d]);
          }
 
     int R[D];
-    double w[D], maxX[D];
+    double  maxX[D];
     int maxR=1;
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
          Xd_view = gsl_matrix_row(X, d);
          maxX[d] = gsl_vector_max(&Xd_view.vector);
          R[d]=1;
-         w[d]=1;
+         //w[d]=1;
           switch(C[d]){
             case 'g':
                 B[d] = gsl_matrix_alloc(maxK,1);
                 break;
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
-                w[d]=2/maxX[d];
+                //w[d]=2/maxX[d];
                 break;
             case 'n':
                 B[d] = gsl_matrix_alloc(maxK,1);
-                w[d]=2/maxX[d];
+                //w[d]=2/maxX[d];
                 break;
             case 'c':
                 R[d]=(int)maxX[d];
@@ -115,7 +121,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     }
 
   //...............Inference Function.......................//
-   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, w, maxR, bias, N, D, K, alpha, s2B, s2Y, maxK, Nsim);
+   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
 
    //...............SET OUTPUT POINTERS.......................//
     output_Z = mxCreateDoubleMatrix(Kest,N,mxREAL);
