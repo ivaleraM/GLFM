@@ -2,10 +2,10 @@ clear
 addpath(genpath('../Ccode/'));
 
 missing=-1;
-p=0.1; %probability of missing
-f_1=@(x,w) log(exp(w*x)-1);
-df_1=@(x,w) w./(1-exp(-w*x));
-logN=@(x) max(log(x),-30); %To avoid -Inf
+
+%f_1=@(x,w) log(exp(w*x)-1);
+%df_1=@(x,w) w./(1-exp(-w*x));
+%logN=@(x) max(log(x),-30); %To avoid -Inf
 
 %% Selecting missing data
 randn('seed',round(sum(1e5*clock)));
@@ -15,6 +15,7 @@ load ../databases/dataExploration/mat/prostate.mat %../databases/Wine.mat
 
 drug_identifier = data.X(:,2) > 0.5;
 
+% remove drug levels
 data.X(:,2) = [];
 data.C(2) = [];
 data.cat_labels(2) = [];
@@ -38,6 +39,7 @@ bias = 1;
 maxK= D;
 
 Xmiss(isnan(Xmiss)) = missing;
+W = zeros(1,D); % vector of weights for transformation
 for d=1:D
     if (data.C(d) == 'n') && (min(data.X(:,d)) == 0)
         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 1;
@@ -45,16 +47,18 @@ for d=1:D
         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) + 10^-6;
     end
     
-%     if ((data.C(d) == 'n') || (data.C(d) == 'c'))   && (min(data.X(:,d)) > 1)
-%         idx = min(data.X(:,d));
-%         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 1;
-%     end
-%     if (data.C(d) == 'p') && (min(data.X(:,d)) > 1)
-%         idx = min(data.X(:,d));
-%         Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 10^-6;
-%     end
-    
+    % normalize data (such that it occupies interval (0,max(X(d))]
+    if ((data.C(d) == 'n') || (data.C(d) == 'c'))   && (min(data.X(:,d)) > 1)
+        idx = min(data.X(:,d));
+        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 1;
+    end
+    if (data.C(d) == 'p') && (min(data.X(:,d)) > 1)
+        idx = min(data.X(:,d));
+        Xmiss(Xmiss(:,d) ~= missing,d) = Xmiss(Xmiss(:,d) ~= missing,d) - idx + 10^-6;
+    end
+    W(d) = 2/max( Xmiss(Xmiss(:,d) ~= missing,d) );
 end
+
 
 %% Inference
 tic;
@@ -62,7 +66,7 @@ Zini= [drug_identifier, not(drug_identifier), double(rand(N,2)>0.8)];
 bias = 2;
 Zest = Zini';
 for it=1:1
-    [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,s2Y,s2u,s2B,alpha,Nsim,maxK,missing);
+    [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',W,bias,s2Y,s2u,s2B,alpha,Nsim,maxK,missing);
     sum(Zest')
     toc;
 end
