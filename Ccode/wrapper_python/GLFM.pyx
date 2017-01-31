@@ -36,13 +36,14 @@ cdef extern from "../core/InferenceFunctions.h":
     #           Nsim: number of internal iterations (inside C++ code)
     # Outputs:
     #           Kest: number of active features
-    int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y,int maxK,int Nsim)
+    int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y, double s2u, int maxK,int Nsim)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
-        Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None, int bias=0,\
-        double s2Y=1.0, double s2B=1.0, double alpha=1.0, int Nsim=50,\
+        Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None,\
+        np.ndarray[double, ndim=1, mode="c"] w, int bias=0, double s2Y=1.0, double s2u=1.0,\
+        double s2B=1.0, double alpha=1.0, int Nsim=50,\
         int maxK=50, double missing=-1):#\
     """
     Function to run inference for GLFM model
@@ -50,7 +51,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
         input: observation matrix ( numpy array [D*N] )
         Cin: string array [1*D]
         Zin: latent feature binary matrix (numpy array [K*N] )
-        
+
         *** (the following are optional parameters) ***
         bias: number of columns that should not be sampled in matrix Zin
         s2Y: variance for pseudo-observations Y
@@ -108,14 +109,9 @@ def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
         C += chr( tolower(ord(Cin[d])) ) # convert to lower case
 
     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)
-    cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)
+    #cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)
     cdef np.ndarray[double, ndim=1, mode="c"] maxX = np.empty(D)
     cdef int maxR = 1
-    #print 'Size of R[D]=(%d,%d)' % (R.shape[0],R.shape[1])
-    #print 'Size of w[D]=(%d,%d)' % (w.shape[0],w.shape[1])
-    #print 'Size of maxX[D]=(%d,%d)' % (maxX.shape[0],maxX.shape[1])
-    #R[0] = 0; R[1] = 1; R[2] = 2; R[221] = 3
-    #print 'R[0]=%d, R[1]=%d, R[2]=%d, R[3]=%d\n' % (R[0], R[1], R[2], R[221])
 
     cdef gsl_vector_view Xd_view
     for d in xrange(D):
@@ -123,15 +119,15 @@ def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
         maxX[d] = gsl_vector_max(&Xd_view.vector)
         #print "maxX[%d] = %f\n" % (d,maxX[d])
         R[d] = 1
-        w[d] = 1
+        #w[d] = 1
         if C[d] == 'g':
             B[d] = gsl_matrix_alloc(maxK,1)
         elif C[d] == 'p':
             B[d] = gsl_matrix_alloc(maxK,1)
-            w[d]=2/maxX[d]
+            #w[d]=2/maxX[d]
         elif C[d] == 'n':
             B[d] = gsl_matrix_alloc(maxK,1)
-            w[d] = 2/maxX[d]
+            #w[d] = 2/maxX[d]
         elif C[d] == 'c':
             R[d] = <int>maxX[d]
             B[d] = gsl_matrix_alloc(maxK,R[d])
@@ -150,7 +146,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] input not None,\
     print 'Entering C function'
     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
             <int*> R.data, &w[0],\
-            maxR, bias,  N, D, K, alpha, s2B, s2Y, maxK, Nsim);
+            maxR, bias,  N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
     print 'Back to Python'
 
     ##...............Set Output Pointers.......................##
