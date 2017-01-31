@@ -44,9 +44,13 @@ C = np.tile('g',(1,X.shape[0]))[0].tostring()
 Kinit = 1
 Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64') )
 
+# Generate weights for transformation
+W = np.ascontiguousarray( 2.0 / np.max(X,1) )
+pdb.set_trace()
+
 print 'Infering latent features...'
 tic = time.time()
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=1000,s2Y=s2x/5, s2B=1, maxK=10)
+(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,W,Nsim=1000,s2Y=s2x/5, s2B=1, maxK=10)
 toc = time.time()
 time = tic - toc
 print 'Elapsed: %.2f seconds' % (toc-tic)
