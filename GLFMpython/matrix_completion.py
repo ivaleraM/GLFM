@@ -5,8 +5,6 @@ import sys
 sys.path.append('../Ccode/wrapper_python/')
 import GLFM
 
-import pdb
-
 def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
     """
     Function to complete missing values of a certain numpy 2dim array
@@ -46,7 +44,6 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     Kinit = 3
     Zini = np.ascontiguousarray( (np.random.rand(Kinit,N) > 0.8).astype('float64') )
     W = np.ascontiguousarray( 2.0/np.max(Xmiss,1) )
-    pdb.set_trace()
     # Call inner C function
     (Zest, B, Theta)= GLFM.infer(Xmiss,C,Zini,W,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
 
