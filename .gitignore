@@ -7,8 +7,9 @@
 *.csv
 *.o
 *.mexa64
-./Ccode/wrapper_python/build/*
+Ccode/wrapper_python/GLFM.cpp
+Ccode/wrapper_python/build/*
 GLFMpython/.ipynb_checkpoints/*
-./results/tmp_*.mat
-./results/*.mat
-./databases/*
+results/tmp_*.mat
+results/*.mat
+databases/*
