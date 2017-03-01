@@ -19,5 +19,6 @@ setup(
             language="c++",
             libraries=cython_gsl.get_libraries(),
             library_dirs=[cython_gsl.get_library_dir()],
-            include_dirs=[cython_gsl.get_cython_include_dir()])]
+            include_dirs=[cython_gsl.get_cython_include_dir()],
+            extra_compile_args=["-w"])] # this line suppresses warnings
     )

@@ -4,10 +4,7 @@ function x = fpos(y, w)
     %   w: scalar
 
     % TODO: make weights W input-dependent
-    
     %%x = log( exp( w * y ) + 1);
-    
     %x =  y^2 /w;
-    
     x = log(exp(y)+1) / w;
 end

@@ -1,11 +1,15 @@
 %% Script to create pcb database
 
 clear
+
 % load database and categorical columns
-file = '/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/simulations/data/csv_xls/prostate.csv';
+%file = '/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/simulations/data/csv_xls/prostate.csv';
+filename = '/Users/melanie/Desktop/GLFM/databases/dataExploration/csv_xls/prostate.csv';
+
+addpath('./aux/');
 load_matrix_prostate;
 load_char_columns_prostate;
-header = import_header(file, 1, 1);
+header = import_header(filename, 1, 1);
 
 nameVars = {'status','pf','ekg'};
 idxs = [5,8,12];
@@ -42,5 +46,11 @@ data.X = X;
 data.C = ['cpncn','nccnn','cpnnp','c'];
 data.cat_labels = info;
 data.ylabel = header;
+data.ylabel_long = {'Stage', 'Drug level', 'Months of Follow-up', 'Status', 'Age in years', ...
+    'Weight Index', 'Type of activity', 'History of Cardiovascular Disease', ...
+    'Systolic Blood Pressure/10', 'Diastolic Blood Pressure/10', ...
+    'Electrocardiogram', 'Serum Hemoglobin (g/100ml)', 'Size of Primary Tumor (cm^2)', ...
+    'Combined Index of Stage and Hist. Grade', 'Serum Prostatic Acid Phosphatase', ...
+    'Bone Metastases'};
 
-save('prostate.mat','data');
+save('./mat/prostate.mat','data');
