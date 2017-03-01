@@ -5,8 +5,6 @@ import GLFM        # import General Latent Feature Model Library
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
 
-verbose = 1        # set to 1 to print description of each step to the screen
-
 # ---------------------------------------------
 # 1. GENERATIVE MODEL
 # ---------------------------------------------
@@ -57,16 +55,16 @@ X = np.ascontiguousarray(X) # specify way to store matrix to be compatible with 
 
 print '\n 2. INITIALIZATION\n'
 
+print '\tInitializing Z...'
+Kinit = 1 # initial number of latent features
+Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64') )
+
 print '\tInitialization of variables needed for the GLFM model...'
 C = np.tile('g',(1,X.shape[0]))[0].tostring() # vector to indicate datatype of each dimension
-Kinit = 1 # initial number of latent features
-
-print '\tInitializing Z...'
-Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64') )
 # Generate weights for transformation
 W = np.ascontiguousarray( 2.0 / np.max(X,1) )
 
-Niter = 100 # number of algorithm iterations
+Niter = 100  # number of algorithm iterations
 s2y = s2x/5  # noise variance for pseudo-obervations
 s2B = 1      # noise variance for feature values
 
