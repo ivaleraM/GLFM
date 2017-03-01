@@ -10,6 +10,7 @@ import pdb
 Z = np.array([[1.0,0],[1,1],[1,1]])
 X = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 3, 4.1, 4]])
 C = 'PoGN'
+W = 2.0 / np.max(X,0)
 
 print 'First, in Python'
 print X
@@ -34,8 +35,8 @@ Z2 = np.ascontiguousarray(Z.transpose())
 #print X2
 
 print '\nNow, inside C'
-pdb.set_trace()
-(Z_out,B_out,Theta_out) = GLFM.infer(X2,C,Z2)
+#pdb.set_trace()
+(Z_out,B_out,Theta_out) = GLFM.infer(X2,C,Z2,W)
 
 print Z_out
 print "\n"

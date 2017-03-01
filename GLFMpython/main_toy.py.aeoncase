@@ -1,0 +1,15 @@
+#!/bin/bash
+## This is an auto-generated file -- do not modify.
+## This file stands for a file that has not been downloaded yet.
+## Execute it when AEoncase is running to trigger the download.
+##
+## AEONCASETREE: 321
+## AEONCASEID: AAUEHg3KHw1tSQhmum9e4
+
+if [ -d "$HOME/Library/Application Support/aeoncase" ]; then
+	echo 'AAUEHg3KHw1tSQhmum9e4' > "$HOME/Library/Application Support/aeoncase/config/cmd/321/download/AAUEHg3KHw1tSQhmum9e4"
+elif [ -d "$HOME/.aeoncase" ]; then
+	echo 'AAUEHg3KHw1tSQhmum9e4' > "$HOME/.aeoncase/cmd/321/download/AAUEHg3KHw1tSQhmum9e4"
+else
+	echo 'Cannot find AEoncase config, is it installed?'
+fi
