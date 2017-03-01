@@ -6,7 +6,7 @@ function pdf = pdf_cat(Zn,Bd,s2u,R)
     %    Bd: [K*1], feature weights (dictionary)
     %   s2u: scalar, variance of auxiliary noise
     %     R: number of categories
-    
+
     pdf = zeros(1,R);
     numMC_samples = 100;
     % TODO: perform pdf computation in log space ?
