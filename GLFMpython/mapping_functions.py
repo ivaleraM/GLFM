@@ -2,48 +2,49 @@
 # Module with all available mapping functions necessary for the Generalized
 # Latent Feature Model (GLFM)
 # -------------------------------------------------------------------------
+import numpy as np
+from scipy.stats import norm
 
 # --------------------
 # Auxiliary Functions
 # --------------------
 
-def exp_count(Zn,Bd, params):
+def exp_count(Zn,Bd, s2y, fpos_1_handler, w, maxX):
     # function to compute expectation of random variable
-
-    s2y = params{1}
-    fpos_1_handler = params{2}
-    w = params{3} # function to compute normalization weights w
-    maxX = params{4}
-
-    xin = 1:1:maxX
-
-    func = @(xin) pdf_count(xin,Zn,Bd,w, s2y, fpos_1_handler)
-
-    expect = xin * func(xin) # transpose '
+    # Zn: 1*K nparray
+    # Bd: K*1 nparray
+ #   s2y = params{1}
+ #   fpos_1_handler = params{2}
+ #   w = params{3} # function to compute normalization weights w
+ #   maxX = params{4}
+    xin = range(1,maxX+1)
+    func = lambda x: pdf_count(x,Zn,Bd,w, s2y,fpos_1_handler)
+    expect = np.inner(xin,func(xin))
     return expect
 
-def rnd_pos(Zn,Bd,numSamples,params):
+def rnd_pos(Zn,Bd,numSamples,s2y,s2u,fpos_1_handler,dfpos_1_handler,w,maxX):
     # function to get random samples from the distribution
 
-    s2y = params{1}
-    s2u = params{2}
-    fpos_1_handler = params{3}
-    dfpos_1_handler = params{4}
-    w = params{5} # function to compute normalization weights w
-    maxX = params{6}
+  #  s2y = params{1}
+  #  s2u = params{2}
+  #  fpos_1_handler = params{3}
+  #  dfpos_1_handler = params{4}
+  #  w = params{5} # function to compute normalization weights w
+  #  maxX = params{6}
 
-    func = @(xin) log( pdf_pos(xin,Zn,Bd,w, s2y ,s2u, fpos_1_handler, dfpos_1_handler) )
-    a = 10^-6
+    func = lambda x: np.log( pdf_pos(x,Zn,Bd,w, s2y ,s2u, fpos_1_handler, dfpos_1_handler) )
+    a = 10**-6
     b = maxX
     domain = [a,b+5]
 
+    # FIND ARS IN PYTHON
     samples = ars(func, a, b, domain, numSamples, [])
-    samples = exp(samples)
+    samples = np.exp(samples)
     return samples
 
 def rnd_real(Zn,Bd,numSamples, s2y, s2u):
     # function to get random samples from the distribution
-    x = sqrt(s2u+s2y) .* randn(1,numSamples) + Zn * Bd
+    x = np.sqrt(s2u+s2y) * np.random.randn(numSamples) + np.inner(Zn,Bd)
     return x
 
 # --------------------
@@ -52,19 +53,38 @@ def rnd_real(Zn,Bd,numSamples, s2y, s2u):
 
 def freal(y, s2u):
     # Mapping function for real values
-    x = y + sqrt(s2u) * randn(size(y))
+    # s2u: auxiliary noise
+    dim = len(y.shape)
+    if dim == 1:
+        tmp = randn(y.shape[0])
+    elif dim == 2:
+        tmp = randn(y.shape[0],y.shape[1])
+    else:
+        print 'undefined dimensions for y'
+    x = y + np.math.sqrt(s2u) * tmp
+    return x
+
+def fpos(y, w):
+    # Inputs:
+    #   Pseudo-observations y: [N*D] # Check dimensions
+    #   transformation weight w (scalar)
+
+    ##x = log( exp( w * y ) + 1)
+    #x =  y^2 /w
+    x = np.math.log(np.math.exp(y)+1) / (w*1.0)
     return x
 
 def fcat(y):
     # input argument y: [N*R]
-    # output: x [N*1]
-    [mm, x] = max(y,[],2)
+    # output: x [1*N]
+    x = np.max(y,1) # .reshape(-1,1)
     return x
 
 def fcount(y,w):
     # Inputs:
-    #   x: [N*D]
-    x = floor( fpos(y, w) )
+    #   Pseudo-observations y: [N*D]
+    #   transformation weights w [1*D] # TODO: Check dimensions
+    x = np.floor( fpos(y, w) )
     return x
 
 def ford(y, theta):
@@ -73,7 +93,7 @@ def ford(y, theta):
     #       y: [1*R] Pseudo-observations
     #   theta: [1*(R-1)] Thresholds that divide the real line into R regions
     for r in xrange(len(theta)): #= 1:length(theta)
-        val = theta()
+        val = theta[r]
         if (y < val):
             x = r
             break
@@ -81,28 +101,17 @@ def ford(y, theta):
             x = r+1
     return x
 
-def fpos(y, w):
-    # Inputs:
-    #   y: 
-    #   w: scalar
-
-    ##x = log( exp( w * y ) + 1)
-    #x =  y^2 /w
-    x = log(exp(y)+1) / w
-    return x
-
 def fpos_1(x,w):
     # w: scalar
-
     #y = sqrt(w*x)
     # y = log( exp( x ) + 1) / w
-    y = log( exp( w*x ) -1 )
+    y = np.math.log( np.math.exp( w*x ) - 1 )
     return y
 
 def fpos_1_xi(x,w):
     # w: scalar
 
-    y = sqrt(w*x)
+    y = np.math.sqrt(w*x)
     # y = log( exp( x ) + 1) / w
     # y = log( exp( w*x ) -1 )
     return y
@@ -111,26 +120,24 @@ def fpos_xi(y, w):
     # Inputs:
     #   y: 
     #   w: scalar
-    # TODO: make weights W input-dependent
     #x = log( exp( w * y ) + 1)
-
-    x =  y^2 /w
     #x = log(exp(y)+1) / w
+    x =  y**2 / (w*1.0)
     return x
 
 def dfpos_1(x, w):
     # w: scalar
     #y = 1./sqrt(x)
     #y = -0.5*w^0.5 * x.^(-0.5)
-    y = w ./ ( 1 - exp( w .* x) )
+    y = (w*1.0) / ( 1 - np.math.exp( w * x) )
     return y
 
 def dfpos_1_xi(x, w):
     # w: scalar
-
     #y = 1./sqrt(x)
-    y = -0.5*w^0.5 * x.^(-0.5)
     #y = w ./ ( 1 - exp( w .* x) )
+
+    y = -0.5*(w**0.5) * (x**(-0.5))
     return y
 
 # ------------------------------------------
@@ -139,7 +146,13 @@ def dfpos_1_xi(x, w):
 
 def pdf_real(X, Zn,Bd,s2y,s2u):
     # Probability Density Function for real variables
-    pdf = normpdf(X, Zn* Bd, sqrt(s2y + s2u) )
+    # Inputs:
+    #   X: observations (dimensions?)
+    #   Zn: 1*K array
+    #   Bd: 1*K array
+    #  s2y: noise variance for pseudo-observations (scalar)
+    #  s2u: auxiliary noise variance (scalar)
+    pdf = norm.pdf(X, np.inner(Zn,Bd) , np.math.sqrt(s2y + s2u) )
     return pdf
 
 def pdf_cat(Zn,Bd,s2u,R):
@@ -151,28 +164,26 @@ def pdf_cat(Zn,Bd,s2u,R):
     #   s2u: scalar, variance of auxiliary noise
     #     R: number of categories
 
-    pdf = zeros(1,R)
+    pdf = np.zeros((1,R))
     numMC_samples = 100
-    # TODO: perform pdf computation in log space ?
-    for r=1:R
-        tmp = ones(1,numMC_samples)
+    for r in xrange(R):
+        tmp = np.ones((1,numMC_samples))
         # we compute the expectation using Monte Carlo samples
-        uV = sqrt(s2u) * randn(1,numMC_samples) # mean = 0 # TODO: check that u does not depend on j
-        for j=1:R
-            if (j==r)
+        # TODO: check that u does not depend on j
+        uV = np.math.sqrt(s2u) * np.random.randn(numMC_samples) # mean = 0
+        for j in xrange(R):
+            if (j==r):
                 continue
-            end
-            tmp = tmp .* normcdf(uV + repmat( Zn * (Bd(:,r)-Bd(:,j)), 1, numMC_samples) )
-        end
-        pdf(r) = mean(tmp,2)
-    end
+            tmp = tmp * norm.cdf(uV + np.kron( np.ones(numMC_samples), \
+                    np.inner(Zn,Bd[:,r]-Bd[:,j]) )
+                #(Bd(:,r)-Bd(:,j)), 1, numMC_samples) )
+        pdf[r] = np.mean(tmp,1)
     return pdf
 
 
 def pdf_count(X,Zn,Bd,w,s2y, fpos_1_handler):
-
-pdf = normcdf(fpos_1_handler(X+1,w), Zn*Bd, sqrt(s2y)) - ...
-    normcdf(fpos_1_handler(X,w), Zn*Bd, sqrt(s2y))
+    pdf = norm.cdf(fpos_1_handler(X+1,w), np.inner(Zn,Bd), np.math.sqrt(s2y)) - ...
+    norm.cdf(fpos_1_handler(X,w), np.inner(Zn,Bd), np.math.sqrt(s2y))
     return pdf
 
 def pdf_ord(Zn,Bd,theta,s2y):
@@ -180,25 +191,22 @@ def pdf_ord(Zn,Bd,theta,s2y):
     # pdf, a probability vector of length R (number of categories)
     # Input parameters:
     #    Zn: [1*K], feature activation vector
-    #    Bd: [K*1], feature weights (dictionary)
+    #    Bd: [K*1], feature weights (dictionary) # TODO: Review dimensions
     # theta: [1*(R-1)]
     #   s2y: scalar, variance of pseudo-observations
-    R = length(theta)+1 # number of categories
-    pdf = zeros(1,R)
-    for r=1:R
-        if (r==1)
-            a = normcdf(theta(1),Zn * Bd,s2y)
+    R = len(theta)+1 # number of categories
+    pdf = np.zeros(R)
+    for r in xrange(R):
+        if (r==0):
+            a = norm.cdf(theta[0],np.inner(Zn,Bd),np.math.sqrt(s2y))
             b = 0
-        elseif (r== R)
+        elif (r==(R-1)):
             a = 1
-            b = normcdf(theta(r-1),Zn * Bd,s2y)
-        else
-            a = normcdf(theta(r),Zn * Bd,s2y)
-            b = normcdf(theta(r-1),Zn * Bd,s2y)
-        end
-        pdf(r) = a - b
-    end
-end
+            b = norm.cdf(theta[r-2],np.inner(Zn,Bd),np.math.sqrt(s2y))
+        else:
+            a = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.math.sqrt(s2y))
+            b = norm.cdf(theta[r-2],np.inner(Zn,Bd),np.math.sqrt(s2y))
+        pdf[r] = a - b
     return pdf
 
 def pdf_pos(X,Zn,Bd,w,s2y,s2u, fpos_1_handler, dfpos_1_handler):
@@ -211,6 +219,7 @@ def pdf_pos(X,Zn,Bd,w,s2y,s2u, fpos_1_handler, dfpos_1_handler):
     # s2y: scalar, variance of pseudo-observations
     # s2u: scalar, variance of auxiliary noise
 
-    pdf = 1/sqrt(2*pi*(s2u+s2y)) .* exp( -1/(2*(s2y+s2u)) * (fpos_1_handler(X,w) - Zn*Bd).^2 ) ...
-        .* abs( dfpos_1_handler(X,w) )
+    pdf = 1.0/np.math.sqrt(2*np.pi*(s2u+s2y)) * np.math.exp( \
+            -1.0/(2.0*(s2y+s2u)) * (fpos_1_handler(X,w) - np.inner(Zn,Bd))**2)\
+            * np.abs( dfpos_1_handler(X,w) )
     return pdf
