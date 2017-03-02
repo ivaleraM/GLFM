@@ -48,7 +48,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
     Function to call inference routine for GLFM model from Python code
     Inputs:
         Xin: observation matrix ( numpy array [D*N] )
-        Cin: string array [1*D]
+        Cin: string array of length D
         Zin: latent feature binary matrix (numpy array [K*N] )
         Win: vector of input weights for internal function transformation
 
@@ -61,6 +61,15 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
         Nsim: number of iterations
         maxK: máximum number of latent features (for memory allocation)
         missing: value of missings (should be an integer or nan) # TODO: check
+    Outputs:
+        B_out: feature matrix: np.array of dimensions (D,Kest,maxR) where D is
+               the number of dimensions, Kest is the number of inferred latent
+               features, and maxR is the maximum number of categories
+        Z_out: activation matrix: np.arry of dimensions (Kest,N) where Kest is
+               the number of inferred latent features, and N = number of obs.
+        Theta_out: auxiliary variables for ordinal variables, ndarray of size
+                   (D,maxR) where D = nr. of dimensions, maxR = max nr. of
+                   categories
     """
     #print X_in.flags['C_CONTIGUOUS']
     #X_in = np.ascontiguousarray(X_in)
