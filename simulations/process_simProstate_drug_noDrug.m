@@ -61,7 +61,7 @@ for d=1:size(data.X,2) % for each dimension
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u);
+                pdf = pdf_pos(xx,Zn,Bd,w,s2Y,s2u,@(x,w) fpos_1(x,w), @(x,w) dfpos_1(x, w));
                 plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             case 'c',
                 Zn = patterns(pp,:);
@@ -75,7 +75,7 @@ for d=1:size(data.X,2) % for each dimension
                 Zn = patterns(pp,:);
                 Bd = B(d,:,1)';
                 w = 2 ./ max(data.X(:,d));
-                pdf = pdf_count(xx+min(data.X(data.X(:,d) ~= missing,d),Zn,Bd,w,s2Y);
+                pdf = pdf_count(xx+min(data.X(data.X(:,d) ~= missing,d)),Zn,Bd,w,s2Y,@(x,w) fpos_1(x,w));
                 plot(xx,pdf, colors{p}, 'linewidth', 2); hold on;
             otherwise
                 error('Unknown type of variable');

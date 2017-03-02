@@ -48,7 +48,7 @@ s2u = 1;
 colors = {'k--', 'k', 'b--', 'b', 'r--', 'r'};%, 'm--', 'm'};
 for d=1:size(data.X,2) % for each dimension
     figure(d); subplot(5,1,1:4); hold off;
-    mask_noMissing = ~isnan( data.X(:,d) ) && data.X(:,d) ~= missing;
+    mask_noMissing = ~isnan( data.X(:,d) ) & data.X(:,d) ~= missing;
     if ((data.C(d) == 'n') || (data.C(d) == 'c') || (data.C(d) == 'o'))   && (min(data.X(:,d)) > 1)
         offset = min(data.X(mask_noMissing,d)) + 1;
     elseif (data.C(d) == 'p') && (min(data.X(:,d)) > 0)
