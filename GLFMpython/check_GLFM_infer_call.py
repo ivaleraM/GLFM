@@ -16,28 +16,14 @@ print 'First, in Python'
 print X
 print Z
 
-#print '\nX flags'
-#print X.flags
-#print '\n'
-#print X.transpose().flags
-
-#print '\nZ flags'
-#print Z.flags
-#print '\n'
-#print Z.transpose().flags
-
-#print '\nX flags'
-#print X.flags
 X2 = np.ascontiguousarray(X.transpose())
 Z2 = np.ascontiguousarray(Z.transpose())
-#print '\n'
-#print X2.flags
-#print X2
 
-print '\nNow, inside C'
+print '\nNow, inside C\n'
 #pdb.set_trace()
 (Z_out,B_out,Theta_out) = GLFM.infer(X2,C,Z2,W)
 
+print '\nBack to Python\n'
 print Z_out
 print "\n"
 print B_out
