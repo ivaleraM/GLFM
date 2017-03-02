@@ -5,6 +5,8 @@
 import numpy as np
 from scipy.stats import norm
 
+import pdb
+
 # --------------------
 # Auxiliary Functions
 # --------------------
@@ -61,7 +63,7 @@ def freal(y, s2u):
         tmp = randn(y.shape[0],y.shape[1])
     else:
         print 'undefined dimensions for y'
-    x = y + np.math.sqrt(s2u) * tmp
+    x = y + np.sqrt(s2u) * tmp
     return x
 
 def fpos(y, w):
@@ -71,7 +73,7 @@ def fpos(y, w):
 
     ##x = log( exp( w * y ) + 1)
     #x =  y^2 /w
-    x = np.math.log(np.math.exp(y)+1) / (w*1.0)
+    x = np.log(np.exp(y)+1) / (w*1.0)
     return x
 
 def fcat(y):
@@ -101,17 +103,17 @@ def ford(y, theta):
             x = r+1
     return x
 
-def fpos_1(x,w):
+def fpos_1(x,we):
     # w: scalar
     #y = sqrt(w*x)
     # y = log( exp( x ) + 1) / w
-    y = np.math.log( np.math.exp( w*x ) - 1 )
+    y = np.log( np.exp( we*x ) - 1 )
     return y
 
 def fpos_1_xi(x,w):
     # w: scalar
 
-    y = np.math.sqrt(w*x)
+    y = np.sqrt(w*x)
     # y = log( exp( x ) + 1) / w
     # y = log( exp( w*x ) -1 )
     return y
@@ -129,7 +131,7 @@ def dfpos_1(x, w):
     # w: scalar
     #y = 1./sqrt(x)
     #y = -0.5*w^0.5 * x.^(-0.5)
-    y = (w*1.0) / ( 1 - np.math.exp( w * x) )
+    y = (w*1.0) / ( 1 - np.exp( w * x) )
     return y
 
 def dfpos_1_xi(x, w):
@@ -152,7 +154,7 @@ def pdf_real(X, Zn,Bd,s2y,s2u):
     #   Bd: 1*K array
     #  s2y: noise variance for pseudo-observations (scalar)
     #  s2u: auxiliary noise variance (scalar)
-    pdf = norm.pdf(X, np.inner(Zn,Bd) , np.math.sqrt(s2y + s2u) )
+    pdf = norm.pdf(X, np.inner(Zn,Bd) , np.sqrt(s2y + s2u) )
     return pdf
 
 def pdf_cat(Zn,Bd,s2u,R):
@@ -164,26 +166,26 @@ def pdf_cat(Zn,Bd,s2u,R):
     #   s2u: scalar, variance of auxiliary noise
     #     R: number of categories
 
-    pdf = np.zeros((1,R))
+    pdf = np.zeros(R)
     numMC_samples = 100
     for r in xrange(R):
         tmp = np.ones((1,numMC_samples))
         # we compute the expectation using Monte Carlo samples
         # TODO: check that u does not depend on j
-        uV = np.math.sqrt(s2u) * np.random.randn(numMC_samples) # mean = 0
+        uV = np.sqrt(s2u) * np.random.randn(numMC_samples) # mean = 0
         for j in xrange(R):
             if (j==r):
                 continue
             tmp = tmp * norm.cdf(uV + np.kron( np.ones(numMC_samples), \
-                    np.inner(Zn,Bd[:,r]-Bd[:,j]) )
+                    np.inner(Zn,Bd[:,r]-Bd[:,j]) ) )
                 #(Bd(:,r)-Bd(:,j)), 1, numMC_samples) )
         pdf[r] = np.mean(tmp,1)
     return pdf
 
 
 def pdf_count(X,Zn,Bd,w,s2y, fpos_1_handler):
-    pdf = norm.cdf(fpos_1_handler(X+1,w), np.inner(Zn,Bd), np.math.sqrt(s2y)) - ...
-    norm.cdf(fpos_1_handler(X,w), np.inner(Zn,Bd), np.math.sqrt(s2y))
+    pdf = norm.cdf(fpos_1_handler(X+1,w), np.inner(Zn,Bd), np.sqrt(s2y)) \
+        - norm.cdf(fpos_1_handler(X,w), np.inner(Zn,Bd), np.sqrt(s2y))
     return pdf
 
 def pdf_ord(Zn,Bd,theta,s2y):
@@ -198,14 +200,14 @@ def pdf_ord(Zn,Bd,theta,s2y):
     pdf = np.zeros(R)
     for r in xrange(R):
         if (r==0):
-            a = norm.cdf(theta[0],np.inner(Zn,Bd),np.math.sqrt(s2y))
+            a = norm.cdf(theta[0],np.inner(Zn,Bd),np.sqrt(s2y))
             b = 0
         elif (r==(R-1)):
             a = 1
-            b = norm.cdf(theta[r-2],np.inner(Zn,Bd),np.math.sqrt(s2y))
+            b = norm.cdf(theta[r-2],np.inner(Zn,Bd),np.sqrt(s2y))
         else:
-            a = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.math.sqrt(s2y))
-            b = norm.cdf(theta[r-2],np.inner(Zn,Bd),np.math.sqrt(s2y))
+            a = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
+            b = norm.cdf(theta[r-2],np.inner(Zn,Bd),np.sqrt(s2y))
         pdf[r] = a - b
     return pdf
 
@@ -219,7 +221,7 @@ def pdf_pos(X,Zn,Bd,w,s2y,s2u, fpos_1_handler, dfpos_1_handler):
     # s2y: scalar, variance of pseudo-observations
     # s2u: scalar, variance of auxiliary noise
 
-    pdf = 1.0/np.math.sqrt(2*np.pi*(s2u+s2y)) * np.math.exp( \
+    pdf = 1.0/np.sqrt(2*np.pi*(s2u+s2y)) * np.exp( \
             -1.0/(2.0*(s2y+s2u)) * (fpos_1_handler(X,w) - np.inner(Zn,Bd))**2)\
             * np.abs( dfpos_1_handler(X,w) )
     return pdf
