@@ -1,9 +1,10 @@
 import numpy as np # import numpy matrix for calculus with matrices
-import sys         # import sys to add path of the python wrapper functions
-sys.path.append('../Ccode/wrapper_python/')
-import GLFM        # import General Latent Feature Model Library
+#import sys         # import sys to add path of the python wrapper functions
+#sys.path.append('../Ccode/wrapper_python/')
+#import GLFM        # import General Latent Feature Model Library
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
+import GLFM #matrix_completion as GLFM
 
 # ---------------------------------------------
 # 1. GENERATIVE MODEL
@@ -108,5 +109,6 @@ for k in xrange(B_out.shape[1]):
 plt.ion()  # interactive mode for plotting (script continues)
 plt.show() # display figure
 
-print "SUCCESSFUL"
-
+print('\n\n# -------------------')
+print "# SUCCESSFUL"
+print('# -------------------')

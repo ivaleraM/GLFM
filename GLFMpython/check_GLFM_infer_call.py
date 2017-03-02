@@ -1,7 +1,4 @@
 import numpy as np
-import sys
-sys.path.append('../Ccode/wrapper_python/')
-import pdb
 import GLFM
 
 # --------------------------------------------------

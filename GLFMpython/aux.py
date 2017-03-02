@@ -38,7 +38,7 @@ def preprocess(X,C,missing=-1):
             print 'Unkown datatype'
     return X2
 
-def plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
+def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     """
     Function to plot an individual dimension of feature matrix B
     Inputs:
@@ -116,3 +116,95 @@ def plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     else:
         print 'Unknown datatype'
     return
+
+
+
+def plot_dim(X,B,Theta,C,d,Zp,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
+    """
+    Function to plot an individual dimension of feature matrix B
+    Inputs:
+        X: observation matrix of dimensions (D,N)
+        B: (D,Kest,maxR) ndarray
+        C: datatype vector - str of length D
+        d: dimension to plot
+    Output:
+        void
+    """
+    if Zp.shape[1] != B.shape[1]:
+        print 'Error: Sizes of Zp and B are inconsistent'
+
+    colors = ['r','b','g','m','g']
+    plt.figure()       # create new figure
+    plt.xlabel(xlabel) # add x legend
+    print xlabel
+
+    (D,Kest,maxR) = B.shape
+    Xd = X[d,:]
+    Cd = C[d]
+    # only consider values in dimension d which are not missing
+    if np.isnan(missing):
+        mask = np.where(not(np.isnan(Xd)))[0]
+    else:
+        mask = np.where(Xd != missing)[0]
+    (numPatterns,Kest) = Zp.shape
+    if Cd == 'g':
+        numP = 100 # number of points to plot
+        xx = np.linspace( min(Xd[mask]), max(Xd[mask]), numP )
+        Bdv = B[d,:,0]
+        for p in xrange(numPatterns):
+            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
+            pdf = mf.pdf_real(xx, Zn,Bdv,s2Y,s2u)
+            plt.plot(xx,pdf,label=str(Zn))
+        plt.legend()
+        plt.ion()
+        plt.show()
+
+    elif Cd == 'p':
+        numP = 100 # number of points to plot
+        xx = np.linspace( min(Xd[mask]), max(Xd[mask]), numP )
+        Bdv = B[d,:,0]
+        w = 2.0 / max(Xd[mask]) # TODO: put function handler
+        for p in xrange(numPatterns):
+            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
+            pdf = mf.pdf_pos(xx,Zn,Bdv,w,s2Y,s2u,lambda x,w: mf.fpos_1(x,w), \
+                lambda x,w: mf.dfpos_1(x, w))
+            plt.plot(xx,pdf,colors[p],label=str(Zn))
+        plt.legend()
+        plt.ion()
+        plt.show()
+
+    elif Cd == 'n':
+        xx = np.arange( min(Xd[mask]), max(Xd[mask])+1)
+        Bdv = B[d,:,0]
+        w = 2.0 / max(Xd[mask]) # TODO: put function handler
+        for p in xrange(numPatterns):
+            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
+            pdf = mf.pdf_count(xx,Zn,Bdv,w,s2Y, lambda x,w: mf.fpos_1(x,w))
+            plt.stem(xx,pdf,colors[p], label=str(Zn))
+        plt.legend()
+        plt.ion()
+        plt.show()
+
+    elif Cd == 'c':
+        R = len( np.unique(Xd[mask]) )
+        Bdv = np.squeeze(B[d,:,:]) # TODO: Review that size = [K*R]
+        bar_width = 0.35
+        for p in xrange(numPatterns):
+            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
+            pdf = mf.pdf_cat(Zn,Bdv,s2u,R)
+            index = np.arange(len(pdf))
+            plt.bar(index,pdf,bar_width,colors[p], label=str(Zn))
+        plt.xticks(index + bar_width / 2, catlabel, rotation='vertical')
+        plt.legend()
+        plt.ion()
+        plt.show()
+
+    elif Cd == 'o':
+        print 'This category is currently under development'
+        a = 1
+        # TODO
+    else:
+        print 'Unknown datatype'
+    return
+
+

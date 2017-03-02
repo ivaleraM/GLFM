@@ -7,7 +7,6 @@ import GLFM
 
 import csv
 import matplotlib.pyplot as plt
-import matrix_completion as MC # import General Latent Feature Model Package
 
 ## load input data + add perc. of missings
 print 'Loading data...'
@@ -77,7 +76,7 @@ Z = np.ascontiguousarray( np.random.randint(0,2,size=(Kinit,N)).astype('float64'
 Xmiss = np.ascontiguousarray(Xmiss)
 
 #(Z_out,B_out,Theta_out) = GLFM.infer(Xmiss,C,Z)
-Xcompl = MC.complete_matrix(Xmiss, C, Niter=50, missing=missing_val) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
+Xcompl = GLFM.complete_matrix(Xmiss, C, Niter=50, missing=missing_val) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
 
 print 'Visualizing a single example without missing...'
 pixels = Xcompl[:,idx_ran]

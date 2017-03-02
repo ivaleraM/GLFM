@@ -14,6 +14,7 @@ import csv
 
 from aux import preprocess
 from aux import plot_dim
+from aux import plot_dim_1feat
 import pdb
 
 # ---------------------------------------------
@@ -60,6 +61,10 @@ Kinit = 1   # initial number of latent features
 prob = 0.2  # probability of feature activation in matrix Z
 Z = np.ascontiguousarray( ((np.random.rand(Kinit,N) < prob) * 1.0).astype('float64') )
 
+# with bias
+Z = np.concatenate((np.ones((N,1)),(np.random.rand(N,Kest-1) < 0.2)*1.0),axis=1)
+bias = 1
+
 print '\tInitialization of variables needed for the GLFM model...'
 # Generate weights for transformation
 W = np.ascontiguousarray( 2.0 / np.max(X,1) ) # TODO: account for missings
@@ -91,40 +96,15 @@ Kest = B_out.shape[1] # number of inferred latent features
 D = B_out.shape[0]    # number of dimensions
 
 
-pdb.set_trace()
-#k = 0
-for d in xrange(D):
-    # Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
-    ylab = str(data['ylabel'][0][d].tolist()[0])
-    V = np.squeeze(data['cat_labels'][0][d])
-    catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
-    #plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,\
-    #        xlabel=ylab, catlabel=catlab)
-    Zp = np.zeros((2,Kest)) # dimensions (numPatterns,Kest)
-    Zp[0,0] = 1.0
-    Zp[1,1] = 1.0
-    plot_dim(X, B_out, Theta_out, C,d,Zp,s2y,s2u,\
-            xlabel=ylab, catlabel=catlab)
-    pdb.set_trace()
-
-print '\tPrint inferred latent features...'
-f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = \
-        plt.subplots(3, 3, sharex='col', sharey='row')
-V = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]
-for k in xrange(B_out.shape[1]):
-    if k>len(V):
-        break;
-    # visualize each inferred dimension
-    B_out[:,k]
-    pixels = B_out[:,k].reshape((int(np.sqrt(D)),int(np.sqrt(D))))
-    pixels
-    # Plot
-    V[k].imshow(pixels, cmap='gray',interpolation='none')
-    V[k].set_ylim(0,5)
-    V[k].set_xlim(0,5)
-    V[k].set_title('Feature %d' % (k+1))
-plt.ion()  # interactive mode for plotting (script continues)
-plt.show() # display figure
+k = 0
+d = 2
+#for d in xrange(D):
+# Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
+ylab = str(data['ylabel_long'][0][d].tolist()[0])
+V = np.squeeze(data['cat_labels'][0][d])
+catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
+plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,\
+        xlabel=ylab, catlabel=catlab)
 
 print "SUCCESSFUL"
 
