@@ -1,14 +1,12 @@
-
-# coding: utf-8
-
-# # Demo script for data exploration
-
-# In[1]:
+# ----------------------------------------------------------------
+# Demo script for data exploration
+# ----------------------------------------------------------------
 
 import numpy as np # import numpy matrix for calculus with matrices
 import GLFM        # import General Latent Feature Model Library
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
+import cPickle     # module to be able to load databases
 
 # import libraries for I/O of data
 import scipy.io
@@ -16,15 +14,21 @@ import csv
 
 from aux import preprocess
 from aux import plot_dim
-from aux import plot_dim_1feat
-
-
-# In[2]:
+import pdb
 
 # ---------------------------------------------
 # 1. LOAD DATA TO BE EXPLORED
 # ---------------------------------------------
 print '\n 1. LOAD DATABASE TO EXPLORE\n'
+
+#input_file = '../databases/dataExploration/csv_xls/prostate.csv'
+#with open(input_file) as f:
+#    reader = csv.reader(f, delimiter=',')
+#    for row in reader:
+#        print row
+#        pdb.set_trace()
+#    [Y,genetic_ids, clinical_ids,vocab] = cPickle.load(f)
+
 # Fields inside structure
 #       xlabel: [502x1 double]
 #            X: [502x16 double]
@@ -39,15 +43,12 @@ data = tmp['data'][0,0] # data is a dictionary with the following keys
 X = data['X'].transpose() #  ndarray of dimensions D * N
 C = str(data['C'][0])
 # dealing with missing data: replace np.nan by -1
-(xx,yy) = np.where(np.isnan(X)) # find positions where X is nan (i.e. missing data)
+(xx,yy) = np.where(np.isnan(X)) # find positions where X is nan
 for r in xrange(len(xx)):
     X[xx[r],yy[r]] = -1
 
 # prepare input data for C++ inference routine # TODO: hide from user
 X = preprocess(X,C)
-
-
-# In[3]:
 
 # ---------------------------------------------
 # 2. INITIALIZATION FOR GLFM ALGORITHM
@@ -58,10 +59,6 @@ print '\tInitializing Z...'
 Kinit = 1   # initial number of latent features
 prob = 0.2  # probability of feature activation in matrix Z
 Z = np.ascontiguousarray( ((np.random.rand(Kinit,N) < prob) * 1.0).astype('float64') )
-bias = 0
-# with bias
-#Z = np.concatenate((np.ones((N,1)),(np.random.rand(N,Kest-1) < 0.2)*1.0),axis=1)
-#bias = 1
 
 print '\tInitialization of variables needed for the GLFM model...'
 # Generate weights for transformation
@@ -73,10 +70,6 @@ s2B = 1      # noise variance for feature values
 s2u = 0.1    # auxiliary noise
 alpha = 1    # mass parameter for the Indian Buffet Process
 
-
-
-# In[4]:
-
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
@@ -84,14 +77,10 @@ print '\n 3. INFERENCE\n'
 
 print '\tInfering latent features...'
 tic = time.time()
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,W,Nsim=Niter,s2Y=s2y, s2B=s2B, maxK=D, bias=bias)
+(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,W,Nsim=Niter,s2Y=s2y, s2B=s2B, maxK=D)
 toc = time.time()
 time = tic - toc
 print '\tElapsed: %.2f seconds.' % (toc-tic)
-
-
-
-# In[6]:
 
 # ---------------------------------------------
 # 4. PROCESS RESULTS
@@ -102,22 +91,40 @@ Kest = B_out.shape[1] # number of inferred latent features
 D = B_out.shape[0]    # number of dimensions
 
 
-k = 0
-d = 3
-#for d in xrange(D):
-# Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
-ylab = str(data['ylabel_long'][0][d].tolist()[0])
-V = np.squeeze(data['cat_labels'][0][d])
-catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
-plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,        xlabel=ylab, catlabel=catlab)
+#k = 0
+for d in xrange(D):
+    # Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
+    ylab = str(data['ylabel'][0][d].tolist()[0])
+    V = np.squeeze(data['cat_labels'][0][d])
+    catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
+    #plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,\
+    #        xlabel=ylab, catlabel=catlab)
+    Zp = np.zeros((2,Kest)) # dimensions (numPatterns,Kest)
+    Zp[0,0] = 1.0
+    Zp[1,1] = 1.0
+    pdb.set_trace()
+    plot_dim(X, B_out, Theta_out, C,d,Zp,s2y,s2u,\
+            xlabel=ylab, catlabel=catlab)
+    pdb.set_trace()
 
-k = 1
-#for d in xrange(D):
-# Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
-ylab = str(data['ylabel_long'][0][d].tolist()[0])
-V = np.squeeze(data['cat_labels'][0][d])
-catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
-plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,        xlabel=ylab, catlabel=catlab)
+print '\tPrint inferred latent features...'
+f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = \
+        plt.subplots(3, 3, sharex='col', sharey='row')
+V = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]
+for k in xrange(B_out.shape[1]):
+    if k>len(V):
+        break;
+    # visualize each inferred dimension
+    B_out[:,k]
+    pixels = B_out[:,k].reshape((int(np.sqrt(D)),int(np.sqrt(D))))
+    pixels
+    # Plot
+    V[k].imshow(pixels, cmap='gray',interpolation='none')
+    V[k].set_ylim(0,5)
+    V[k].set_xlim(0,5)
+    V[k].set_title('Feature %d' % (k+1))
+plt.ion()  # interactive mode for plotting (script continues)
+plt.show() # display figure
 
 print "SUCCESSFUL"
 

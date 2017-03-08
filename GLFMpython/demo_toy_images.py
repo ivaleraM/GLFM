@@ -1,10 +1,21 @@
+
+# coding: utf-8
+
+# # Introduction to the Indian Buffet Process
+# # DEMO_TOY_IMAGES
+
+# Let us first import all the necessary libraries.
+
+# In[3]:
+
 import numpy as np # import numpy matrix for calculus with matrices
-#import sys         # import sys to add path of the python wrapper functions
-#sys.path.append('../Ccode/wrapper_python/')
-#import GLFM        # import General Latent Feature Model Library
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
-import GLFM #matrix_completion as GLFM
+import sys
+import GLFM
+
+
+# In[8]:
 
 # ---------------------------------------------
 # 1. GENERATIVE MODEL
@@ -14,14 +25,7 @@ print '\n 1. GENERATIVE MODEL\n'
 print '\tGenerating feature images (components)...'
 # Btrue contains the features images or components in order to generate the
 # whole set of images
-Btrue = np.array([[0,1.0,0,0,0,0,  1,1,1,0,0,0, 0,1,0,0,0,0, \
-        0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0], \
-        [0,0.0,0,1,1,1,  0,0,0,1,0,1, 0,0,0,1,1,1, \
-        0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0], \
-        [0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, \
-        1,0,0,0,0,0, 1,1,0,0,0,0, 1,1,1,0,0,0], \
-        [0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, \
-        0,0,0,1,1,1, 0,0,0,0,1,0, 0,0,0,0,1,0]])
+Btrue = np.array([[0,1.0,0,0,0,0,  1,1,1,0,0,0, 0,1,0,0,0,0,         0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0],         [0,0.0,0,1,1,1,  0,0,0,1,0,1, 0,0,0,1,1,1,         0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0],         [0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,         1,0,0,0,0,0, 1,1,0,0,0,0, 1,1,1,0,0,0],         [0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,         0,0,0,1,1,1, 0,0,0,0,1,0, 0,0,0,0,1,0]])
 D = Btrue.shape[1] # number of dimensions
 K = Btrue.shape[0] # number of binary images
 
@@ -39,7 +43,7 @@ plt.ion()  # turn on interactive mode for plotting (so that the script continues
 plt.show() # display images component
 
 print '\tSetting model parameters (ground truth) and generate database...'
-N = 500            # number of images to be generated
+N = 1000           # number of images to be generated
 s2x = 1            # noise variance for the observations
 
 print '\tGenerating data with N=%d and noise variance s2x=%.2f' % (N,s2x)
@@ -49,6 +53,10 @@ Ztrue = np.ascontiguousarray( np.random.randint(0,2,size=(K,N)).astype('float64'
 X = np.sqrt(s2x) * np.random.randn(D,N) + np.inner(Btrue.transpose(),Ztrue.transpose())
 X = np.ascontiguousarray(X) # specify way to store matrix to be compatible with C code
 #X = X - 0.5 # center data
+
+
+
+# In[3]:
 
 # ---------------------------------------------
 # 2. INITIALIZATION FOR GLFM ALGORITHM
@@ -65,34 +73,37 @@ C = np.tile('g',(1,X.shape[0]))[0].tostring() # vector to indicate datatype of e
 # Generate weights for transformation
 W = np.ascontiguousarray( 2.0 / np.max(X,1) )
 
-Niter = 100  # number of algorithm iterations
+Niter = 1000  # number of algorithm iterations
 s2y = 1      # noise variance for pseudo-obervations
 s2B = 1      # noise variance for feature values
+
+
+
+# In[ ]:
 
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
-print '\n 3. INFERENCE\n'
-
 print '\tInfering latent features...'
-tic = time.time()
+#tic = time.time()
 (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,W,Nsim=Niter,s2Y=s2y, s2B=s2B,
         s2u=0.005, maxK=10)
-toc = time.time()
-time = tic - toc
-print '\tElapsed: %.2f seconds.' % (toc-tic)
+#toc = time.time()
+#time = tic - toc
+#print '\tElapsed: %.2f seconds.' % (toc-tic)
+
+
+
+# In[ ]:
 
 # ---------------------------------------------
 # 4. PROCESS RESULTS
 # ---------------------------------------------
-print '\n 4. PROCESSING RESULTS\n'
-
 Kest = B_out.shape[1] # number of inferred latent features
 D = B_out.shape[0]    # number of dimensions
 
 print '\tPrint inferred latent features...'
-f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = \
-        plt.subplots(3, 3, sharex='col', sharey='row')
+f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) =         plt.subplots(3, 3, sharex='col', sharey='row')
 V = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]
 for k in xrange(B_out.shape[1]):
     if k>len(V):
@@ -108,7 +119,9 @@ for k in xrange(B_out.shape[1]):
     V[k].set_title('Feature %d' % (k+1))
 plt.ion()  # interactive mode for plotting (script continues)
 plt.show() # display figure
+plt.pause(0.0001)
 
 print('\n\n# -------------------')
-print "# SUCCESSFUL"
+print "# END"
 print('# -------------------')
+
