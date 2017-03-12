@@ -130,13 +130,14 @@ def plot_dim(X,B,Theta,C,d,Zp,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     Output:
         void
     """
+    pdb.set_trace()
     if Zp.shape[1] != B.shape[1]:
         print 'Error: Sizes of Zp and B are inconsistent'
 
     colors = ['r','b','g','m','g']
     plt.figure()       # create new figure
     plt.xlabel(xlabel) # add x legend
-    print xlabel
+    #print xlabel
 
     (D,Kest,maxR) = B.shape
     Xd = X[d,:]
