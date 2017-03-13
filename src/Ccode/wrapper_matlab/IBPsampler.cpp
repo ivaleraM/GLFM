@@ -8,14 +8,14 @@
 #define input_C prhs[1]
 #define input_Z prhs[2]
 #define input_bias prhs[3]
-//#define input_W prhs[4]
-#define input_s2Y prhs[4]
-#define input_s2u prhs[5]
-#define input_s2B prhs[6]
-#define input_alpha prhs[7]
-#define input_Nsim prhs[8]
-#define input_maxK prhs[9]
-#define input_missing prhs[10]
+#define input_W prhs[4]
+#define input_s2Y prhs[5]
+#define input_s2u prhs[6]
+#define input_s2B prhs[7]
+#define input_alpha prhs[8]
+#define input_Nsim prhs[9]
+#define input_maxK prhs[10]
+#define input_missing prhs[11]
 
 //*********************************OUTPUTS**************************//
 #define output_Z plhs[0]
@@ -27,7 +27,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     //..................CHECKING INPUTS AND OUTPUTS.............//
     /* Matrices are arranged per column */
 
-    if (nrhs!=11) {
+    if (nrhs!=12) {
         mexErrMsgTxt("Invalid number of arguments\n");
     }
 
@@ -50,7 +50,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double *X_dou = mxGetPr(input_X);
     char *C= mxArrayToString(input_C);
     double *Z_dou = mxGetPr(input_Z);
-    //double *w_dou = mxGetPr(input_W);
+    double *w_dou = mxGetPr(input_W);
 
     //Inputs to the C function
     int bias = mxGetScalar(input_bias);
@@ -81,7 +81,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double w[D];
     for (int d=0; d<D; d++){
           C[d] = tolower(C[d]);//convert to lower case
-          w[d]=1; //w_dou[d];
+          w[d]=w_dou[d];
           //printf("%c ",C[d]);
          }
 
