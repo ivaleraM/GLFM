@@ -1,30 +1,65 @@
-import numpy as np
-import random
+import numpy as np # package to work with arrays
+import random # package used to initialize latent variables
+import os
 import sys
-sys.path.append('../Ccode/wrapper_python/')
+root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
+sys.path.append(root+'/Ccode/wrapper_python/')
 import GLFMlib # python wrapper library in order to run C++ inference routine
 
 class GLFM:
-    # General Latent Feature Model Class
-    # model hyperparameters and parameter settings
-    def __init__(self, alpha=1, bias=0, s2y=1.0, s2u=0.001, s2B=1.0):
+    """
+    General Latent Feature Model Class
+    attributes = model hyperparameters + parameter settings
+        alpha : mass parameter for the Indian Buffet Process
+        bias  : Number of columns that should be considered as bias (and
+                thus, not sampled during inference)
+        s2y   : variance of the Gaussian prior for the pseudo-observations
+        s2u   : variance of the Gaussian prior on the auxiliary variables
+        s2B   : variance of the Gaussian prior on the elements of the
+                weighting matrices (latent features) B (TODO: Give intuition)
+        Niter : number of internal iterations for the Gibbs sampler within
+                the C code before return
+        maxK  : max number of latent features to be allocated inside C++
+        missing : integer value that should be understood as missing value
+        verbose : parameter to control how much info should be printed
+    """
+    def __init__(self, alpha=1.0, bias=0, s2y=1.0, s2u=0.001, s2B=1.0,\
+            Niter=100, maxK=50, missing=-1, verbose=0):
         self.alpha = alpha
         self.bias = bias
         self.s2y = s2y
         self.s2u = s2u
         self.s2B = s2B
+        self.Niter = Niter
+        self.maxK = maxK
+        self.missing = missing
+        self.verbose = verbose
 
-    def infer(self, Xin,Cin,Zin,Win,bias=1,s2Y=1.0, s2u=0.001, s2B=1.0,
-            alpha=1.0, Niter=100, maxK=50, missing=-1, verbose=0):
+    def print_info(self):
+        print 'General Latent Feature Model Object:\n'+\
+                ('alpha: %.2f\n' % self.alpha)+\
+                (' bias: %d\n' % self.bias)+\
+                ('  s2y: %.2f\n' % self.s2y)+\
+                ('  s2u: %.2f\n' % self.s2u)+\
+                ('  s2B: %.2f\n' % self.s2B)+\
+                ('Niter: %d\n' % self.Niter)+\
+                (' maxK: %d\n' % self.maxK)+\
+                ('missing: %d\n' % self.missing)+\
+                ('verbose: %d\n' % self.verbose)
+
+
+    def infer(self, Xin, Cin, Zin):
+        # Generate weights for transformation
+        Win = np.ascontiguousarray( 2.0 / np.max(Xin,1) )
         return GLFMlib.infer(Xin, Cin, Zin, Win, self.bias, self.s2y, self.s2u,\
-            self.s2B, self.alpha, Niter,\
-            maxK, missing, verbose)
+            self.s2B, self.alpha, self.Niter, self.maxK, self.missing, self.verbose)
 
-    def complete_matrix(self, Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
+    def complete_matrix(self, Xmiss, C):
         """
         Function to complete missing values of a certain numpy 2dim array
 
         Input parameters:
+             self  : GLFM Object
              Xmiss : numpy array which should be completed, should be normalized (TODO: check)
                      Size [NxD] where N is the number of observations and D is the
                      number of dimensions. Here missing data should be introduced
@@ -34,16 +69,6 @@ class GLFM:
                      (dimension) of the observation matrix X. Here 'g' indicates
                      real variable, 'p' positive real variable, 'n' count data,
                      'o' ordinal data and 'c' categorical data.
-             bias  : Number of columns that should be considered as bias (and
-                     thus, not sampled during inference)
-             s2Y   : variance of the Gaussian prior on the auxiliary variables
-                     (pseudo-observations) Y (TODO: detail how to change it)
-             s2B   : variance of the Gaussian prior on the elements of the
-                     weighting matrices (latent features) B (TODO: Give intuition)
-             alpha : mass parameter for the Indian Buffet Process
-             Niter : number of internal iterations for the Gibbs sampler within
-                     the C code before return
-             missing : integer value that should be understood as missing value
         Output paramaters:
             Xcompl : same numpy array as Xmiss but whose missing values have been
                      inferred and completed by the algorithm.
@@ -58,16 +83,10 @@ class GLFM:
         #Zini= 1.0*( np.random.rand(N,2) > 0.8 )
         Kinit = 3
         Zini = np.ascontiguousarray( (np.random.rand(Kinit,N) > 0.8).astype('float64') )
-        W = np.ascontiguousarray( 2.0/np.max(Xmiss,1) )
-        # Call inner C function
-        (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,W,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
-
-        # Compute test log-likelihood
-        # TODO: Compute test LLH?
+        (Zest, B, Theta)= self.infer(Xmiss,C,Zini) # run inference function
 
         Xcompl=np.copy(Xmiss)
         [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
-        #miss=find(Xmiss==missing)';
         f_1= lambda x,w: np.log(np.exp(w*x)-1) # called element-wise 
         f= lambda y,w:  np.log(np.exp(y)+1)/w
         W = 2 / Xmiss.max(1) # D*1 # TODO: Take care of missing values when taking max
