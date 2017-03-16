@@ -1,10 +1,10 @@
 import numpy as np
 import random
 
+import os
 import sys
-#sys.path.append('../Ccode/wrapper_python/')
-path = '/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/GLFM/'
-sys.path.append(path+'src/Ccode/wrapper_python/')
+root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
+sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
 
 import GLFMlib # python wrapper library in order to run C++ inference routine
 
@@ -55,9 +55,6 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     W = np.ascontiguousarray( 2.0/np.max(Xmiss,1) )
     # Call inner C function
     (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,W,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
-
-    # Compute test log-likelihood
-    # TODO: Compute test LLH?
 
     Xcompl=np.copy(Xmiss)
     [idxs_d, idxs_n] = (Xmiss == missing).nonzero()

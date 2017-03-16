@@ -1,37 +1,21 @@
-''' bnpy module __init__ file
+''' GLFM module __init__ file
 '''
 import os
 import sys
 
 # Configure PYTHONPATH before importing any bnpy modules
+path = '/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/GLFM/'
+sys.path.append(path+'src/Ccode/wrapper_python/')
 root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
-sys.path.append(os.path.join(root, 'datasets/'))
-sys.path.append(os.path.join(root, 'third-party/'))
-sys.path.append(os.path.join(root, 'third-party/anchorwordtopics/'))
+print 'root=' + root
+sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
+print os.path.join(root, 'Ccode/wrapper_python/')
+print os.path.join(root, 'GLFMpython/')
+#import data
 
-import data
-import suffstats
-import util
-
-import allocmodel
-import obsmodel
-from HModel import HModel
-
-import ioutil
-import init
-import learnalg
-import birthmove
-import mergemove
-import deletemove
-
-import Run
-
-run = Run.run
-load_model = ioutil.ModelReader.load_model
-save_model = ioutil.ModelWriter.save_model
-
-__all__ = ['run', 'Run', 'learnalg', 'allocmodel', 'obsmodel', 'suffstats',
-                   'HModel', 'init', 'util', 'ioutil']
+__all__ = ['GLFM']
+#__all__ = ['run', 'Run', 'learnalg', 'allocmodel', 'obsmodel', 'suffstats',
+#                   'HModel', 'init', 'util', 'ioutil']
 
 ## Configure save location
 #hasWriteableOutdir = False
@@ -58,13 +42,13 @@ __all__ = ['run', 'Run', 'learnalg', 'allocmodel', 'obsmodel', 'suffstats',
 #    else:
 #        print "Warning: Environment variable BNPYDATADIR not a valid directory"
 
-# Optional viz package for plotting
-try:
-    from matplotlib import pylab
-    import viz
-    canPlot = True
-    __all__.append('viz')
-except ImportError:
-    print "Error importing matplotlib. Plotting disabled."
-    print "Fix by making sure this produces a figure window on your system"
-    print " >>> from matplotlib import pylab; pylab.figure(); pylab.show();"
+## Optional viz package for plotting
+#try:
+#    from matplotlib import pylab
+#    import viz
+#    canPlot = True
+#    __all__.append('viz')
+#except ImportError:
+#    print "Error importing matplotlib. Plotting disabled."
+#    print "Fix by making sure this produces a figure window on your system"
+#    print " >>> from matplotlib import pylab; pylab.figure(); pylab.show();"
