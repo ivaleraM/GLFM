@@ -1,5 +1,4 @@
 import numpy as np
-import pdb
 import mapping_functions as mf
 import matplotlib.pyplot as plt
 

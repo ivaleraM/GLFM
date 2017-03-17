@@ -1,7 +1,10 @@
 function [patterns, C] = get_feature_patterns(Z,varargin)
-% function to return matrix with all patterns (numPatterns*numFeatures)
-% C is an assignment vector, with the pattern id for each patient
-% (numPatients*1)
+% function to return matrix with all patterns dim = (numPatterns*numFeatures)
+% Inputs:
+%   - Z: N*K matrix
+% Outputs:
+%   - patterns: (numPatterns*numFeatures) matrix
+%   - C is an assignment vector, with the pattern id for each patient (numPatients*1)
 
 % average
 N = size(Z,1);
@@ -10,7 +13,6 @@ C = zeros(N,1);
 
 if isempty(varargin)
     patterns = unique(Z,'rows'); % all existing patterns
-    %patterns = de2bi(0:(D-1),'left-msb');
 else
     patterns = varargin{1};
 end

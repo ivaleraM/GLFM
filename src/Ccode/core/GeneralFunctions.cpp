@@ -17,7 +17,6 @@
 // Transformations
 /*double f(double x, double w){
     return logFun(1+w*gsl_sf_exp(x));
-    
 }*/
 double f_1(double x, double w){
     return logFun(gsl_sf_exp(w*x)-1);

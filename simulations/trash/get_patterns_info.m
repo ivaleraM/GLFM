@@ -1,5 +1,5 @@
 function [numPatients, mean_survival, median_survival] = get_patterns_info(Y,patterns,C)
-    % fiven the matrix of patterns, it returns 3 vectors with number of
+    % Given the matrix of patterns, it returns 3 vectors with number of
     % patients, mean and median survival per pattern.
     % C is an assignment vector, with the pattern id for each patient
 
