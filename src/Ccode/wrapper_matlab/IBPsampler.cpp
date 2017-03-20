@@ -40,7 +40,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     const mwSize* Cdim = mxGetDimensions(input_C);
 
     int N = Xdim[0];
-    int D = Xdim[1];
+    size_t D = Xdim[1];
     int K = Zdim[1];
     //printf("C1 %d, C2 %d \n",Cdim[0], Cdim[1]);
     if (Cdim[1]!=D & Cdim[0]!=1){
@@ -87,7 +87,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
     int R[D];
     double  maxX[D];
-    int maxR=1;
+    size_t maxR=1;
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
          Xd_view = gsl_matrix_row(X, d);
@@ -127,7 +127,8 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     output_Z = mxCreateDoubleMatrix(Kest,N,mxREAL);
     double *pZ=mxGetPr(output_Z);
 
-    int dimB[3]={D,Kest,maxR};
+    size_t Kest2 = (size_t) Kest;
+    size_t dimB[3]={D,Kest2,maxR};
     output_B = mxCreateNumericArray(3,dimB,mxDOUBLE_CLASS,mxREAL);
     double *pB=mxGetPr(output_B);
 

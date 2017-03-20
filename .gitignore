@@ -7,6 +7,7 @@
 *.csv
 *.o
 *.mexa64
+*.mexmaci64
 
 src/Ccode/wrapper_python/build/*
 src/Ccode/wrapper_python/GLFM.cpp
