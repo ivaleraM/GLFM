@@ -1,6 +1,6 @@
 clear
 
-addpath(genpath('../Ccode/'));
+addpath(genpath('../../src/Ccode/'));
 
 Niter_in = 100;
 Niter_out = 1;
@@ -14,7 +14,7 @@ missing=-1;
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
 
-load ../databases/dataExploration/mat/prostate.mat %../databases/Wine.mat
+load ../../datasets/mat/prostate.mat %../databases/Wine.mat
 
 drug_identifier = data.X(:,2) > 0.5;
 
@@ -66,7 +66,6 @@ Zini= [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
 bias = 2;
 Zest = Zini';
 for it=1:Niter_out
-    disp('Im here...');
     pause;
     [Zest B Theta]= IBPsampler(Xmiss,data.C,Zest',bias,W,s2Y,s2u,s2B,alpha,Niter_in,maxK,missing);
     sum(Zest')
