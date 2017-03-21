@@ -54,16 +54,17 @@ def rnd_real(Zn,Bd,numSamples, s2y, s2u):
 # --------------------
 
 def freal(y, s2u):
-    # Mapping function for real values
-    # s2u: auxiliary noise
-    dim = len(y.shape)
-    if dim == 1:
-        tmp = randn(y.shape[0])
-    elif dim == 2:
-        tmp = randn(y.shape[0],y.shape[1])
-    else:
-        print 'undefined dimensions for y'
-    x = y + np.sqrt(s2u) * tmp
+#    # Mapping function for real values
+#    # s2u: auxiliary noise
+#    dim = len(y.shape)
+#    if dim == 1:
+#        tmp = randn(y.shape[0])
+#    elif dim == 2:
+#        tmp = randn(y.shape[0],y.shape[1])
+#    else:
+#        print 'undefined dimensions for y'
+#    x = y + np.sqrt(s2u) * tmp
+    x = y
     return x
 
 def fpos(y):
@@ -116,9 +117,8 @@ def dfpos_1(x):
     y = 1.0 / ( 1 - np.exp(-x) )
     return y
 
-def dfpos_1_xi(x, w):
-    y = 2*x
-    #y = -0.5*(w**0.5) * (x**(-0.5))
+def dfpos_1_xi(x):
+    y = -0.5* (x**(-1.5))
     return y
 
 # ------------------------------------------
