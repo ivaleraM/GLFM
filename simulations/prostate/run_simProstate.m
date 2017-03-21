@@ -1,5 +1,5 @@
 
-function run_simProstate(Niter, s2Y, s2u, alpha, simId)
+%function run_simProstate(Niter, s2Y, s2u, alpha, simId)
        
        addpath(genpath('../../src/'));
        randn('seed',round(sum(1e5*clock)));
@@ -24,13 +24,14 @@ function run_simProstate(Niter, s2Y, s2u, alpha, simId)
        
        %% DEFINE PARAMS
        params.missing = -1;
-       params.s2Y = .5;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-       params.s2u = .5;
-       params.s2B = 1;      % Variance of the Gaussian prior of the weigting matrices B
-       params.alpha = 1;    % Concentration parameter of the IBP
-       params.Niter = 100; % Number of iterations for the gibbs sampler
-       params.maxK = D;
+       params.s2Y = .5;      % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+       params.s2u = .01;
+       params.s2B = 1;       % Variance of the Gaussian prior of the weigting matrices B
+       params.alpha = 1;     % Concentration parameter of the IBP
+       params.Niter = 10000; % Number of iterations for the gibbs sampler
+       params.maxK = 10;
        params.bias = 2;
+       params.save = 1;
        
        %% Inference
        tic;
@@ -38,7 +39,11 @@ function run_simProstate(Niter, s2Y, s2u, alpha, simId)
        sum(hidden.Z)
        toc;
        
-       output_file = sprintf( '../results/prostate_simId%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',simId,Niter, s2Y, s2u, alpha);
-       save(output_file);
-
-end
+       if params.save
+           output_file = sprintf( '../results/prostate_simId%d_%d_s2Y%.2f_s2u%.2f_alpha%.2f.mat',simId,Niter, s2Y, s2u, alpha);
+           save(output_file);
+       end
+       
+       
+       
+%end

@@ -15,18 +15,16 @@ function hidden = run_IBPsampler(data,varargin)
     switch length(varargin)
         case 0
             % initialize Z
-            
+            hidden.Z = double(rand(N,2)>0.8);
             % default values for params
-            params.bias = 0;
-            params.s2Y = 0.1;
-            params.s2u = 0.1;
-            params.s2B = 1;
-            params.alpha = 1;
-            params.Niter = 100;
-            params.maxK = size(data.X,2);
-            params.missing = -1;
+            params = init_default_params(data, []);
+            
         case 1, hidden = varargin{1};
+            params = init_default_params(data, []);
+            
         case 2, hidden = varargin{1}; params = varargin{2};
+            params = init_default_params(data, params); % eventually complete params structure
+            
         otherwise
             error('Incorrect number of input parameters: should be 1, 2 or 3');
     end
@@ -34,7 +32,7 @@ function hidden = run_IBPsampler(data,varargin)
     % replace missings + preprocess
     data.X(isnan(data.X)) = params.missing;
     
-    %[Xnorm,suffStats] = preprocess(X,C)
+    %[Xnorm,suffStats] = preprocess(X,C,missings)
     [Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
     
     % call .cpp wrapper function

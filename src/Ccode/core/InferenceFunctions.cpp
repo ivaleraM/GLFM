@@ -392,6 +392,8 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
 //    printf("C[0]=%f,C[1]=%f,C[2]=%f\n", C[0], C[1], C[2]);
 //    printf("N=%d, D=%d, K=%d\n", N, D, K);
 
+    printf("Running inference algorithm (currently inside C++ routine...)\n");
+    
        //.....INIZIALIZATION........//
     double s2theta=1;
     // random numbers
