@@ -16,10 +16,10 @@ function [X,suffStats] = preprocess(X,C,missing)
         xs = X(mask,d); % vector will all not missing values
         switch C(d)
             case 'g', mu = mean(xs);
-            case 'p', mu = min(xs) + 10^-6; 
-            case 'n', mu = min(xs) + 1;
-            case 'c', mu = min(xs) + 1;
-            case 'o', mu = min(xs) + 1;
+            case 'p', mu = min(xs) - 10^-6; 
+            case 'n', mu = min(xs) - 1;
+            case 'c', mu = min(xs) - 1;
+            case 'o', mu = min(xs) - 1;
             otherwise
                 error('Unknown data type: should be g, p, c, n, c, o');
         end
