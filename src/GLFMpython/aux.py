@@ -48,7 +48,7 @@ def preprocess(X,C,missing=-1):
             print 'Unkown datatype'
         if (C[d] == 'g') or (C[d] == 'p') or (C[d] == 'n'):
             X2[d,mask] = 2 * (X[d,mask] - mu) / max(X[d,mask]-mu)
-        elif
+        else:
             X2[d,mask] = X[d,mask] - mu
     return X2
 

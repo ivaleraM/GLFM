@@ -59,8 +59,6 @@ bias = 0
 #bias = 1
 
 print '\tInitialization of variables needed for the GLFM model...'
-# Generate weights for transformation
-W = np.ascontiguousarray( 2.0 / np.max(X,1) ) # TODO: account for missings
 
 Niter = 100  # number of algorithm iterations
 s2y = 0.5    # noise variance for pseudo-obervations
@@ -75,7 +73,7 @@ print '\n 3. INFERENCE\n'
 
 print '\tInfering latent features...'
 tic = time.time()
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,W,Nsim=Niter,s2Y=s2y, s2B=s2B, maxK=D, bias=bias)
+(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=Niter,s2Y=s2y, s2B=s2B, maxK=D, bias=bias)
 toc = time.time()
 time = tic - toc
 print '\tElapsed: %.2f seconds.' % (toc-tic)

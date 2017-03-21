@@ -8,8 +8,11 @@ sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
 
 import GLFMlib # python wrapper library in order to run C++ inference routine
 
-def infer(Xin,Cin,Zin,Win,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
+def infer(Xin,Cin,Zin,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
         alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0):
+    Win = np.ones(Xin.shape[0])
+    Xin = np.ascontiguousarray( Xin ) # specify way to store matrices to be
+    Zin = np.ascontiguousarray( Zin ) # compatible with C code
     return GLFMlib.infer(Xin, Cin, Zin, Win, bias, s2Y, s2u, s2B, alpha, Nsim,\
         maxK, missing, verbose)
 
@@ -52,9 +55,8 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     #Zini= 1.0*( np.random.rand(N,2) > 0.8 )
     Kinit = 3
     Zini = np.ascontiguousarray( (np.random.rand(Kinit,N) > 0.8).astype('float64') )
-    W = np.ascontiguousarray( 2.0/np.max(Xmiss,1) )
     # Call inner C function
-    (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,W,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
+    (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
 
     Xcompl=np.copy(Xmiss)
     [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
