@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+import time
 import os
 import sys
 root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
@@ -14,12 +15,17 @@ def infer(Xin,Cin,Zin,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
         alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0, transform='on'):
     # prepare input data for C++ inference routine
     if transform=='on':
-        Xin = preprocess(Xin,Cin,missing)
+        (Xin,suffStats) = preprocess(Xin,Cin,missing)
     Fin = np.ones(Xin.shape[0])
     Xin = np.ascontiguousarray( Xin ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( Zin ) # compatible with C code
-    return GLFMlib.infer(Xin, Cin, Zin, Fin, bias, s2Y, s2u, s2B, alpha, Nsim,\
+    tic = time.time()
+    (Z_out,B_out,Theta_out) = GLFMlib.infer(Xin, Cin, Zin, Fin, bias, s2Y, s2u, s2B, alpha, Nsim,\
         maxK, missing, verbose)
+    toc = time.time()
+    time = tic - toc
+    print '\tElapsed: %.2f seconds.' % (toc-tic)
+    return (Z_out,B_out,Theta_out)
 
 def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
     """
