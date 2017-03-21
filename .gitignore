@@ -16,6 +16,6 @@ src/Ccode/wrapper_python/GLFM.cpp
 src/Ccode/wrapper_python_old/build/*
 src/Ccode/wrapper_python_old/GLFM.cpp
 
-GLFMpython/.ipynb_checkpoints/*
+demos/python/.ipynb_checkpoints/*
 simulations/results/*
 datasets/*
