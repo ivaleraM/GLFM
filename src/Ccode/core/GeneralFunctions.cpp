@@ -19,10 +19,14 @@
     return logFun(1+w*gsl_sf_exp(x));
 }*/
 double f_1(double x, double w){
-    return logFun(gsl_sf_exp(w*x)-1);
-    //w=2;
-    //return  sqrt(w*x);
-    //f_1=@(x) (1/a)*sqrt(x);    
+    if (w==1){
+        return logFun(gsl_sf_exp(x)-1);
+    }else if(w==2){
+        return  sqrt(x);
+    }else{
+        printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
+        return logFun(gsl_sf_exp(x)-1);
+    }
 }
 
 // Functions

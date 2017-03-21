@@ -263,15 +263,14 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
             muy= gsl_matrix_alloc(1,1);
             for (int n=0; n<N; n++){
                 xnd=gsl_matrix_get (X, d, n);
+                Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
+                Bd_view = gsl_matrix_submatrix (Bd, 0, 0, K, 1);
+                matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
                 if (xnd==missing || gsl_isnan(xnd)){
-                    Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
-                    Bd_view = gsl_matrix_submatrix (Bd, 0, 0, K, 1);
-                    
-                    matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
                     gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
-
+                 }else{
+                    gsl_matrix_set (Yd, 0, n, (xnd/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
                 }
-                
             }
             gsl_matrix_free(muy);    
             
@@ -431,7 +430,6 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                    }else{
                         gsl_matrix_set(Y[d], 0, n, xnd);
                     }
-
                 }
 
                 break;
@@ -444,7 +442,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     if (xnd==missing || gsl_isnan(xnd)){
                          gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
                     }else{
-                         gsl_matrix_set(Y[d], 0, n, f_1(xnd,w[d])+gsl_ran_gaussian (seed, s2Y));
+                         gsl_matrix_set(Y[d], 0, n, f_1(xnd,w[d])); //+gsl_ran_gaussian (seed, s2Y)
                     }
                 }
                 break;

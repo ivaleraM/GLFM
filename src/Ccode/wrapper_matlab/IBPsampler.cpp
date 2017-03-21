@@ -8,14 +8,15 @@
 #define input_C prhs[1]
 #define input_Z prhs[2]
 #define input_bias prhs[3]
+#define input_F prhs[4]
 //#define input_W prhs[4]
-#define input_s2Y prhs[4]
-#define input_s2u prhs[5]
-#define input_s2B prhs[6]
-#define input_alpha prhs[7]
-#define input_Nsim prhs[8]
-#define input_maxK prhs[9]
-#define input_missing prhs[10]
+#define input_s2Y prhs[5]
+#define input_s2u prhs[6]
+#define input_s2B prhs[7]
+#define input_alpha prhs[8]
+#define input_Nsim prhs[9]
+#define input_maxK prhs[10]
+#define input_missing prhs[11]
 
 //*********************************OUTPUTS**************************//
 #define output_Z plhs[0]
@@ -40,7 +41,8 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     const mwSize* Cdim = mxGetDimensions(input_C);
 
     int N = Xdim[0];
-    size_t D = Xdim[1];
+//     size_t D = Xdim[1];
+    int D = Xdim[1];
     int K = Zdim[1];
     //printf("C1 %d, C2 %d \n",Cdim[0], Cdim[1]);
     if (Cdim[1]!=D & Cdim[0]!=1){
@@ -50,6 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double *X_dou = mxGetPr(input_X);
     char *C= mxArrayToString(input_C);
     double *Z_dou = mxGetPr(input_Z);
+    double *f_dou = mxGetPr(input_F);
     //double *w_dou = mxGetPr(input_W);
 
     //Inputs to the C function
@@ -78,16 +81,19 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
     //...............BODY CODE.......................//
     //Starting C function
-    double w[D];
+//     double w[D],
+    double f[D];
     for (int d=0; d<D; d++){
           C[d] = tolower(C[d]);//convert to lower case
-          w[d]=1; //w_dou[d];
+//           w[d]=1; //w_dou[d];
+          f[d]= f_dou[d];
           //printf("%c ",C[d]);
          }
 
     int R[D];
     double  maxX[D];
-    size_t maxR=1;
+//     size_t maxR=1;
+    int maxR=1;
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
          Xd_view = gsl_matrix_row(X, d);
@@ -121,14 +127,15 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     }
 
   //...............Inference Function.......................//
-   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
+   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, f, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
 
    //...............SET OUTPUT POINTERS.......................//
     output_Z = mxCreateDoubleMatrix(Kest,N,mxREAL);
     double *pZ=mxGetPr(output_Z);
 
-    size_t Kest2 = (size_t) Kest;
-    size_t dimB[3]={D,Kest2,maxR};
+//     size_t Kest2 = (size_t) Kest;
+//     size_t dimB[3]={D,Kest2,maxR};
+    int dimB[3]={D,Kest,maxR};
     output_B = mxCreateNumericArray(3,dimB,mxDOUBLE_CLASS,mxREAL);
     double *pB=mxGetPr(output_B);
 
