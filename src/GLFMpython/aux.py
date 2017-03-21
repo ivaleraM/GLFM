@@ -2,12 +2,23 @@ import numpy as np
 import mapping_functions as mf
 import matplotlib.pyplot as plt
 
+#import cPickle
+#input_file = '../databases/dataExploration/csv_xls/prostate.csv'
+#with open(input_file) as f:
+#    reader = csv.reader(f, delimiter=',')
+#    for row in reader:
+#        print row
+#        pdb.set_trace()
+#    [Y,genetic_ids, clinical_ids,vocab] = cPickle.load(f)
+
 def preprocess(X,C,missing=-1):
     """
     Function to make matrix X suitable for Ccode inference routine
-    For count data, categorical and ordinal data, make sure that first
+    For categorical and ordinal data, make sure that first
     categories start at 1
+    For real-valued, positive and count data, make transformation
     For positive real data, make sure that the smallest value is bigger than 0
+    For count data, smallest value should be 1
     Inputs:
              X: observation matrix, D*N array
              C: datatype, string of length D
@@ -25,16 +36,20 @@ def preprocess(X,C,missing=-1):
             mask = np.where(X[d,:] != missing)[0]
         if mask.shape[0] == 0: # empty
             continue
-        offset = min(X[d,mask])
-        if C[d] == 'n' or C[d] == 'c' or C[d] == 'o':
-            X2[d,mask] = X[d,mask] - offset + 1
+        if C[d] == 'g':
+            mu = mean(X2[d,mask])
         elif C[d] == 'p':
-            X2[d,mask] = X[d,mask] - offset + 10**-6
-        elif C[d] == 'g':
-            continue
-            # TODO
+            mu = min(X2[d,mask]) - 10**-10
+        elif C[d] == 'n':
+            mu = min(X2[d,mask]) - 1
+        elif (C[d] == 'c') or (C[d] == 'o'):
+            mu = min(X2[d,mask]) - 1
         else:
             print 'Unkown datatype'
+        if (C[d] == 'g') or (C[d] == 'p') or (C[d] == 'n'):
+            X2[d,mask] = 2 * (X[d,mask] - mu) / max(X[d,mask]-mu)
+        elif
+            X2[d,mask] = X[d,mask] - mu
     return X2
 
 def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
