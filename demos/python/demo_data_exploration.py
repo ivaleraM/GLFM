@@ -1,14 +1,14 @@
-# DEMO DATA EXPLORATION FOR PROSTATE CANCER DATASET
-
-# coding: utf-8
+# ----------------------------------------------------------------
 # Demo script for data exploration
+# ----------------------------------------------------------------
 
 import numpy as np # import numpy matrix for calculus with matrices
 import sys
-sys.path.append('../../src/GLFMpython_old/')
+sys.path.append('../../src/GLFMpython/')
 import GLFM        # import General Latent Feature Model Library
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
+import pdb
 
 # import libraries for I/O of data
 import scipy.io
@@ -22,6 +22,7 @@ from aux import plot_dim_1feat
 # 1. LOAD DATA TO BE EXPLORED
 # ---------------------------------------------
 print '\n 1. LOAD DATABASE TO EXPLORE\n'
+
 # Fields inside structure
 #       xlabel: [502x1 double]
 #            X: [502x16 double]
@@ -29,7 +30,7 @@ print '\n 1. LOAD DATABASE TO EXPLORE\n'
 #   cat_labels: {[]  []  []  {10x1 cell}  []  [] {4x1 cell}  ... []}
 #       ylabel: {'stage'  'rx'  'dtime' 'status'  'age'  'wt'  'pf'... 'bm'}
 #  ylabel_long: {1x16 cell}
-input_file = '../../datasets/dataExploration/mat/prostate.mat'
+input_file = '../../datasets/mat/prostate.mat'
 tmp = scipy.io.loadmat(input_file)
 data = tmp['data'][0,0] # data is a dictionary with the following keys
 (N,D) = data['X'].shape
@@ -67,10 +68,6 @@ s2B = 1      # noise variance for feature values
 s2u = 0.1    # auxiliary noise
 alpha = 1    # mass parameter for the Indian Buffet Process
 
-
-
-# In[4]:
-
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
@@ -83,10 +80,6 @@ toc = time.time()
 time = tic - toc
 print '\tElapsed: %.2f seconds.' % (toc-tic)
 
-
-
-# In[6]:
-
 # ---------------------------------------------
 # 4. PROCESS RESULTS
 # ---------------------------------------------
@@ -96,22 +89,24 @@ Kest = B_out.shape[1] # number of inferred latent features
 D = B_out.shape[0]    # number of dimensions
 
 
-k = 0
-d = 3
-#for d in xrange(D):
-# Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
-ylab = str(data['ylabel_long'][0][d].tolist()[0])
-V = np.squeeze(data['cat_labels'][0][d])
-catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
-plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,        xlabel=ylab, catlabel=catlab)
+for d in xrange(D):
+    ylab = str(data['ylabel_long'][0][d].tolist()[0]) # label for dimension d
+    V = np.squeeze(data['cat_labels'][0][d]) # labels for categories (empty if not categorical)
+    catlab = tuple( map(lambda x: str(x.tolist()[0]),V) ) # transform list of categories into tuple
+    Zp = np.zeros((3,Kest)) # dimensions (numPatterns,Kest)
+    Zp[0,0] = 1.0
+    Zp[1,1] = 1.0
+    Zp[2,2] = 1.0
+    plot_dim(X, B_out, Theta_out, C,d,Zp,s2y,s2u,\
+            xlabel=ylab, catlabel=catlab) # function to plot patterns corresponding to Zp
+    pdb.set_trace()
 
-k = 1
-#for d in xrange(D):
-# Signature: plot_dim(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,labels=[])
-ylab = str(data['ylabel_long'][0][d].tolist()[0])
-V = np.squeeze(data['cat_labels'][0][d])
-catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
-plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u,        xlabel=ylab, catlabel=catlab)
+#k = 1
+#d = 3
+#ylab = str(data['ylabel_long'][0][d].tolist()[0])
+#V = np.squeeze(data['cat_labels'][0][d])
+#catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
+#plot_dim_1feat(X, B_out, Theta_out, C,d,k,s2y,s2u, xlabel=ylab, catlabel=catlab)
 
 print "SUCCESSFUL"
 

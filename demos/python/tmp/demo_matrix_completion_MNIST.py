@@ -4,25 +4,22 @@
 # # Introduction to the Indian Buffet Process
 # # DEMO_MATRIX_COMPLETION
 
-# In[1]:
-
 ## import necessary packages
 import numpy as np # library to work with numpy arrays and math operations
 from random import sample
 import sys
+sys.path.append('../../src/GLFMpython/')
 import GLFM
 import csv
 import matplotlib.pyplot as plt
 
-
-# In[2]:
 
 # ---------------------------------------------
 # 1. LOAD DATA
 # ---------------------------------------------
 print 'Loading data...'
 # DB can be downloaded here: http://pjreddie.com/projects/mnist-in-csv/
-file = '../databases/mnist_train_small_100.csv'
+file = '../../datasets/raw/MNIST/mnist_train_small_100.csv'
 N = 100
 images = []
 with open(file, 'r') as csv_file:
@@ -50,8 +47,6 @@ Xtrue = X[:,sample(xrange(X.shape[1]),N)] + 1.0 # add one, since 'n' type cannot
 C = np.tile('n',(1,Xtrue.shape[0]))[0].tostring()
 
 
-# In[3]:
-
 # ---------------------------------------------
 # 2. ADDING MISSING VALUES
 # ---------------------------------------------
@@ -64,8 +59,6 @@ Xmiss = np.copy(Xtrue)
 Xmiss[mask_missing] = missing_val
 
 
-# In[4]:
-
 # ---------------------------------------------
 # 4. RUN ALGORITHM
 # ---------------------------------------------
@@ -76,9 +69,6 @@ Xmiss = np.ascontiguousarray(Xmiss)
 
 #(Z_out,B_out,Theta_out) = GLFM.infer(Xmiss,C,Z)
 Xcompl = GLFM.complete_matrix(Xmiss, C, Niter=100, missing=missing_val) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
-
-
-# In[5]:
 
 # ---------------------------------------------
 # 3. VISUALIZATION OF A RANDOM IMAGE
