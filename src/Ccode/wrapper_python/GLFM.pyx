@@ -41,7 +41,7 @@ cdef extern from "../core/InferenceFunctions.h":
 @cython.wraparound(False)
 def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
         Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None,\
-        np.ndarray[double, ndim=1, mode="c"] Win, int bias=0, double s2Y=1.0, double s2u=1.0,\
+        np.ndarray[double, ndim=1, mode="c"] Fin, int bias=0, double s2Y=1.0, double s2u=1.0,\
         double s2B=1.0, double alpha=1.0, int Nsim=100,\
         int maxK=50, double missing=-1, int verbose=0):#\
     """
@@ -50,7 +50,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
         Xin: observation matrix ( numpy array [D*N] )
         Cin: string array of length D
         Zin: latent feature binary matrix (numpy array [K*N] )
-        Win: vector of input weights for internal function transformation
+        Fin: vector of transform functions indicators
 
         *** (the following are optional parameters) ***
         bias: number of columns that should not be sampled in matrix Zin
@@ -154,7 +154,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
     ##...............Inference Function.......................##
     print '\nEntering C function...'
     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
-            <int*> R.data, &Win[0],\
+            <int*> R.data, &Fin[0],\
             maxR, bias,  N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
     print 'Back to Python OK'
 

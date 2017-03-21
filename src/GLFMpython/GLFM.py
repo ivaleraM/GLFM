@@ -15,10 +15,10 @@ def infer(Xin,Cin,Zin,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
     # prepare input data for C++ inference routine
     if transform=='on':
         Xin = preprocess(Xin,Cin,missing)
-    Win = np.ones(Xin.shape[0])
+    Fin = np.ones(Xin.shape[0])
     Xin = np.ascontiguousarray( Xin ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( Zin ) # compatible with C code
-    return GLFMlib.infer(Xin, Cin, Zin, Win, bias, s2Y, s2u, s2B, alpha, Nsim,\
+    return GLFMlib.infer(Xin, Cin, Zin, Fin, bias, s2Y, s2u, s2B, alpha, Nsim,\
         maxK, missing, verbose)
 
 def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
