@@ -8,6 +8,7 @@ sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
 
 import GLFMlib # python wrapper library in order to run C++ inference routine
 from aux import preprocess
+import mapping_functions as mf
 
 def infer(Xin,Cin,Zin,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
         alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0, transform='on'):
@@ -57,29 +58,27 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     ## Inference
     #Zini= 1.0*( np.random.rand(N,2) > 0.8 )
     Kinit = 3
-    Zini = np.ascontiguousarray( (np.random.rand(Kinit,N) > 0.8).astype('float64') )
+    Zini = (np.random.rand(Kinit,N) > 0.8).astype('float64')
     # Call inner C function
     (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
 
     Xcompl=np.copy(Xmiss)
     [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
-    #miss=find(Xmiss==missing)';
-    f_1= lambda x,w: np.log(np.exp(w*x)-1) # called element-wise 
-    f= lambda y,w:  np.log(np.exp(y)+1)/w
-    W = 2 / Xmiss.max(1) # D*1 # TODO: Take care of missing values when taking max
+
     for ii in xrange(len(idxs_n)):
         if Xmiss[idxs_d[ii],idxs_n[ii]] == missing: # will always be the case
-            d = idxs_d[ii] # np.ceil(ii/N)
-            n = idxs_n[ii] # np.mod(ii,N)
+            d = idxs_d[ii]
+            n = idxs_n[ii]
             Br=np.squeeze(B[d,:])
             aux = Zest[:,n].reshape(-1,1) # Zest(:,n)'
+            M = np.inner(aux.transpose(),Br)
             if (C[d] != 'c'):
-                M = np.inner(aux.transpose(),Br)
+                # TODO
             if (C[d] == 'g'):
                 # branch checked, working
                 Xcompl[d,n] = M
             elif (C[d] == 'p'):
-                Xcompl[d,n] = f(M,W[d])
+                Xcompl[d,n] = mf.fpos(M)
             elif (C[d] == 'c'):
                Br = np.squeeze(B[d,:,:])
                prob = np.zeros((1,R[d]))
@@ -92,6 +91,6 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
                 [idx_x, idx_y] = (Theta[d,1:R[d]]>=M).nonzero()
                 Xcompl[d,n] = idx_x[0] # TODO: verify (x,y) and what if more els?
             elif (C[d] == 'n'):
-                Xcompl[d,n] = np.floor(f(M,W[d]))
+                Xcompl[d,n] = np.floor(mf.fpos(M))
 
     return Xcompl

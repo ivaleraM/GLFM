@@ -66,14 +66,10 @@ def freal(y, s2u):
     x = y + np.sqrt(s2u) * tmp
     return x
 
-def fpos(y, w):
+def fpos(y):
     # Inputs:
     #   Pseudo-observations y: [N*D] # Check dimensions
-    #   transformation weight w (scalar)
-
-    ##x = log( exp( w * y ) + 1)
-    #x =  y^2 /w
-    x = np.log(np.exp(y)+1) / (w*1.0)
+    x = np.log(np.exp(y)+1)
     return x
 
 def fcat(y):
@@ -82,11 +78,10 @@ def fcat(y):
     x = np.max(y,1) # .reshape(-1,1)
     return x
 
-def fcount(y,w):
+def fcount(y):
     # Inputs:
     #   Pseudo-observations y: [N*D]
-    #   transformation weights w [1*D] # TODO: Check dimensions
-    x = np.floor( fpos(y, w) )
+    x = np.floor( fpos(y) )
     return x
 
 def ford(y, theta):
@@ -103,43 +98,27 @@ def ford(y, theta):
             x = r+1
     return x
 
-def fpos_1(x,we):
-    # w: scalar
-    #y = sqrt(w*x)
-    # y = log( exp( x ) + 1) / w
-    y = np.log( np.exp( we*x ) - 1 )
+def fpos_1(x):
+    y = np.log( np.exp(x) - 1 )
     return y
 
-def fpos_1_xi(x,w):
-    # w: scalar
-
-    y = np.sqrt(w*x)
-    # y = log( exp( x ) + 1) / w
-    # y = log( exp( w*x ) -1 )
+def fpos_1_sq(x):
+    y = np.sqrt(x)
     return y
 
-def fpos_xi(y, w):
+def fpos_sq(y):
     # Inputs:
-    #   y: 
-    #   w: scalar
-    #x = log( exp( w * y ) + 1)
-    #x = log(exp(y)+1) / w
-    x =  y**2 / (w*1.0)
+    #   y: pseudo-observations
+    x =  y**2
     return x
 
-def dfpos_1(x, w):
-    # w: scalar
-    #y = 1./sqrt(x)
-    #y = -0.5*w^0.5 * x.^(-0.5)
-    y = (w*1.0) / ( 1 - np.exp( w * x) )
+def dfpos_1(x):
+    y = 1.0 / ( 1 - np.exp(-x) )
     return y
 
 def dfpos_1_xi(x, w):
-    # w: scalar
-    #y = 1./sqrt(x)
-    #y = w ./ ( 1 - exp( w .* x) )
-
-    y = -0.5*(w**0.5) * (x**(-0.5))
+    y = 2*x
+    #y = -0.5*(w**0.5) * (x**(-0.5))
     return y
 
 # ------------------------------------------
