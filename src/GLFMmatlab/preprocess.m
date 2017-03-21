@@ -29,6 +29,7 @@ function [X,suffStats] = preprocess(X,C,missing)
             X(mask,d) = 2 .* (xs - mu)./ max(xs-mu);
         else
             X(mask,d) = X(mask,d) - mu; % be sure that labels start at 1 (C++ implementation)
+            suffStats{d}(1) = -mu; 
         end
     end
 
