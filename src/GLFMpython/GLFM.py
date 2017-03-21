@@ -10,9 +10,10 @@ import GLFMlib # python wrapper library in order to run C++ inference routine
 from aux import preprocess
 
 def infer(Xin,Cin,Zin,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
-        alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0):
+        alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0, transform='on'):
     # prepare input data for C++ inference routine
-    Xin = preprocess(Xin,Cin,missing)
+    if transform=='on':
+        Xin = preprocess(Xin,Cin,missing)
     Win = np.ones(Xin.shape[0])
     Xin = np.ascontiguousarray( Xin ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( Zin ) # compatible with C code
