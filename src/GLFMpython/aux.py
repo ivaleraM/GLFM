@@ -28,6 +28,7 @@ def preprocess(X,C,missing=-1):
     """
     (D,N) = X.shape
     X2 = X.copy() # preprocess matrix
+    suffStats = []
     for d in xrange(D): # for each dimension
         # get vector removing missing values in dimension d
         if np.isnan(missing):
@@ -37,7 +38,7 @@ def preprocess(X,C,missing=-1):
         if mask.shape[0] == 0: # empty
             continue
         if C[d] == 'g':
-            mu = mean(X2[d,mask])
+            mu = np.mean(X2[d,mask])
         elif C[d] == 'p':
             mu = min(X2[d,mask]) - 10**-10
         elif C[d] == 'n':
@@ -47,10 +48,12 @@ def preprocess(X,C,missing=-1):
         else:
             print 'Unkown datatype'
         if (C[d] == 'g') or (C[d] == 'p') or (C[d] == 'n'):
-            X2[d,mask] = 2 * (X[d,mask] - mu) / max(X[d,mask]-mu)
+            X2[d,mask] = 2.0 * (X[d,mask] - mu) / max(X[d,mask]-mu)
+            suffStats.append(np.array([ -mu, 2.0/max(xs-mu) ])
         else:
             X2[d,mask] = X[d,mask] - mu
-    return X2
+            suffStats.append(np.array( [-mu] )
+    return (X2,suffStats)
 
 def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     """
