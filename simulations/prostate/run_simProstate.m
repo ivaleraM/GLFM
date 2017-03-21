@@ -31,6 +31,8 @@
        params.Niter = 10000; % Number of iterations for the gibbs sampler
        params.maxK = 10;
        params.bias = 2;
+       
+       params.simId = 1;
        params.save = 1;
        
        %% Inference
