@@ -12,3 +12,5 @@ function params = init_default_params(data, params)
     if ~isfield(params,'s2B'), params.s2B = 1; end % Variance of the Gaussian prior of the weigting matrices B
     if ~isfield(params,'Niter'), params.Niter = 1000; end % number of iterations to run
     if ~isfield(params,'maxK'), params.maxK = size(data.X,2); end % max number of latent features for memory allocation inside C++ routine
+    if ~isfield(params,'verbose'), params.verbose = 1; end % plot info in command line
+    if ~isfield(params,'save'), params.save = 0; end

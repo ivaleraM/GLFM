@@ -1,4 +1,4 @@
-function hidden = run_IBPsampler(data,varargin)
+function hidden = IBPsampler_run(data,varargin)
     % Wrapper .m function to call .cpp functions and make call simpler
     %
     %   Inputs:
@@ -36,12 +36,18 @@ function hidden = run_IBPsampler(data,varargin)
     [Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
     
     % call .cpp wrapper function
+    tic;
     [Z B Theta]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params. missing);
+    hidden.time = toc;
     
     hidden.Z = Z'; % it returns a K*N matrix, should be inverted
     hidden.B = B;
     hidden.Theta = Theta;
     hidden.suffStats = suffStats; % mapping functions info (necessary for plotting)
     
+    if params.verbose
+        hidden.time
+        sum(hidden.Z)
+    end
 end
