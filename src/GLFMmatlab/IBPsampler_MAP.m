@@ -1,0 +1,1 @@
+function X_map = IBPsampler_MAP(Zp,hidden)
