@@ -22,11 +22,27 @@ exploration of a given dataset.
 
 Calling from Matlab
 -------------------
-    bla
+    hidden = IBPsampler_run(data, hidden, params);
+
+where data is a structure containing:
+    X: N*D observation matrix of N samples and D dimensions 
+    C: 1*D string array indicating type of data for each dimension
+
+--- Alternative calls ---
+    
+    hidden = IBPsampler_run(data, hidden);
+OR
+    hidden = IBPsampler_run(data, hidden, params);
+
+where hidden is a structure of latent variables:
+    Z: N*K binary matrix of feature assignments (initialization for the IBP)
+and parans is a structure containing all simulation parameters and model
+    hyperparameters (see documentation for further details).
 
 Calling from Python
 -------------------
-    bla
+    import GLFM
+    (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
 
 # print help message for required arguments
 python -m GLFM.infer --help
