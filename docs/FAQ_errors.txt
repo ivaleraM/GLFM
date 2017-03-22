@@ -285,4 +285,22 @@ Isabel
 > necessary.
 
 
+-------------------------------------
+ERROR WITH MEX: GSL NOT FOUND (OS X)
+-------------------------------------
+
+mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+Building with 'Xcode Clang++'.
+Error using mex
+In file included from
+/Users/melanie/Documents/GLFM/src/Ccode/wrapper_matlab/IBPsampler.cpp:1:
+/Users/melanie/Documents/GLFM/src/Ccode/wrapper_matlab/IBPsampler.h:6:10:
+fatal error: 'gsl/gsl_sf_exp.h' file not found
+#include <gsl/gsl_sf_exp.h>
+         ^
+         1 error generated.
+
+To solve it, simplify specify library location (where to look for the include) with -I flag
+
+mex  -lgsl -I/usr/local/include -lgmp -lgslcblas IBPsampler.cpp
 
