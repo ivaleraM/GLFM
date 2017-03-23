@@ -91,15 +91,15 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     gsl_vector **theta=(gsl_vector **) calloc(D,sizeof(gsl_vector*));
     double w[D],mu[D];
     int R[D];
-    //printf("In C++: Transforming input data... ");
-    //int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w);
-    //printf("done\n");
-    int maxR = 1;
-    for (int d=0; d<D; d++){
-      w[d] = 1;
-      mu[d]= 0;
-      R[d] = 1;
-     }
+    printf("In C++: Transforming input data... ");
+    int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w);
+    printf("done\n");
+    //int maxR = 1;
+    //for (int d=0; d<D; d++){
+    //  w[d] = 1;
+    //  mu[d]= 0;
+    //  R[d] = 1;
+    // }
     printf("maxR=%d\n", maxR);
 
   //...............Inference Function.......................//

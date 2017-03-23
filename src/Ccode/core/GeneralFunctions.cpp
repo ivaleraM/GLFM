@@ -28,14 +28,15 @@ double fre_1(double x, double func, double mu, double w){
 
 double f_1(double x, double func, double mu, double w){
     //printf("pos = %f ", logFun(gsl_sf_exp(w*(x-mu))-1));
-    if (func==1){
-        return logFun(gsl_sf_exp(w*(x-mu))-1);
-    }else if(func==2){
-        return  sqrt(w*(x-mu));
-    }else{
-        printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
-        return logFun(gsl_sf_exp(w*(x-mu))-1);
-    }
+    return x;
+//    if (func==1){
+//        return logFun(gsl_sf_exp(w*(x-mu))-1);
+//    }else if(func==2){
+//        return  sqrt(w*(x-mu));
+//    }else{
+//        printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
+//        return logFun(gsl_sf_exp(w*(x-mu))-1);
+//    }
 }
 
 // Functions
