@@ -1,28 +1,50 @@
+%% demo TOY COMPLETE MNIST
+
 clear
-addpath(genpath('../Ccode/'));
-addpath('./aux/');
+addpath(genpath('../../src/GLFMmatlab/'));
+addpath(genpath('../../src/Ccode/'));
 
-% Define parameter default values for algorithm
-bias = 1; s2Y = 1.0; s2B = 1.0; alpha = 1.0; Niter = 5; maxK = 50; missing_val = -100;
+randn('seed',round(sum(1e5*clock)));
+rand('seed',round(sum(1e5*clock)));
 
-% load MNIST dataset
+%% LOAD MNIST dataset
 % This DB can be downloaded here: http://yann.lecun.com/exdb/mnist/
-images = loadMNISTImages('../databases/train-images-idx3-ubyte');
+images = loadMNISTImages('../../datasets/MNIST/train-images-idx3-ubyte');
 N = 100; % subset of images to consider
 Xtrue = images(:, randperm(size(images,2),N))' + 1; % N*D matrix (each column is one pixel
 
 perc_missing = 0.2;
+missing_val = -100;
 mask_missings = rand(size(Xtrue)) < perc_missing;
 Xmiss = Xtrue;
 Xmiss(mask_missings) = missing_val;
 
 C = repmat('n',1,size(Xmiss,2));
 
-% visualization
-idx = randi(N,1);
-figure(1); imagesc(reshape(Xmiss(idx,:),sqrt(784),sqrt(784)) );
-%colormap(gray)
+data.X = Xmiss;
+data.C = C;
 
-Xcompl = matrix_completion(Xmiss, C, s2Y, s2B, alpha, Niter, maxK, missing_val);
+%% Define parameter default values for algorithm
+params.bias = 1;
+params.s2Y = 1.0;
+params.s2B = 1.0;
+params.alpha = 1.0;
+params.Niter = 5;
+params.maxK = 50;
+params.missing = -100;
+
+%% INFERENCE
+hidden = IBPsampler_run(data,[],params); % no need to initialize Z
+
+%% Complete MATRIX + visualize random image
+
+X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+% visualization random image
+idx = randi(N,1);
+figure(1);
+subplot(1,3,1); imagesc(reshape(Xtrue(idx,:),sqrt(784),sqrt(784)) );
+subplot(1,3,2); imagesc(reshape(data.X(idx,:),sqrt(784),sqrt(784)) );
+subplot(1,3,3); imagesc(reshape(X_map(idx,:),sqrt(784),sqrt(784)) );
+%colormap(gray)
 
 disp('SUCCESSFUL');

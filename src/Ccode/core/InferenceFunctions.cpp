@@ -607,8 +607,8 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
                 if (R[d]>maxR){maxR=R[d];}
                 break;
          }
-//          printf("mu = %f ", mu[d]);
-//          printf("w = %f \n", w[d]);
+          printf("mu = %f ", mu[d]);
+          printf("w = %f \n", w[d]);
     }
     return maxR;
 }

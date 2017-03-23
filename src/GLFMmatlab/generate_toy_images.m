@@ -7,7 +7,7 @@ function [data,gT] = generate_toy_images(N,s2x)
     %  data: data structure with X: N*D obs matrix and C: 1*D datatype
     %  string vector
     %
-    Btrue = [0,1.0,0,0,0,0,  1,1,1,0,0,0, 0,1,0,0,0,0, ...
+    Btrue = 2* [0,1.0,0,0,0,0,  1,1,1,0,0,0, 0,1,0,0,0,0, ...
         0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0; ...
         0,0.0,0,1,1,1,  0,0,0,1,0,1, 0,0,0,1,1,1, ...
         0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0; ...
@@ -21,7 +21,7 @@ function [data,gT] = generate_toy_images(N,s2x)
     
     Ztrue = rand(N,K) < 0.5;
     
-    data.X = sqrt(s2x) * randn(N,D) + Ztrue * Btrue;
+    data.X = sqrt(s2x) * randn(N,D) + ( Ztrue * Btrue );
     data.C = repmat('g',1,D);
     
     gT.B = Btrue;

@@ -15,8 +15,7 @@ function hidden = IBPsampler_run(data,varargin)
     
     switch length(varargin)
         case 0
-            % initialize Z
-            hidden.Z = double(rand(N,2)>0.8);
+            hidden.Z = [];
             % default values for params
             params = init_default_params(data, []);
             
@@ -30,15 +29,24 @@ function hidden = IBPsampler_run(data,varargin)
             error('Incorrect number of input parameters: should be 1, 2 or 3');
     end
     
+    % initialize Z
+    if isempty(hidden.Z)
+        hidden.Z = double(rand(N,2)>0.8);
+        if (params.bias == 1)
+            hidden.Z = [ones(N,1) hidden.Z];
+        elseif (params.bias > 1)
+            error('There is more than 1 bias specified, but structure Z has not been initialized...');
+        end
+    end
+    
     % replace missings + preprocess
     data.X(isnan(data.X)) = params.missing;
     
-    [Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
-%     [Xmiss] = data.X;
+    %[Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
     
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, ones(1,size(Xmiss,2)), params.s2Y, ...
+    [Z B theta mu w]= IBPsampler(data.X,data.C, hidden.Z, params.bias, ones(1,size(data.X,2)), params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     
