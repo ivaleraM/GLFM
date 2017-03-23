@@ -29,6 +29,8 @@ function hidden = IBPsampler_run(data,varargin)
             error('Incorrect number of input parameters: should be 1, 2 or 3');
     end
     
+    D = size(data.X,2);
+    
     % initialize Z
     if isempty(hidden.Z)
         hidden.Z = double(rand(N,2)>0.8);
@@ -42,11 +44,21 @@ function hidden = IBPsampler_run(data,varargin)
     % replace missings + preprocess
     data.X(isnan(data.X)) = params.missing;
     
+    % change labels for categorical and ordinal vars such that > 0
+    V_offset = zeros(1,D);
+    for d=1:D
+        if (data.C(d) == 'c') || (data.C(d) == 'o')
+            mask = data.X(:,d) ~= params.missing;
+            V_offset(d) = min( data.X(mask,d) );
+            data.X(mask,d) = data.X(mask,d) - V_offset(d) + 1;
+        end
+    end
+    
     %[Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
     
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w]= IBPsampler(data.X,data.C, hidden.Z, params.bias, ones(1,size(data.X,2)), params.s2Y, ...
+    [Z B theta mu w]= IBPsampler(data.X,data.C, hidden.Z, params.bias, ones(1,D), params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     
@@ -55,7 +67,12 @@ function hidden = IBPsampler_run(data,varargin)
     hidden.theta = theta;
     hidden.mu = mu; % mapping functions info (necessary for plotting)
     hidden.w = w;
-    
+    hidden.R = ones(1,D);
+    for d=1:D
+        if (data.C(d) == 'c')
+            hidden.R(d) = length(unique(data.X(data.X(:,d)~= params.missing,d) ));
+        end
+    end
     if params.verbose
         hidden.time
         sum(hidden.Z)

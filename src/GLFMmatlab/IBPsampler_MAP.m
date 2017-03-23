@@ -21,7 +21,7 @@ function X_map = IBPsampler_MAP(C, Zp, hidden)
             case 'g', X_map(:,d) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
             case 'p', X_map(:,d) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
             case 'n', X_map(:,d) = f_n( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-            case 'c', X_map(:,d) = f_c( Zp * squeeze(hidden.B(d,:,:))' );
+            case 'c', X_map(:,d) = f_c( Zp * squeeze(hidden.B(d,:,1:hidden.R(d))) );
             case 'o', X_map(:,d) = f_o( Zp * squeeze(hidden.B(d,:,1))', hidden.Theta(d,:) );
             otherwise
                 error('Unknown data type');
