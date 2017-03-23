@@ -19,10 +19,10 @@ hidden.Z = Zini;
 % define params
 params.missing = -1;
 params.s2Y = .5;      % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .01;
+params.s2u = .001;
 params.s2B = 1;       % Variance of the Gaussian prior of the weigting matrices B
-params.alpha = 1;     % Concentration parameter of the IBP
-params.Niter = 1; % Number of iterations for the gibbs sampler
+params.alpha = 1;    % Concentration parameter of the IBP
+params.Niter = 1000; % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 0;
 
@@ -35,14 +35,14 @@ Zp = eye(Kest);
 % compute observations resulting when each of the latent features is active
 X_map = IBPsampler_MAP(data.C, Zp, hidden);
 
-figure; title('Ground truth');
+figure(1); title('Ground truth');
 for k=1:size(gT.B,1)
     subplot(3,3,k);
-    imagesc(reshape(gT.B(k,:), [4 4]));
+    imagesc(reshape(gT.B(k,:), [6 6]));
 end
 
-figure; title('Inferred Latent Features');
+figure(2); title('Inferred Latent Features');
 for k=1:Kest
     subplot(3,3,k);
-    imagesc(reshape(hidden.B(k,:,1), [4 4]));
+    imagesc(reshape(X_map(k,:), [6 6]));
 end

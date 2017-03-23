@@ -12,7 +12,7 @@ function X_map = IBPsampler_MAP(C, Zp, hidden)
     D = size(hidden.B,1);
     P = size(Zp,1);
     K = size(hidden.B,2);
-    if (size(hidden.Zp,2) ~= K)
+    if (size(Zp,2) ~= K)
         error('Incongruent sizes between Zp and hidden.B');
     end
     X_map = zeros(P,D); % output    

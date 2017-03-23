@@ -38,14 +38,15 @@ function hidden = IBPsampler_run(data,varargin)
     
     %% call .cpp wrapper function
     tic;
-    [Z B Theta]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, ones(1,size(Xmiss,2)), params.s2Y, ...
+    [Z B theta mu w]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, ones(1,size(Xmiss,2)), params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     
     hidden.Z = Z'; % it returns a K*N matrix, should be inverted
     hidden.B = B;
-    hidden.Theta = Theta;
-    hidden.suffStats = suffStats; % mapping functions info (necessary for plotting)
+    hidden.theta = theta;
+    hidden.mu = mu; % mapping functions info (necessary for plotting)
+    hidden.w = w;
     
     if params.verbose
         hidden.time

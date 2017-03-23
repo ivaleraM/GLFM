@@ -1,8 +1,8 @@
-function x = f_p(y, mu, w)
+function y = f_p_1(x, mu, w)
     % transformation function for positive data
-    % Y -> X (from pseudo-obversations to data)
+    % X -> Y (from data to pseudo-obversations)
     if (w == 0)
         error('scaling factor should never be 0');
     end
-    x = log( exp(y) + 1 )./w + mu;
+    y = log( exp(w.*(x-mu) - 1) );
 end

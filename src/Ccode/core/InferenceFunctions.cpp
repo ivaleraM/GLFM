@@ -511,7 +511,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     printf("Nsim=%d\n", Nsim);
     //....Body functions....//      
     for (int it=0; it<Nsim; it++){
-        //Kest=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon);
+        Kest=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon);
         
         gsl_matrix_view P_view = gsl_matrix_submatrix (P, 0, 0, Kest, Kest);
         gsl_matrix *S= gsl_matrix_calloc(Kest,Kest);
