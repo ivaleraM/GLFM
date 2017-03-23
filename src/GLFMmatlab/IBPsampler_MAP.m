@@ -26,4 +26,7 @@ function X_map = IBPsampler_MAP(C, Zp, hidden)
             otherwise
                 error('Unknown data type');
         end
+        if (sum(isnan(X_map(:,d))) > 0)
+            error('Some values are nan!');
+        end
     end
