@@ -587,12 +587,12 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
                 break;
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
-                mu[d]= minX[d]+1e-6;
+                mu[d]= minX[d]-1e-6;
                 w[d]=2/(maxX[d]-mu[d]);
                 break;
             case 'n':
                 B[d] = gsl_matrix_alloc(maxK,1);
-                mu[d]= minX[d]+1;
+                mu[d]= minX[d]-1;
                 w[d]=2/(maxX[d]-mu[d]);
                 break;
             case 'c':
