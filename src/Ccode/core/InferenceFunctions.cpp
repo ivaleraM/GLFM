@@ -252,7 +252,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
 
 
 //Sample Y
-void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, double s2Y, double s2u, double s2theta, gsl_matrix *X, gsl_matrix *Z, gsl_matrix *Yd,  gsl_matrix *Bd, gsl_vector *thetad, const gsl_rng *seed){
+void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, double mud, double wd, double s2Y, double s2u, double s2theta, gsl_matrix *X, gsl_matrix *Z, gsl_matrix *Yd,  gsl_matrix *Bd, gsl_vector *thetad, const gsl_rng *seed){
     //double s2u=1;
     gsl_matrix_view Zn;
     gsl_matrix_view Bd_view;
@@ -269,7 +269,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
                 if (xnd==missing || gsl_isnan(xnd)){
                     gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
                  }else{
-                    gsl_matrix_set (Yd, 0, n, (xnd/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
+                    gsl_matrix_set (Yd, 0, n, (fre_1(xnd, fd, mud, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
                 }
             }
             gsl_matrix_free(muy);    
@@ -286,7 +286,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
                 if (xnd==missing || gsl_isnan(xnd)){
                      gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
                 }else{
-                    gsl_matrix_set (Yd, 0, n, (f_1(xnd, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
+                    gsl_matrix_set (Yd, 0, n, (f_1(xnd, fd, mud, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
                 }
             }
             gsl_matrix_free(muy); 
@@ -302,7 +302,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
                 if (xnd==missing || gsl_isnan(xnd)){
                      gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
                 }else{
-                    gsl_matrix_set (Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), s2Y, f_1(xnd,wd),f_1(xnd+1, wd)));
+                    gsl_matrix_set (Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), s2Y, f_1(xnd, fd, mud, wd),f_1(xnd+1, fd, mud, wd)));
                 }
             }
             gsl_matrix_free(muy); 
@@ -382,7 +382,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double wd, 
     
 }
 
-int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y, double s2u,int maxK,int Nsim){
+int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y, double s2u,int maxK,int Nsim){
 //Starting C function
     
 //    // For debugging, print input parameters
@@ -428,7 +428,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     if (xnd==missing || gsl_isnan(xnd)){
                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
                    }else{
-                        gsl_matrix_set(Y[d], 0, n, xnd);
+                        gsl_matrix_set(Y[d], 0, n, fre_1(xnd, f[d], mu[d], w[d]));
                     }
                 }
 
@@ -442,7 +442,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     if (xnd==missing || gsl_isnan(xnd)){
                          gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
                     }else{
-                         gsl_matrix_set(Y[d], 0, n, f_1(xnd,w[d])); //+gsl_ran_gaussian (seed, s2Y)
+                         gsl_matrix_set(Y[d], 0, n, f_1(xnd, f[d], mu[d], w[d]) ); //+gsl_ran_gaussian (seed, s2Y)
                     }
                 }
                 break;
@@ -457,7 +457,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     if (xnd==missing || gsl_isnan(xnd)){
                          gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
                     }else{
-                         gsl_matrix_set(Y[d], 0, n, f_1(xnd+gsl_ran_beta (seed, 5,1),w[d]));
+                         gsl_matrix_set(Y[d], 0, n, f_1(xnd,f[d], mu[d], w[d]));// +gsl_ran_beta (seed, 5,1)
                     }
                 }
                 break;
@@ -540,7 +540,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
              }
              
          //Sample Y  
-         SampleY (missing, N, d, Kest, C[d],  R[d], w[d], s2Y, s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
+         SampleY (missing, N, d, Kest, C[d],  R[d], f[d], mu[d], w[d], s2Y, s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
          
          //Update lambda
          matrix_multiply(Z,Y[d],lambda[d],1,0,CblasNoTrans,CblasTrans);     
@@ -562,6 +562,50 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     free(Y);
     
     return Kest;
+}
+
+int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char *C, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w){
+    int maxR=1;
+    double  maxX[D], minX[D], meanX[D];
+    gsl_vector_view Xd_view;
+    for (int d=0; d<D; d++){
+         Xd_view = gsl_matrix_row(X, d);
+         maxX[d] = gsl_vector_max(&Xd_view.vector);
+         minX[d] = gsl_vector_min(&Xd_view.vector);
+         meanX[d] = compute_vector_mean(N,missing, &Xd_view.vector);
+         mu[d]=1;
+         R[d]=1;
+         w[d]=1;
+          switch(C[d]){
+            case 'g':
+                B[d] = gsl_matrix_alloc(maxK,1);
+                mu[d]= meanX[d];
+                w[d]=2/(meanX[d]-mu[d]);
+                break;
+            case 'p':
+                B[d] = gsl_matrix_alloc(maxK,1);
+                mu[d]= minX[d]+1e-6;
+                w[d]=2/(maxX[d]-mu[d]);
+                break;
+            case 'n':
+                B[d] = gsl_matrix_alloc(maxK,1);
+                mu[d]= minX[d]+1;
+                w[d]=2/(maxX[d]-mu[d]);
+                break;
+            case 'c':
+                R[d]=(int)maxX[d];
+                B[d] = gsl_matrix_alloc(maxK,R[d]);
+                if (R[d]>maxR){maxR=R[d];}
+                break;
+            case 'o':
+                R[d]=(int)maxX[d];
+                B[d] = gsl_matrix_alloc(maxK,1);
+                theta[d] = gsl_vector_alloc(R[d]);
+                if (R[d]>maxR){maxR=R[d];}
+                break;
+         }
+    }
+    return maxR;
 }
 
 

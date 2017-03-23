@@ -18,18 +18,40 @@
 /*double f(double x, double w){
     return logFun(1+w*gsl_sf_exp(x));
 }*/
-double f_1(double x, double w){
-    if (w==1){
-        return logFun(gsl_sf_exp(x)-1);
-    }else if(w==2){
-        return  sqrt(x);
+double fre_1(double x, double func, double mu, double w){
+    //printf("re = %f ", w*(x-mu));
+//     if (func==1){
+        return w*(x-mu);
+//     }
+}
+
+double f_1(double x, double func, double mu, double w){
+    //printf("pos = %f ", logFun(gsl_sf_exp(w*(x-mu))-1));
+    if (func==1){
+        return logFun(gsl_sf_exp(w*(x-mu))-1);
+    }else if(func==2){
+        return  sqrt(w*(x-mu));
     }else{
         printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
-        return logFun(gsl_sf_exp(x)-1);
+        return logFun(gsl_sf_exp(w*(x-mu))-1);
     }
 }
 
 // Functions
+double compute_vector_mean(int N, double missing, gsl_vector *v){
+    double sumX=0;
+    double countX=0;
+    for (int nn=0; nn<N; nn++){
+        double xnd= gsl_vector_get (v, nn);
+        if (xnd==missing || gsl_isnan(xnd)){
+            sumX+= xnd;
+            countX+=1;
+        }
+    }
+    return sumX/countX;
+ 
+}
+
 double logFun(double x)
 {
 	if (x==0){return GSL_NEGINF;}
