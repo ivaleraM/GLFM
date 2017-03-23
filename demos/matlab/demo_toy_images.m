@@ -2,6 +2,8 @@
 
 clear
 addpath(genpath('../../src/GLFMmatlab/'));
+addpath(genpath('../../src/Ccode/'));
+
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
 
@@ -9,10 +11,8 @@ rand('seed',round(sum(1e5*clock)));
 N = 1000;
 s2x = 1;
 [data,gT] = generate_toy_images(N,s2x);
-D = size(data.X,2);
 
 %% INITIALIZATION + PARAMETER SETTINGS
-
 Zini = double(rand(N,1)>0.8);
 hidden.Z = Zini;
 
@@ -29,7 +29,20 @@ params.bias = 0;
 %% INFERENCE
 hidden = IBPsampler_run(data, hidden, params);
 
-%% PLOT EACH LATENT FEATURE
+%% PLOT REAL Vs INFERRED LATENT FEATURE
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
-X_map = IBPsampler_MAP(Zp,hidden);
+% compute observations resulting when each of the latent features is active
+X_map = IBPsampler_MAP(data.C, Zp, hidden);
+
+figure; title('Ground truth');
+for k=1:size(gT.B,1)
+    subplot(3,3,k);
+    imagesc(reshape(gT.B(k,:), [4 4]));
+end
+
+figure; title('Inferred Latent Features');
+for k=1:Kest
+    subplot(3,3,k);
+    imagesc(reshape(hidden.B(k,:,1), [4 4]));
+end

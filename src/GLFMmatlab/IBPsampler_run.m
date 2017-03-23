@@ -1,10 +1,11 @@
 function hidden = IBPsampler_run(data,varargin)
-    % Wrapper .m function to call .cpp functions and make call simpler
+    % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     %
     %   Inputs:
     %       data: structure with all input data information
     %           (*) data.X: N*D observation matrix (raw)
     %           (*) data.C: 1*D string array with input data types
+    %       (*) means mandatory
     %
     %       ------------- optional ---------------------
     %
@@ -32,10 +33,9 @@ function hidden = IBPsampler_run(data,varargin)
     % replace missings + preprocess
     data.X(isnan(data.X)) = params.missing;
     
-    %[Xnorm,suffStats] = preprocess(X,C,missings)
     [Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
     
-    % call .cpp wrapper function
+    %% call .cpp wrapper function
     tic;
     [Z B Theta]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params. missing);
