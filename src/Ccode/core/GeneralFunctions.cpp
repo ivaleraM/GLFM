@@ -19,24 +19,21 @@
     return logFun(1+w*gsl_sf_exp(x));
 }*/
 double fre_1(double x, double func, double mu, double w){
-    //printf("re = %f ", w*(x-mu));
 //     if (func==1){
-     return x;
-//        return w*(x-mu);
+     return w*(x-mu);
 //     }
 }
 
 double f_1(double x, double func, double mu, double w){
-    //printf("pos = %f ", logFun(gsl_sf_exp(w*(x-mu))-1));
-    return x;
-//    if (func==1){
-//        return logFun(gsl_sf_exp(w*(x-mu))-1);
-//    }else if(func==2){
-//        return  sqrt(w*(x-mu));
-//    }else{
-//        printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
-//        return logFun(gsl_sf_exp(w*(x-mu))-1);
-//    }
+//     printf("pos = %f ", logFun(gsl_sf_exp(w*(x-mu))-1));
+   if (func==1){
+       return logFun(gsl_sf_exp(w*(x-mu))-1);
+   }else if(func==2){
+       return  sqrt(w*(x-mu));
+   }else{
+       printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
+       return logFun(gsl_sf_exp(w*(x-mu))-1);
+   }
 }
 
 // Functions
@@ -45,7 +42,7 @@ double compute_vector_mean(int N, double missing, gsl_vector *v){
     double countX=0;
     for (int nn=0; nn<N; nn++){
         double xnd= gsl_vector_get (v, nn);
-        if (xnd==missing || gsl_isnan(xnd)){
+        if (xnd!=missing){
             sumX+= xnd;
             countX+=1;
         }
@@ -53,7 +50,29 @@ double compute_vector_mean(int N, double missing, gsl_vector *v){
     return sumX/countX;
  
 }
+double compute_vector_max(int N, double missing, gsl_vector *v){
+    double maxX=-1e100;
+    double countX=0;
+    for (int nn=0; nn<N; nn++){
+        double xnd= gsl_vector_get (v, nn);
+        if (xnd!=missing){
+            if (xnd>maxX){maxX=xnd;}
+        }
+    }
+    return maxX; 
+}
 
+double compute_vector_min(int N, double missing, gsl_vector *v){
+    double minX=1e100;
+    double countX=0;
+    for (int nn=0; nn<N; nn++){
+        double xnd= gsl_vector_get (v, nn);
+        if (xnd!=missing){
+            if (xnd<minX){minX=xnd;}
+        }
+    }
+    return minX; 
+}
 double logFun(double x)
 {
 	if (x==0){return GSL_NEGINF;}

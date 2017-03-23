@@ -33,6 +33,8 @@ double f_1(double x, double func, double mu, double w);
 
 // General functions
 double compute_vector_mean(int N, double missing, gsl_vector v);
+double compute_vector_max(int N, double missing, gsl_vector *v);
+double compute_vector_min(int N, double missing, gsl_vector *v);
 int factorial (int N);
 int poissrnd(double lambda);
 //gsl_matrix *double2gsl(double *Amat, int nRows, int nCols);

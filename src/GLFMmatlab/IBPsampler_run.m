@@ -34,6 +34,7 @@ function hidden = IBPsampler_run(data,varargin)
     data.X(isnan(data.X)) = params.missing;
     
     [Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
+%     [Xmiss] = data.X;
     
     %% call .cpp wrapper function
     tic;

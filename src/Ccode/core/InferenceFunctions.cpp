@@ -573,8 +573,8 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
          Xd_view = gsl_matrix_row(X, d);
-         maxX[d] = gsl_vector_max(&Xd_view.vector);
-         minX[d] = gsl_vector_min(&Xd_view.vector);
+         maxX[d] = compute_vector_max(N,missing, &Xd_view.vector);//gsl_vector_max(&Xd_view.vector);
+         minX[d] = compute_vector_min(N,missing, &Xd_view.vector);;//gsl_vector_min(&Xd_view.vector);
          meanX[d] = compute_vector_mean(N,missing, &Xd_view.vector);
          mu[d]=1;
          R[d]=1;
@@ -583,7 +583,7 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
             case 'g':
                 B[d] = gsl_matrix_alloc(maxK,1);
                 mu[d]= meanX[d];
-                w[d]=2/(meanX[d]-mu[d]);
+                w[d]=2/(maxX[d]-mu[d]);
                 break;
             case 'p':
                 B[d] = gsl_matrix_alloc(maxK,1);
@@ -607,6 +607,8 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
                 if (R[d]>maxR){maxR=R[d];}
                 break;
          }
+//          printf("mu = %f ", mu[d]);
+//          printf("w = %f \n", w[d]);
     }
     return maxR;
 }
