@@ -22,7 +22,7 @@ params.s2Y = .5;      % Variance of the Gaussian prior on the auxiliary variable
 params.s2u = .01;
 params.s2B = 1;       % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;     % Concentration parameter of the IBP
-params.Niter = 1000; % Number of iterations for the gibbs sampler
+params.Niter = 0; % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 0;
 

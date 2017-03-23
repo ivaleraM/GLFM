@@ -26,4 +26,4 @@ function X_map = IBPsampler_MAP(C, Zp, hidden)
             otherwise
                 error('Unknown data type');
         end
-    
+    end

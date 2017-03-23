@@ -21,7 +21,8 @@
 double fre_1(double x, double func, double mu, double w){
     //printf("re = %f ", w*(x-mu));
 //     if (func==1){
-        return w*(x-mu);
+     return x;
+//        return w*(x-mu);
 //     }
 }
 

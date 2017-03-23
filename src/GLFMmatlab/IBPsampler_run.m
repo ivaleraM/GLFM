@@ -37,8 +37,8 @@ function hidden = IBPsampler_run(data,varargin)
     
     %% call .cpp wrapper function
     tic;
-    [Z B Theta]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, params.s2Y, ...
-        params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params. missing);
+    [Z B Theta]= IBPsampler(Xmiss,data.C, hidden.Z, params.bias, ones(1,size(Xmiss,2)), params.s2Y, ...
+        params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     
     hidden.Z = Z'; % it returns a K*N matrix, should be inverted

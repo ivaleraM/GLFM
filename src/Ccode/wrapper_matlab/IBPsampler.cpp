@@ -80,7 +80,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
       C[d] = tolower(C[d]);//convert to lower case
       f[d]= f_dou[d];
      }
-    
+
 //...............BODY CODE.......................//
 //Starting C function
 
@@ -91,9 +91,19 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     gsl_vector **theta=(gsl_vector **) calloc(D,sizeof(gsl_vector*));
     double w[D],mu[D];
     int R[D];
-    int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w);
+    //printf("In C++: Transforming input data... ");
+    //int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w);
+    //printf("done\n");
+    int maxR = 1;
+    for (int d=0; d<D; d++){
+      w[d] = 1;
+      mu[d]= 0;
+      R[d] = 1;
+     }
+    printf("maxR=%d\n", maxR);
 
   //...............Inference Function.......................//
+    printf("In C++: Running Inference Routine... ");
    int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, f, mu, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
 
    //...............SET OUTPUT POINTERS.......................//
