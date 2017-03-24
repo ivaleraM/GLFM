@@ -15,7 +15,7 @@ function hidden = IBPsampler_run(data,varargin)
     
     switch length(varargin)
         case 0
-            hidden.Z = [];
+            hidden = [];
             % default values for params
             params = init_default_params(data, []);
             
@@ -30,9 +30,11 @@ function hidden = IBPsampler_run(data,varargin)
     end
     
     D = size(data.X,2);
+    N = size(data.X,1);
     
     % initialize Z
-    if isempty(hidden.Z)
+    if isempty(hidden)
+        clearvars hidden
         hidden.Z = double(rand(N,2)>0.8);
         if (params.bias == 1)
             hidden.Z = [ones(N,1) hidden.Z];
