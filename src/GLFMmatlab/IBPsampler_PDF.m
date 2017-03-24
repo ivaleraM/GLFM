@@ -1,4 +1,4 @@
-function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, d)
+function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
     % Function to generate the PDF solutions corresponding to patterns in
     % Zp, and dimension d
     % Inputs:
@@ -13,34 +13,35 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, d)
     % Outputs:
     %   xd: 1*numS where numS is the number of points to be considered
     %  pdf: P*numS where P is the number of patterns to consider
+    data.X(isnan(data.X(:,d)),d) = params.missing; 
     
     P = size(Zp,1);
     K = size(hidden.B,2);
     if (size(Zp,2) ~= K)
         error('Incongruent sizes between Zp and hidden.B');
     end
-    if (data.C == 'g') || (data.C == 'p')
+    if (data.C(d) == 'g') || (data.C(d) == 'p')
         numS = 100;
         xd = linspace( min(data.X(data.X(:,d) ~= params.missing, d)), max(data.X(data.X(:,d) ~= params.missing, d)), numS);
-    elseif (data.C == 'n')
+    elseif (data.C(d) == 'n')
         xd = min(data.X(data.X(:,d) ~= params.missing, d)):max(data.X(data.X(:,d) ~= params.missing, d));
         numS = length(xd);
     else
-        xd = unique(data.X(data.X ~= missing, d));
+        xd = unique(data.X(data.X(:,d) ~= params.missing, d));
         numS = length(xd); % number of labels for categories or ordinal data
     end
     pdf = zeros(P,numS);
     for p=1:P
         switch data.C(d)
             case 'g', pdf(p,:) = pdf_g(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.w(d), params);
-            case 'p', pdf(p,:) = pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.w(d), params);
-            case 'n', pdf(p,:) = pdf_n(x,Zp, squeeze(hidden.B(d,:,1))', params);
-            case 'c', pdf(p,:) = pdf_c(Zp, squeeze(hidden.B(d,:,1:hidden.R(d))), params);
-            case 'o', pdf(p,:) = pdf_o(Zp, squeeze(hidden.B(d,:,1))', hidden.Theta(d,:), params);
+            case 'p', pdf(p,:) = pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), params);
+            case 'n', pdf(p,:) = pdf_n(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), params);
+            case 'c', pdf(p,:) = pdf_c(Zp(p,:), squeeze(hidden.B(d,:,1:hidden.R(d))), params);
+            case 'o', pdf(p,:) = pdf_o(Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.Theta(d,:), params);
             otherwise
                 error('Unknown data type');
         end
-        if (sum(isnan(X_map(:,d))) > 0)
+        if (sum(isnan(pdf)) > 0)
             error('Some values are nan!');
         end
     end

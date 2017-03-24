@@ -17,6 +17,7 @@ data.X(:,2) = [];
 data.C(2) = [];
 data.cat_labels(2) = [];
 data.ylabel(2) = [];
+data.ylabel_long(2) = [];
 
 %% Initialize Hidden Structure
 [N, D] = size(data.X);
@@ -29,7 +30,7 @@ params.s2Y = 0.5;      % Variance of the Gaussian prior on the auxiliary variabl
 params.s2u = .01;
 params.s2B = 1;       % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;     % Concentration parameter of the IBP
-params.Niter = 1000; % Number of iterations for the gibbs sampler
+params.Niter = 2; % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 2;
 
@@ -47,21 +48,23 @@ end
 %% Predict MAP estimate for each latent feature
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
-
+Zp = Zp(1:2,:);
+leg = {'F1','F2'};
 %% Plot Dimensions
-figure;
+figure(2);
 for d=1:D
-    [xd, pdf] = IBPsampler_PDF(data.C, Zp, hidden, d);
+    [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
     if (data.C(d) == 'c') 
-        bar(pdf);
+        bar(pdf');
     elseif (data.C(d) == 'n') || (data.C(d) == 'o')
-        stem(xd, pdf);
+        stem(xd, pdf');
     else
-        plot(xd,pdf);
+        plot(xd,pdf');
     end
-    title(data.ylong(d));
+    title(data.ylabel_long{d});
     if (data.C(d) == 'c') || (data.C(d) == 'o')
-        legend([]);
+        set(gca,'XTickLabel',data.cat_labels{d});
+        set(gca,'XTickLabelRotation',45);
     end
+    legend(leg);
 end
-pause;
