@@ -459,7 +459,9 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     }else{
                          gsl_matrix_set(Y[d], 0, n, f_1(xnd,f[d], mu[d], w[d]));// +gsl_ran_beta (seed, 5,1)
                     }
+//                     printf("ynd = %f ", f_1(xnd,f[d], mu[d], w[d]));
                 }
+//                 printf("\n");
                 break;
                 
             case 'c': 
@@ -581,28 +583,29 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
          w[d]=1;
           switch(C[d]){
             case 'g':
-                B[d] = gsl_matrix_alloc(maxK,1);
+                B[d] = gsl_matrix_calloc(maxK,1);
                 mu[d]= meanX[d];
-                w[d]=2/(maxX[d]-mu[d]);
+                w[d]=4/(maxX[d]-mu[d]);
                 break;
             case 'p':
-                B[d] = gsl_matrix_alloc(maxK,1);
+                B[d] = gsl_matrix_calloc(maxK,1);
                 mu[d]= minX[d]-1e-6;
-                w[d]=2/(maxX[d]-mu[d]);
+                w[d]=4/(maxX[d]-mu[d]);
                 break;
             case 'n':
-                B[d] = gsl_matrix_alloc(maxK,1);
+                B[d] = gsl_matrix_calloc(maxK,1);
                 mu[d]= minX[d]-1;
-                w[d]=2/(maxX[d]-mu[d]);
+                //w[d]=1;
+                w[d]=4/(maxX[d]-mu[d]);
                 break;
             case 'c':
                 R[d]=(int)maxX[d];
-                B[d] = gsl_matrix_alloc(maxK,R[d]);
+                B[d] = gsl_matrix_calloc(maxK,R[d]);
                 if (R[d]>maxR){maxR=R[d];}
                 break;
             case 'o':
                 R[d]=(int)maxX[d];
-                B[d] = gsl_matrix_alloc(maxK,1);
+                B[d] = gsl_matrix_calloc(maxK,1);
                 theta[d] = gsl_vector_alloc(R[d]);
                 if (R[d]>maxR){maxR=R[d];}
                 break;

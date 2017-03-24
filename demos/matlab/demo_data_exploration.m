@@ -25,11 +25,11 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = .2;      % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2Y = 0.5;      % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .01;
 params.s2B = 1;       % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;     % Concentration parameter of the IBP
-params.Niter = 10; % Number of iterations for the gibbs sampler
+params.Niter = 2; % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 2;
 
