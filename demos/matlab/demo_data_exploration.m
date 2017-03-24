@@ -47,8 +47,21 @@ end
 %% Predict MAP estimate for each latent feature
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
-% compute observations resulting when each of the latent features is active
-X_map = IBPsampler_MAP(data.C, Zp, hidden);
 
 %% Plot Dimensions
-IBPsampler_plotDim(data.C, Zp, hidden);
+figure;
+for d=1:D
+    [xd, pdf] = IBPsampler_PDF(data.C, Zp, hidden, d);
+    if (data.C(d) == 'c') 
+        bar(pdf);
+    elseif (data.C(d) == 'n') || (data.C(d) == 'o')
+        stem(xd, pdf);
+    else
+        plot(xd,pdf);
+    end
+    title(data.ylong(d));
+    if (data.C(d) == 'c') || (data.C(d) == 'o')
+        legend([]);
+    end
+end
+pause;
