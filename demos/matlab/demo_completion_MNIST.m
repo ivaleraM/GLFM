@@ -40,8 +40,8 @@ hidden = IBPsampler_run(data,[],params); % no need to initialize Z
 
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 % visualization random image
-idx = randi(N,1);
-figure(1);
+idx = 10; %randi(N,1);
+figure;
 subplot(1,3,1); imagesc(reshape(Xtrue(idx,:),sqrt(784),sqrt(784)) );
 subplot(1,3,2); imagesc(reshape(data.X(idx,:),sqrt(784),sqrt(784)) );
 subplot(1,3,3); imagesc(reshape(X_map(idx,:),sqrt(784),sqrt(784)) );

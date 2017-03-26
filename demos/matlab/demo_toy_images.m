@@ -18,6 +18,7 @@ hidden.Z = Zini;
 
 % define params
 params.missing = -10;
+<<<<<<< HEAD
 params.s2Y = 1.5;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .01;
 params.s2B = 0.5;      % Variance of the Gaussian prior of the weigting matrices B
