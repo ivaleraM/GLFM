@@ -19,7 +19,7 @@ function [data,gT] = generate_toy_images(N,s2x)
     K = size(Btrue,1); % number of latent features
     D = size(Btrue,2); % number of dimensions
     
-    Ztrue = rand(N,K) < 0.5;
+    Ztrue = rand(N,K) < 0.2;
     
     data.X = sqrt(s2x) * randn(N,D) + ( Ztrue * Btrue );
     data.C = repmat('g',1,D);

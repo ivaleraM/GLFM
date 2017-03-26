@@ -10,7 +10,7 @@ rand('seed',round(sum(1e5*clock)));
 %% LOAD MNIST dataset
 % This DB can be downloaded here: http://yann.lecun.com/exdb/mnist/
 images = loadMNISTImages('../../datasets/raw/MNIST/train-images-idx3-ubyte');
-N = 100; % subset of images to consider
+N = 50; % subset of images to consider
 Xtrue = images(:, randperm(size(images,2),N))' + 1; % N*D matrix (each column is one pixel
 
 perc_missing = 0.2;
@@ -26,10 +26,10 @@ data.C = C;
 
 %% Define parameter default values for algorithm
 params.bias = 1;
-params.s2Y = 1.0;
-params.s2B = 1.0;
+params.s2Y = 1;
+params.s2B = 1;
 params.alpha = 1.0;
-params.Niter = 10;
+params.Niter = 50;
 params.maxK = 50;
 params.missing = -100;
 

@@ -570,6 +570,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
 }
 
 int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char *C, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w){
+    
     int maxR=1;
     double  maxX[D], minX[D], meanX[D];
     gsl_vector_view Xd_view;
@@ -612,6 +613,9 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
          }
           printf("mu = %f ", mu[d]);
           printf("w = %f \n", w[d]);
+//           printf("maxX = %f ", maxX[d]);
+//           printf("minX = %f ", minX[d]);
+//           printf("meanX = %f \n ", meanX[d]);
     }
     return maxR;
 }
