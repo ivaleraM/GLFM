@@ -25,11 +25,11 @@ data.X = Xmiss;
 data.C = C;
 
 %% Define parameter default values for algorithm
-params.bias = 1;
+params.bias = 0;
 params.s2Y = 1;
-params.s2B = 1;
+params.s2B = 0.1;
 params.alpha = 1.0;
-params.Niter = 50;
+params.Niter = 10;
 params.maxK = 50;
 params.missing = -100;
 
@@ -40,7 +40,7 @@ hidden = IBPsampler_run(data,[],params); % no need to initialize Z
 
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 % visualization random image
-idx = 10; %randi(N,1);
+idx = randi(N,1);
 figure;
 subplot(1,3,1); imagesc(reshape(Xtrue(idx,:),sqrt(784),sqrt(784)) );
 subplot(1,3,2); imagesc(reshape(data.X(idx,:),sqrt(784),sqrt(784)) );
