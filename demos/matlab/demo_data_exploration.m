@@ -1,7 +1,7 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
-
+close
 addpath(genpath('../../src/'));
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
@@ -26,13 +26,14 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2Y = 2;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;   % Auxiliary variance
-params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = 1;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 params.Niter = 100;   % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 2;
+params.func = 1*ones(1,D);
 
 params.simId = 1;
 params.save = 0;
@@ -48,8 +49,8 @@ end
 %% Predict MAP estimate for each latent feature
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
-Zp = Zp(1:2,:);
-leg = {'Bias 0','Bias 1'};
+Zp = Zp(1:4,:);
+leg = {'Bias 0','Bias 1','F1', 'F2'};
 
 
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);

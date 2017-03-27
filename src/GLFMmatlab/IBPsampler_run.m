@@ -60,7 +60,7 @@ function hidden = IBPsampler_run(data,varargin)
     
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w]= IBPsampler(data.X,data.C, hidden.Z, params.bias, ones(1,D), params.s2Y, ...
+    [Z B theta mu w]= IBPsampler(data.X,data.C, hidden.Z, params.bias,params.bias, params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     
