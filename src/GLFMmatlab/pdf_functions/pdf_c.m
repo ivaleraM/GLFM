@@ -10,11 +10,14 @@ function pdf = pdf_c(Zp, B, params)
     % generate r.v's u
     u = sqrt(params.s2Y) * randn(numMC,1);
     for r=1:R
+        aux = ones(numMC,1);
         for j=1:R
             if (j==r)
                 continue;
             end
-            pdf(r) = pdf(r) + mean( normcdf( u + Zp*(B(:,r) - B(:,j)) ) );
+            aux = aux .* normcdf( u + Zp*(B(:,r) - B(:,j)) );
         end
+        pdf(r) = mean(aux);
     end
+    pdf = pdf ./ sum(pdf); 
 end
