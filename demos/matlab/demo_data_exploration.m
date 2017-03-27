@@ -31,28 +31,34 @@ tmp = num2str( unique(data.X(~isnan(data.X(:,14)),14)) );
 data.cat_labels{14} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
 
 % ---------------------
-drug_identifier = data.X(:,2) > 0.5;
-% remove drug levels
-data.X(:,2) = [];
-data.C(2) = [];
-data.cat_labels(2) = [];
-data.ylabel(2) = [];
-data.ylabel_long(2) = [];
+% drug_identifier = data.X(:,2) > 0.5;
+% % remove drug levels
+% data.X(:,2) = [];
+% data.C(2) = [];
+% data.cat_labels(2) = [];
+% data.ylabel(2) = [];
+% data.ylabel_long(2) = [];
+
+tmp = num2str(unique(data.X(:,2)));
+data.cat_labels{2} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
+data.C(2) = 'o';
+
 
 %% Initialize Hidden Structure
 [N, D] = size(data.X);
-Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
+%Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
+Zini = [ones(N,1), double(rand(N,1)>0.8)];
 hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 1;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .005;  % Auxiliary variance
-params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
-params.alpha = 1;   % Concentration parameter of the IBP
+params.s2Y = 0.5;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2u = .001;  % Auxiliary variance
+params.s2B = 0.1;   % Variance of the Gaussian prior of the weigting matrices B
+params.alpha = 10;   % Concentration parameter of the IBP
 params.Niter = 1000; % Number of iterations for the gibbs sampler
 params.maxK = 10;
-params.bias = 2;
+params.bias = 1;
 params.func = 2*ones(1,D);
 
 params.simId = 1;
@@ -71,8 +77,8 @@ Kest = size(hidden.B,2);
 Zp = eye(Kest);
 %Zp(3,1) = 1;
 %Zp = [Zp; 0 1 1];
-Zp = Zp(1:3,:);
-leg = {'Bias 0','Bias 1','B0+F1', 'B1+F1'};
+Zp = Zp(1:min(3,Kest),:);
+leg = {'F0','F1', 'F2'};
 
 
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
@@ -80,7 +86,7 @@ X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 %% Plot Dimensions
 figure(1);
 for d=1:D
-    subplot(3,1,1);
+    subplot(2,1,1);
     [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
     if (data.C(d) == 'c') || (data.C(d) == 'o') 
         bar(pdf');
@@ -95,9 +101,11 @@ for d=1:D
         set(gca,'XTickLabelRotation',45);
     end
     legend(leg);
-    subplot(3,1,2);
-    hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
-    subplot(3,1,3);
-    hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
+    subplot(2,1,2);
+    hist(data.X(:,d),100); title('Empirical');
+%     subplot(3,1,2);
+%     hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
+%     subplot(3,1,3);
+%     hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
     pause;
 end
