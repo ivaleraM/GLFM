@@ -33,7 +33,7 @@ params.alpha = 1;   % Concentration parameter of the IBP
 params.Niter = 100;   % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 2;
-params.func = 1*ones(1,D);
+params.func = 2*ones(1,D);
 
 params.simId = 1;
 params.save = 0;

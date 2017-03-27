@@ -32,6 +32,7 @@ params.alpha = 10;
 params.Niter = 100;
 params.maxK = 50;
 params.missing = -100;
+params.func = 1*ones(1,size(Xmiss,2));
 
 %% INFERENCE
 hidden = IBPsampler_run(data,[],params); % no need to initialize Z
