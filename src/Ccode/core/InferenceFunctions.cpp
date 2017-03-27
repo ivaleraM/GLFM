@@ -253,7 +253,9 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
 
 //Sample Y
 void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, double mud, double wd, double s2Y, double s2u, double s2theta, gsl_matrix *X, gsl_matrix *Z, gsl_matrix *Yd,  gsl_matrix *Bd, gsl_vector *thetad, const gsl_rng *seed){
-    //double s2u=1;
+    double su= sqrt(s2u);
+    double sY= sqrt(s2Y);
+    double stheta= sqrt(s2theta);
     gsl_matrix_view Zn;
     gsl_matrix_view Bd_view;
     gsl_matrix *muy;
@@ -267,9 +269,9 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                 Bd_view = gsl_matrix_submatrix (Bd, 0, 0, K, 1);
                 matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
                 if (xnd==missing || gsl_isnan(xnd)){
-                    gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
+                    gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, sY));
                  }else{
-                    gsl_matrix_set (Yd, 0, n, (fre_1(xnd, fd, mud, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
+                    gsl_matrix_set (Yd, 0, n, (fre_1(xnd, fd, mud, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, sqrt(1/(1/s2Y+1/s2u))));
                 }
             }
             gsl_matrix_free(muy);    
@@ -284,9 +286,9 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                 Bd_view = gsl_matrix_submatrix (Bd, 0, 0, K, 1);
                 matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans);
                 if (xnd==missing || gsl_isnan(xnd)){
-                     gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
+                     gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, sY));
                 }else{
-                    gsl_matrix_set (Yd, 0, n, (f_1(xnd, fd, mud, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, 1/(1/s2Y+1/s2u)));
+                    gsl_matrix_set (Yd, 0, n, (f_1(xnd, fd, mud, wd)/s2u + gsl_matrix_get(muy,0,0)/s2Y)/(1/s2Y+1/s2u) +  gsl_ran_gaussian (seed, sqrt(1/(1/s2Y+1/s2u))));
                 }
             }
             gsl_matrix_free(muy); 
@@ -300,9 +302,9 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                 Bd_view = gsl_matrix_submatrix (Bd, 0, 0, K, 1);
                 matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans);
                 if (xnd==missing || gsl_isnan(xnd)){
-                     gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, s2Y));
+                     gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+  gsl_ran_gaussian (seed, sY));
                 }else{
-                    gsl_matrix_set (Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), s2Y, f_1(xnd, fd, mud, wd),f_1(xnd+1, fd, mud, wd)));
+                    gsl_matrix_set (Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), sY, f_1(xnd, fd, mud, wd),f_1(xnd+1, fd, mud, wd)));
                 }
             }
             gsl_matrix_free(muy); 
@@ -317,7 +319,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                 matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans);
                 if (xnd==missing || gsl_isnan(xnd)){
                     for(int r=0; r<Rd; r++){
-                        gsl_matrix_set (Yd, r, n, gsl_matrix_get(muy,0,r)+gsl_ran_gaussian (seed, s2Y));
+                        gsl_matrix_set (Yd, r, n, gsl_matrix_get(muy,0,r)+gsl_ran_gaussian (seed, sY));
                     }
                 }else{
                     double maxY=0;
@@ -326,10 +328,10 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                         double ydr= gsl_matrix_get (Yd, r, n);
                         if ((ydr!=ytrue) & (ydr>maxY)){maxY=ydr;}
                     }
-                    gsl_matrix_set (Yd, xnd-1, n, truncnormrnd(gsl_matrix_get(muy,0,xnd-1), s2Y, maxY, GSL_POSINF));
+                    gsl_matrix_set (Yd, xnd-1, n, truncnormrnd(gsl_matrix_get(muy,0,xnd-1), sY, maxY, GSL_POSINF));
                     for(int r=0; r<Rd; r++){
                         if (r!=xnd-1){
-                            gsl_matrix_set (Yd, r, n, truncnormrnd(gsl_matrix_get(muy,0,r), s2Y, GSL_NEGINF, gsl_matrix_get (Yd, xnd-1, n)));
+                            gsl_matrix_set (Yd, r, n, truncnormrnd(gsl_matrix_get(muy,0,r), sY, GSL_NEGINF, gsl_matrix_get (Yd, xnd-1, n)));
                         }
                     }
                 }
@@ -349,13 +351,13 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                     
                     matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans);
                     if (xnd==missing || gsl_isnan(xnd)){                        
-                         gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+gsl_ran_gaussian (seed, s2Y));
+                         gsl_matrix_set (Yd, 0, n, gsl_matrix_get(muy,0,0)+gsl_ran_gaussian (seed, sY));
                     }else if (xnd==1){
-                         gsl_matrix_set(Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), s2Y, GSL_NEGINF, gsl_vector_get (thetad, xnd-1)));
+                         gsl_matrix_set(Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), sY, GSL_NEGINF, gsl_vector_get (thetad, xnd-1)));
                          if (gsl_matrix_get(Yd, 0, n)>gsl_vector_get(Ymax,xnd-1)){gsl_vector_set(Ymax,xnd-1,gsl_matrix_get(Yd, 0, n));}
                          if (gsl_matrix_get(Yd, 0, n)<gsl_vector_get(Ymin,xnd-1)){gsl_vector_set(Ymin,xnd-1,gsl_matrix_get(Yd, 0, n));}
                     }else{
-                         gsl_matrix_set(Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), s2Y, gsl_vector_get (thetad, xnd-2), gsl_vector_get (thetad, xnd-1)));
+                         gsl_matrix_set(Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), sY, gsl_vector_get (thetad, xnd-2), gsl_vector_get (thetad, xnd-1)));
                          if (gsl_matrix_get(Yd, 0, n)>gsl_vector_get(Ymax,xnd-1)){gsl_vector_set(Ymax,xnd-1,gsl_matrix_get(Yd, 0, n));}
                          if (gsl_matrix_get(Yd, 0, n)<gsl_vector_get(Ymin,xnd-1)){gsl_vector_set(Ymin,xnd-1,gsl_matrix_get(Yd, 0, n));}
                     }
@@ -372,7 +374,7 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                     else{xlo=gsl_vector_get(Ymax,r);}
                     if( gsl_vector_get (thetad, r+1)<gsl_vector_get(Ymin,r+1)){xhi=gsl_vector_get (thetad, r+1);}
                     else{xhi=gsl_vector_get(Ymin,r+1);}
-                    gsl_vector_set (thetad, r, truncnormrnd(0, s2theta, xlo, xhi));
+                    gsl_vector_set (thetad, r, truncnormrnd(0, stheta, xlo, xhi));
                 }
             
             
@@ -395,6 +397,8 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     
        //.....INIZIALIZATION........//
     double s2theta=1;
+    double stheta=sqrt(s2theta);
+    double sY=sqrt(s2Y);
     // random numbers
     srand48(time(NULL));
     gsl_rng *seed = gsl_rng_alloc(gsl_rng_taus);
@@ -426,7 +430,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                 for (int n=0; n<N; n++){
                     xnd=gsl_matrix_get (X, d, n);
                     if (xnd==missing || gsl_isnan(xnd)){
-                        gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
+                        gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, sY));
                    }else{
                         gsl_matrix_set(Y[d], 0, n, fre_1(xnd, f[d], mu[d], w[d]));
                     }
@@ -440,7 +444,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     xnd=gsl_matrix_get (X, d, n);
                     
                     if (xnd==missing || gsl_isnan(xnd)){
-                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
+                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, sY));
                     }else{
                          gsl_matrix_set(Y[d], 0, n, f_1(xnd, f[d], mu[d], w[d]) ); //+gsl_ran_gaussian (seed, s2Y)
                     }
@@ -455,7 +459,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     xnd=gsl_matrix_get (X, d, n);
                     
                     if (xnd==missing || gsl_isnan(xnd)){
-                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
+                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, sY));
                     }else{
                          gsl_matrix_set(Y[d], 0, n, f_1(xnd,f[d], mu[d], w[d]));// +gsl_ran_beta (seed, 5,1)
                     }
@@ -470,13 +474,13 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     xnd=gsl_matrix_get (X, d, n);                   
                     if (xnd==missing || gsl_isnan(xnd)){
                         for(int r=0; r<R[d]; r++){
-                            gsl_matrix_set (Y[d], r, n, gsl_ran_gaussian(seed, s2Y));
+                            gsl_matrix_set (Y[d], r, n, gsl_ran_gaussian(seed, sY));
                         }
                     }else{
-                        gsl_matrix_set (Y[d], xnd-1, n, truncnormrnd(0, s2Y, 0, GSL_POSINF));
+                        gsl_matrix_set (Y[d], xnd-1, n, truncnormrnd(0, sY, 0, GSL_POSINF));
                         for(int r=0; r<R[d]; r++){
                             if (r!=xnd-1){
-                                gsl_matrix_set (Y[d], r, n, truncnormrnd(0, s2Y, GSL_NEGINF, gsl_matrix_get (Y[d], xnd-1, n)));
+                                gsl_matrix_set (Y[d], r, n, truncnormrnd(0, sY, GSL_NEGINF, gsl_matrix_get (Y[d], xnd-1, n)));
                             }
                         }
                     }
@@ -485,20 +489,20 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                 
              case 'o': 
                 Y[d] =gsl_matrix_alloc(R[d],N); 
-                gsl_vector_set (theta[d], 0, gsl_ran_gaussian(seed, s2theta));
+                gsl_vector_set (theta[d], 0, gsl_ran_gaussian(seed, stheta));
                 for(int r=1; r<R[d]-1; r++){
-                    gsl_vector_set (theta[d], r, truncnormrnd(0, s2theta, gsl_vector_get (theta[d], r-1), GSL_POSINF));
+                    gsl_vector_set (theta[d], r, truncnormrnd(0, stheta, gsl_vector_get (theta[d], r-1), GSL_POSINF));
                 }
                 gsl_vector_set (theta[d], R[d]-1, GSL_POSINF);
                 for (int n=0; n<N; n++){
                     xnd=gsl_matrix_get (X, d, n);
                     
                     if (xnd==missing || gsl_isnan(xnd)){
-                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, s2Y));
+                         gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, sY));
                     }else if (xnd==1){
-                         gsl_matrix_set(Y[d], 0, n, truncnormrnd(0, s2Y, GSL_NEGINF, gsl_vector_get (theta[d], xnd-1)));
+                         gsl_matrix_set(Y[d], 0, n, truncnormrnd(0, sY, GSL_NEGINF, gsl_vector_get (theta[d], xnd-1)));
                     }else{
-                         gsl_matrix_set(Y[d], 0, n, truncnormrnd(0, s2Y, gsl_vector_get (theta[d], xnd-2), gsl_vector_get (theta[d], xnd-1)));
+                         gsl_matrix_set(Y[d], 0, n, truncnormrnd(0, sY, gsl_vector_get (theta[d], xnd-2), gsl_vector_get (theta[d], xnd-1)));
                     }
                 }
                  break;
@@ -572,13 +576,14 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
 int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char *C, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w){
     
     int maxR=1;
-    double  maxX[D], minX[D], meanX[D];
+    double  maxX[D], minX[D], meanX[D],varX[D];
     gsl_vector_view Xd_view;
     for (int d=0; d<D; d++){
          Xd_view = gsl_matrix_row(X, d);
          maxX[d] = compute_vector_max(N,missing, &Xd_view.vector);//gsl_vector_max(&Xd_view.vector);
          minX[d] = compute_vector_min(N,missing, &Xd_view.vector);;//gsl_vector_min(&Xd_view.vector);
          meanX[d] = compute_vector_mean(N,missing, &Xd_view.vector);
+         varX[d] = compute_vector_var(N,missing, &Xd_view.vector);
          mu[d]=1;
          R[d]=1;
          w[d]=1;
@@ -586,18 +591,24 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
             case 'g':
                 B[d] = gsl_matrix_calloc(maxK,1);
                 mu[d]= meanX[d];
-                w[d]=4/(maxX[d]-mu[d]);
+                //w[d]=4/(maxX[d]-mu[d]);
+                if (varX[d]>0){w[d]=1/sqrt(varX[d]);}
+                else{w[d]=1;}
                 break;
             case 'p':
                 B[d] = gsl_matrix_calloc(maxK,1);
                 mu[d]= minX[d]-1e-6;
-                w[d]=4/(maxX[d]-mu[d]);
+//                 w[d]=4/(maxX[d]-mu[d]);
+                if (varX[d]>0){w[d]=1/sqrt(varX[d]);}
+                else{w[d]=1;}
                 break;
             case 'n':
                 B[d] = gsl_matrix_calloc(maxK,1);
                 mu[d]= minX[d]-1;
                 //w[d]=1;
-                w[d]=4/(maxX[d]-mu[d]);
+                //w[d]=4/(maxX[d]-mu[d]);
+                if (varX[d]>0){w[d]=1/sqrt(varX[d]);}
+                else{w[d]=1;}
                 break;
             case 'c':
                 R[d]=(int)maxX[d];
@@ -611,8 +622,9 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
                 if (R[d]>maxR){maxR=R[d];}
                 break;
          }
-          printf("mu = %f ", mu[d]);
-          printf("w = %f \n", w[d]);
+//           printf("mu = %f ", mu[d]);
+//           printf("w = %f \n", w[d]);
+//           printf("varX = %f \n", varX[d]);
 //           printf("maxX = %f ", maxX[d]);
 //           printf("minX = %f ", minX[d]);
 //           printf("meanX = %f \n ", meanX[d]);

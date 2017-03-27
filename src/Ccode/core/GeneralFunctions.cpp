@@ -48,9 +48,25 @@ double compute_vector_mean(int N, double missing, gsl_vector *v){
             countX+=1;
         }
     }
-    return sumX/countX;
- 
+    return sumX/countX; 
 }
+
+double compute_vector_var(int N, double missing, gsl_vector *v){
+    double meanX=compute_vector_mean(N, missing,v);
+    double sumX=0;
+    double countX=0;
+    for (int nn=0; nn<N; nn++){
+        double xnd= gsl_vector_get (v, nn);
+        if (xnd!=missing){
+            sumX+= pow(xnd-meanX,2);
+            countX+=1;
+        }
+    }
+    return sumX/countX; 
+}
+
+
+
 double compute_vector_max(int N, double missing, gsl_vector *v){
     double maxX=-1e100;
     double countX=0;

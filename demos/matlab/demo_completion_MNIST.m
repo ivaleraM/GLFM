@@ -25,11 +25,11 @@ data.X = Xmiss;
 data.C = C;
 
 %% Define parameter default values for algorithm
-params.bias = 0;
+params.bias = 1;
 params.s2Y = 1;
-params.s2B = 0.1;
-params.alpha = 1.0;
-params.Niter = 10;
+params.s2B = 1;
+params.alpha = 10;
+params.Niter = 100;
 params.maxK = 50;
 params.missing = -100;
 
