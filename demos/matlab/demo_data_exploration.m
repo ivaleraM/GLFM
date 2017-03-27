@@ -1,7 +1,7 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
-close
+clear
 addpath(genpath('../../src/'));
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
@@ -11,6 +11,26 @@ input_file = '../../datasets/mat/prostate.mat';
 load(input_file);
 
 %% ADAPT INPUT DATA --> put bias
+data.cat_labels{1} = {'3';'4'};
+
+% change to ordinal variables
+
+% Type of activity: confined in bed, in bed less than 1/2 daytime, ...
+data.C(7) = 'o';
+tmp = (data.X(:,7) == 2);
+data.X( data.X(:,7) == 3,7) = 2;
+data.X(tmp,7) = 3;
+tmp = data.cat_labels{7}(2);
+data.cat_labels{7}(2) = data.cat_labels{7}(3);
+data.cat_labels{7}(3) = tmp;
+%data.X( data.X(:,7) == 1), 7) == 2;
+
+% Index Stage (state of the patient)
+data.C(14) = 'o';
+tmp = num2str( unique(data.X(~isnan(data.X(:,14)),14)) );
+data.cat_labels{14} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
+
+% ---------------------
 drug_identifier = data.X(:,2) > 0.5;
 % remove drug levels
 data.X(:,2) = [];
@@ -26,11 +46,11 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .005;   % Auxiliary variance
-params.s2B = 1;   % Variance of the Gaussian prior of the weigting matrices B
+params.s2Y = 1;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2u = .005;  % Auxiliary variance
+params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
-params.Niter = 100;   % Number of iterations for the gibbs sampler
+params.Niter = 1000; % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 2;
 params.func = 2*ones(1,D);
@@ -49,20 +69,22 @@ end
 %% Predict MAP estimate for each latent feature
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
+%Zp(3,1) = 1;
+%Zp = [Zp; 0 1 1];
 Zp = Zp(1:3,:);
-leg = {'Bias 0','Bias 1','F1', 'F2'};
+leg = {'Bias 0','Bias 1','B0+F1', 'B1+F1'};
 
 
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
-figure();
+figure(1);
 for d=1:D
     subplot(3,1,1);
     [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
-    if (data.C(d) == 'c') 
+    if (data.C(d) == 'c') || (data.C(d) == 'o') 
         bar(pdf');
-    elseif (data.C(d) == 'n') || (data.C(d) == 'o')
+    elseif (data.C(d) == 'n')
         stem(xd, pdf');
     else
         plot(xd,pdf');

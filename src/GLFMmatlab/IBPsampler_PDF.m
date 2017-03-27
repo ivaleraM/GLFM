@@ -37,7 +37,7 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
             case 'p', pdf(p,:) = pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), params);
             case 'n', pdf(p,:) = pdf_n(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), params);
             case 'c', pdf(p,:) = pdf_c(Zp(p,:), squeeze(hidden.B(d,:,1:hidden.R(d))), params);
-            case 'o', pdf(p,:) = pdf_o(Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.Theta(d,:), params);
+            case 'o', pdf(p,:) = pdf_o(Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)), params);
             otherwise
                 error('Unknown data type');
         end

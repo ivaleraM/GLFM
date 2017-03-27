@@ -71,7 +71,7 @@ function hidden = IBPsampler_run(data,varargin)
     hidden.w = w;
     hidden.R = ones(1,D);
     for d=1:D
-        if (data.C(d) == 'c')
+        if (data.C(d) == 'c') || (data.C(d) == 'o')
             hidden.R(d) = length(unique(data.X(data.X(:,d)~= params.missing,d) ));
         end
     end
