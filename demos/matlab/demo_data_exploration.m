@@ -26,11 +26,11 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 0.5;      % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .01;
-params.s2B = 0.3;       % Variance of the Gaussian prior of the weigting matrices B
-params.alpha = 1;     % Concentration parameter of the IBP
-params.Niter = 2; % Number of iterations for the gibbs sampler
+params.s2Y = 1;   % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2u = .005;   % Auxiliary variance
+params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
+params.alpha = 1;   % Concentration parameter of the IBP
+params.Niter = 100;   % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 2;
 
@@ -49,10 +49,15 @@ end
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
 Zp = Zp(1:2,:);
-leg = {'F1','F2'};
+leg = {'Bias 0','Bias 1'};
+
+
+X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+
 %% Plot Dimensions
-figure(2);
+figure();
 for d=1:D
+    subplot(3,1,1);
     [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
     if (data.C(d) == 'c') 
         bar(pdf');
@@ -67,4 +72,9 @@ for d=1:D
         set(gca,'XTickLabelRotation',45);
     end
     legend(leg);
+    subplot(3,1,2);
+    hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
+    subplot(3,1,3);
+    hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
+    pause;
 end
