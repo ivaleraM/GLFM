@@ -45,7 +45,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 100; % Number of iterations for the gibbs sampler
+    params.Niter = 1000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
@@ -69,30 +69,33 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% PLOT USA map and corresponding features
-for k=2:size(hidden.Z,2)
+if ~params.save
     
-    plot_usa_map(data,hidden,k);
-    title(sprintf('Activation of F%d',k-1));
+    for k=2:size(hidden.Z,2)
+        
+        plot_usa_map(data,hidden,k);
+        title(sprintf('Activation of F%d',k-1));
+        
+        %     Zp = zeros(2,size(hidden.Z,2));
+        %     Zp(:,1) = 1; % bias
+        %     Zp(1,k) = 1; % feature active
+        %
+        %     X_F = IBPsampler_MAP(data.C, Zp, hidden);
+        %     idx_toRemove = [1 4 14 15 16];
+        %     X_F(:,idx_toRemove) = [];
+        %     labels = data.ylabel;
+        %     labels(idx_toRemove) = [];
+        %
+        %     plot_cont_feat(X_F, labels, sprintf('F%d',k-1));
+    end
     
-%     Zp = zeros(2,size(hidden.Z,2));
-%     Zp(:,1) = 1; % bias
-%     Zp(1,k) = 1; % feature active
-%     
-%     X_F = IBPsampler_MAP(data.C, Zp, hidden);
-%     idx_toRemove = [1 4 14 15 16];
-%     X_F(:,idx_toRemove) = [];
-%     labels = data.ylabel;
-%     labels(idx_toRemove) = [];
-%     
-%     plot_cont_feat(X_F, labels, sprintf('F%d',k-1));
+    plot_cont_all_feats(data, hidden, params);
 end
-
-plot_cont_all_feats(data, hidden, params);
 
 %% Plot Dimensions
 if ~params.save
     data.ylabel_long = data.ylabel;
-
+    
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
     %Zp(3,1) = 1;
@@ -127,5 +130,5 @@ if ~params.save
         %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
         
         pause;
-    end    
+    end
 end
