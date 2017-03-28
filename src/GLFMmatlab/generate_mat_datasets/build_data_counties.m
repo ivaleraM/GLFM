@@ -48,13 +48,13 @@ data.ylabel = header;
 %%
 load('../../../datasets/mat/states.mat');
 
-V = char(data.cat_labels{1});
+V = char(data.cat_labels{2});
 for r=1:size(V,1)
     co = V(r,:);
     idx_sta = strncmp(co, states.code,length(co));
     co
     states.name{idx_sta}
-    data.cat_labels{1}{r} = states.name{idx_sta};
+    data.cat_labels{2}{r} = states.name{idx_sta};
 end
 
 
