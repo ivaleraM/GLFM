@@ -83,11 +83,13 @@ X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 if ~params.save
     
     Kest = size(hidden.B,2);
-Zp = eye(Kest);
-Zp(3:end,1) = 1;
-
-%Zp = Zp(1:min(3,Kest),:);
-leg = {'F0 placebo','F0 treatment', 'F1 placebo', 'F1 treatment'};
+    Zp = eye(Kest);
+    Zp(3:end,1) = 1;
+    Zp = [Zp; 0 1 1];
+    %Zp = [1 0 0 0; 0 1 0 0; 1 0 1 0; 0 1 1 0; 1 0 0 1; 0 1 0 1];
+    
+    %Zp = Zp(1:min(3,Kest),:);
+    leg = {'F0 placebo','F0 treatment', 'F1 placebo', 'F1 treatment'};
     
     figure(1);
     for d=1:D
@@ -96,7 +98,7 @@ leg = {'F0 placebo','F0 treatment', 'F1 placebo', 'F1 treatment'};
         if (data.C(d) == 'c') || (data.C(d) == 'o')
             bar(pdf');
         elseif (data.C(d) == 'n')
-            stem(xd, pdf');
+            stem(xd, pdf'); 
         else
             plot(xd,pdf');
         end
