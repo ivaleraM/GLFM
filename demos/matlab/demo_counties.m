@@ -45,7 +45,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 1000; % Number of iterations for the gibbs sampler
+    params.Niter = 10; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
@@ -82,7 +82,7 @@ if ~params.save
     
     
     figure(1);
-    for d=1:D
+    for d=4:D
         subplot(2,1,1);
         [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
         if (data.C(d) == 'c') || (data.C(d) == 'o')
@@ -104,6 +104,10 @@ if ~params.save
         %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
         %     subplot(3,1,3);
         %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
-        pause;
+        
+        %pause;
     end
+    
+    plot_usa_map(data,hidden,2);
+    
 end
