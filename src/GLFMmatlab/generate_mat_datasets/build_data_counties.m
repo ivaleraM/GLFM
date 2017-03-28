@@ -3,7 +3,6 @@
 clear
 addpath('./aux/');
 % load database and categorical columns
-file = '/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/simulations/data/prostate.csv';
 load_matrix_counties;
 load_char_columns_counties;
 load_header_counties;
@@ -46,4 +45,17 @@ data.C = ['ccnnn','ngppn','pnppp','pppp'];
 data.cat_labels = info;
 data.ylabel = header;
 
-save('./mat/counties.mat','data');
+%%
+load('../../../datasets/mat/states.mat');
+
+V = char(data.cat_labels{1});
+for r=1:size(V,1)
+    co = V(r,:);
+    idx_sta = strncmp(co, states.code,length(co));
+    co
+    states.name{idx_sta}
+    data.cat_labels{1}{r} = states.name{idx_sta};
+end
+
+
+save('/Users/melanie/Documents/GLFM/datasets/mat/counties.mat','data');
