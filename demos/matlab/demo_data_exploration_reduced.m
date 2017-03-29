@@ -60,7 +60,7 @@ hidden.Z = Zini; % N*D
 params.missing = -1;
 params.s2Y = 0.5;       % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .001;      % Auxiliary variance
-params.s2B = 0.1;       % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = 0.5;       % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 10;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
     params.Niter = 1000; % Number of iterations for the gibbs sampler
