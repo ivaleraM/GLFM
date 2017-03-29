@@ -1,4 +1,4 @@
-%% --------------------------------------------------
+% %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
 %clear
@@ -56,15 +56,15 @@ params.s2Y = 0.5;   % Variance of the Gaussian prior on the auxiliary variables 
 params.s2u = .005;   % Auxiliary variance
 params.s2B = 0.1;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
-params.Niter = 1000;   % Number of iterations for the gibbs sampler
+params.Niter = 100;   % Number of iterations for the gibbs sampler
 
 params.maxK = 10;
 params.bias = 1;
 params.func = 2*ones(1,D);
 
-%params.simId = 1;
+params.simId = 1;
 if ~isfield(params,'save')
-    params.save = 0;
+     params.save = 0;
 end
 
 %% Inference
@@ -80,7 +80,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
-if params.save
+if 1%params.save
     
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
