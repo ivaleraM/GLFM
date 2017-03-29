@@ -1,4 +1,4 @@
-%% --------------------------------------------------
+% %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
 %clear
@@ -63,9 +63,9 @@ params.maxK = 10;
 params.bias = 1;
 params.func = 2*ones(1,D);
 
-%params.simId = 1;
+params.simId = 1;
 if ~isfield(params,'save')
-    params.save = 0;
+     params.save = 0;
 end
 
 %% Inference
@@ -81,7 +81,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
-if params.save
+if 1%params.save
     
     Kest = size(hidden.B,2);
     Zp = eye(Kest);

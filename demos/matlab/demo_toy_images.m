@@ -20,11 +20,12 @@ hidden.Z = Zini;
 params.missing = -10;
 params.s2Y = 1;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .01;
-params.s2B = 0.5;      % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = 1;      % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 5;    % Concentration parameter of the IBP
 params.Niter = 100;  % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 0;
+params.func = 1*ones(1,size(data.X,2));
 
 %% INFERENCE
 hidden = IBPsampler_run(data, hidden, params);

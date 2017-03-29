@@ -1,3 +1,3 @@
-function pdf = pdf_g(x,Zp, B, w, params)
-    pdf = normpdf(x, Zp * B, sqrt(params.s2Y + params.s2u)) .* w;
+function pdf = pdf_g(x,Zp, B, w, s2Y, params)
+    pdf = normpdf(x, Zp * B, sqrt(s2Y + params.s2u)) .* w;
 end

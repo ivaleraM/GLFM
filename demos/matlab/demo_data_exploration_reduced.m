@@ -63,7 +63,7 @@ params.s2u = .001;      % Auxiliary variance
 params.s2B = 0.5;       % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 10;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 1000; % Number of iterations for the gibbs sampler
+    params.Niter = 100; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;

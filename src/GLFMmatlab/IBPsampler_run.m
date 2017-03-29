@@ -60,7 +60,7 @@ function hidden = IBPsampler_run(data,varargin)
     
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w]= IBPsampler(data.X,data.C, hidden.Z, params.bias,params.func, params.s2Y, ...
+    [Z B theta mu w s2Y]= IBPsampler(data.X,data.C, hidden.Z, params.bias,params.func, params.s2Y, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     
@@ -69,6 +69,7 @@ function hidden = IBPsampler_run(data,varargin)
     hidden.theta = theta;
     hidden.mu = mu; % mapping functions info (necessary for plotting)
     hidden.w = w;
+    hidden.s2Y = s2Y;
     hidden.R = ones(1,D);
     for d=1:D
         if (data.C(d) == 'c') || (data.C(d) == 'o')

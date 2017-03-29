@@ -1,4 +1,4 @@
-function pdf = pdf_c(Zp, B, params)
+function pdf = pdf_c(Zp, B, s2Y)
     %
     % Inputs:
     %   B: K*R
@@ -8,7 +8,7 @@ function pdf = pdf_c(Zp, B, params)
     R = size(B,2);
     pdf = zeros(1,R);
     % generate r.v's u
-    u = sqrt(params.s2Y) * randn(numMC,1);
+    u = sqrt(s2Y) * randn(numMC,1);
     for r=1:R
         aux = ones(numMC,1);
         for j=1:R

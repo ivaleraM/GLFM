@@ -26,10 +26,10 @@ data.C = C;
 
 %% Define parameter default values for algorithm
 params.bias = 1;
-params.s2Y = 1;
+params.s2Y = 0;
 params.s2B = 1;
 params.alpha = 10;
-params.Niter = 100;
+params.Niter = 10;
 params.maxK = 50;
 params.missing = -100;
 params.func = 1*ones(1,size(Xmiss,2));

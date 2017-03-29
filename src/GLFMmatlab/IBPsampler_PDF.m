@@ -33,11 +33,11 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
     pdf = zeros(P,numS);
     for p=1:P
         switch data.C(d)
-            case 'g', pdf(p,:) = pdf_g(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.w(d), params);
-            case 'p', pdf(p,:) = pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), params);
-            case 'n', pdf(p,:) = pdf_n(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), params);
-            case 'c', pdf(p,:) = pdf_c(Zp(p,:), squeeze(hidden.B(d,:,1:hidden.R(d))), params);
-            case 'o', pdf(p,:) = pdf_o(Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)), params);
+            case 'g', pdf(p,:) = pdf_g(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.w(d), hidden.s2Y(d), params);
+            case 'p', pdf(p,:) = pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params);
+            case 'n', pdf(p,:) = pdf_n(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params);
+            case 'c', pdf(p,:) = pdf_c(Zp(p,:), squeeze(hidden.B(d,:,1:hidden.R(d))), hidden.s2Y(d));
+            case 'o', pdf(p,:) = pdf_o(Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)), hidden.s2Y(d));
             otherwise
                 error('Unknown data type');
         end

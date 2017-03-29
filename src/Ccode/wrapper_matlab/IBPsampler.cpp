@@ -24,6 +24,7 @@
 #define output_Theta plhs[2]
 #define output_MU plhs[3]
 #define output_W plhs[4]
+#define output_s2Y plhs[5]
 
 void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
@@ -60,7 +61,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     //Inputs to the C function
     int bias = mxGetScalar(input_bias);
     double s2B = mxGetScalar(input_s2B);
-    double s2Y = mxGetScalar(input_s2Y);
+    //double s2Y = mxGetScalar(input_s2Y);
     double s2u = mxGetScalar(input_s2u);
     double alpha = mxGetScalar(input_alpha);
     int maxK = mxGetScalar(input_maxK);
@@ -89,10 +90,10 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     gsl_matrix *X = &Xview.matrix;
     gsl_matrix **B=(gsl_matrix **) calloc(D,sizeof(gsl_matrix*));
     gsl_vector **theta=(gsl_vector **) calloc(D,sizeof(gsl_vector*));
-    double w[D],mu[D];
+    double w[D],mu[D],s2Y[D];
     int R[D];
     printf("In C++: Transforming input data... ");
-    int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w);
+    int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w, s2Y);
     printf("done\n");
     //int maxR = 1;
     //for (int d=0; d<D; d++){
@@ -159,10 +160,13 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double *pMU=mxGetPr(output_MU);
     output_W = mxCreateDoubleMatrix(D, 1,mxREAL);
     double *pW=mxGetPr(output_W);
+    output_s2Y = mxCreateDoubleMatrix(D, 1,mxREAL);
+    double *ps2Y=mxGetPr(output_s2Y);
     
     for (int d=0; d<D; d++){
          pMU[d]=mu[d];
          pW[d]=w[d];
+         ps2Y[d]=s2Y[d];
     }
 
     //..... Free memory.....//
