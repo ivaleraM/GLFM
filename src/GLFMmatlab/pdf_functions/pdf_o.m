@@ -1,4 +1,4 @@
-function pdf = pdf_o(Zp, B, theta, params)
+function pdf = pdf_o(Zp, B, theta, s2Y)
     % Inputs:
     %   theta: 1*R
     %   Zp: 1*K
@@ -7,14 +7,14 @@ function pdf = pdf_o(Zp, B, theta, params)
     pdf = zeros(1,R);
     for r=1:R
         if (r==1)
-            a = normcdf(theta(r), Zp*B, sqrt(params.s2Y) );
+            a = normcdf(theta(r), Zp*B, sqrt(s2Y) );
             b = 0;
         elseif (r==R)
             a = 1;
-            b = normcdf(theta(r-1), Zp*B, sqrt(params.s2Y) );
+            b = normcdf(theta(r-1), Zp*B, sqrt(s2Y) );
         else
-            a = normcdf(theta(r), Zp*B, sqrt(params.s2Y) );
-            b = normcdf(theta(r-1), Zp*B, sqrt(params.s2Y) );
+            a = normcdf(theta(r), Zp*B, sqrt(s2Y) );
+            b = normcdf(theta(r-1), Zp*B, sqrt(s2Y) );
         end
         pdf(r) =  a - b;
     end
