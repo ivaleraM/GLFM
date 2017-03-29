@@ -15,6 +15,10 @@ data.cat_labels{1} = {'3';'4'};
 
 % change to ordinal variables
 
+data.C(3) = 'o'; % months to follow up
+tmp = num2str( unique(data.X(~isnan(data.X(:,3)),3)) );
+data.cat_labels{3} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
+
 % Type of activity: confined in bed, in bed less than 1/2 daytime, ...
 data.C(7) = 'o';
 tmp = (data.X(:,7) == 2);
@@ -23,7 +27,9 @@ data.X(tmp,7) = 3;
 tmp = data.cat_labels{7}(2);
 data.cat_labels{7}(2) = data.cat_labels{7}(3);
 data.cat_labels{7}(3) = tmp;
-%data.X( data.X(:,7) == 1), 7) == 2;
+%tmp = data.cat_labels_long{7}(2);
+%data.cat_labels_long{7}(2) = data.cat_labels_long{7}(3);
+%ata.cat_labels_long{7}(3) = tmp;
 
 % Index Stage (state of the patient)
 data.C(14) = 'o';
@@ -52,12 +58,12 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 0.5;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .001;  % Auxiliary variance
-params.s2B = 0.1;   % Variance of the Gaussian prior of the weigting matrices B
-params.alpha = 10;   % Concentration parameter of the IBP
+params.s2Y = 0.5;       % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2u = .001;      % Auxiliary variance
+params.s2B = 0.1;       % Variance of the Gaussian prior of the weigting matrices B
+params.alpha = 10;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 100; % Number of iterations for the gibbs sampler
+    params.Niter = 1000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
@@ -67,6 +73,35 @@ params.func = 2*ones(1,D);
 if ~isfield(params,'save')
     params.save = 0;
 end
+
+%% Reduced
+
+% simplify Status
+data.cat_labels{4};
+% 1 -->      1  alive
+% [2,3] -->  2  vascular
+% 6 -->      3  prostatic cancer
+% [7,8] -->  4  lung-related dead
+% [4,5,9,10] 5  others
+V = data.X(:,4);
+V(data.X(:,4) == 3) = 2;
+V(data.X(:,4) == 6) = 3;
+%V(data.X(:,4) == 7 | data.X(:,4) == 8) = 4;
+%V(data.X(:,4) == 4 | data.X(:,4) == 5 | data.X(:,4) == 9 | data.X(:,4) == 10) = 5;
+V(data.X(:,4) == 7 | data.X(:,4) == 8 | ...
+    data.X(:,4) == 4 | data.X(:,4) == 5 | data.X(:,4) == 9 | data.X(:,4) == 10) = 4;
+%data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'lung-related', 'others'};
+data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'others'};
+data.X(:,4) = V;
+
+idx_toKeep = [1 2 4 5 8 13 14]; % 11
+%bias = data.X(:,1) - 3;
+%hidden.Z = [bias, double(rand(N,1)>0.8)];
+data.X = data.X(:,idx_toKeep);
+data.C = data.C(idx_toKeep);
+data.cat_labels = data.cat_labels(idx_toKeep);
+data.ylabel = data.ylabel(idx_toKeep);
+data.ylabel_long = data.ylabel_long(idx_toKeep);
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
@@ -81,7 +116,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
-if params.save
+if ~params.save
     
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
@@ -89,11 +124,11 @@ if params.save
     %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
     Zp = Zp(1:min(3,Kest),:);
-    leg = {'F0','F1', 'F2'};
+    leg = {'F0','F1', 'F2', 'F3'};
     
     
     figure(1);
-    for d=1:D
+    for d=1:size(data.X,2)
         subplot(2,1,1);
         [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
         if (data.C(d) == 'c') || (data.C(d) == 'o')
