@@ -43,6 +43,24 @@ tmp = num2str(unique(data.X(:,2)));
 data.cat_labels{2} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
 data.C(2) = 'o';
 
+% simplify Status
+data.cat_labels{4};
+% 1 -->      1  alive
+% [2,3] -->  2  vascular
+% 6 -->      3  prostatic cancer
+% [7,8] -->  4  lung-related dead
+% [4,5,9,10] 5  others
+V = data.X(:,4);
+V(data.X(:,4) == 3) = 2;
+V(data.X(:,4) == 6) = 3;
+%V(data.X(:,4) == 7 | data.X(:,4) == 8) = 4;
+%V(data.X(:,4) == 4 | data.X(:,4) == 5 | data.X(:,4) == 9 | data.X(:,4) == 10) = 5;
+V(data.X(:,4) == 7 | data.X(:,4) == 8 | ...
+    data.X(:,4) == 4 | data.X(:,4) == 5 | data.X(:,4) == 9 | data.X(:,4) == 10) = 4;
+%data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'lung-related', 'others'};
+data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'others'};
+data.X(:,4) = V;
+
 
 %% Initialize Hidden Structure
 [N, D] = size(data.X);
@@ -61,7 +79,7 @@ if ~isfield(params,'save')
 end
 params.maxK = 10;
 params.bias = 1;
-params.func = 2*ones(1,D);
+params.func = ones(1,D);
 
 params.simId = 1;
 if ~isfield(params,'save')
@@ -81,15 +99,15 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
-if 1%params.save
+if ~params.save
     
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
     %Zp(3,1) = 1;
     %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
-    Zp = Zp(1:min(3,Kest),:);
-    leg = {'F0','F1', 'F2'};
+    Zp = Zp(1:min(5,Kest),:);
+    leg = {'F0','F1', 'F2', 'F3', 'F4'};
     
     
     figure(1);

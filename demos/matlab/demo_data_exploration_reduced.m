@@ -58,9 +58,9 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 0.5;       % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2Y = 1;       % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;      % Auxiliary variance
-params.s2B = 0.25;       % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = 0.5;       % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
     params.Niter = 1000; % Number of iterations for the gibbs sampler
@@ -94,20 +94,20 @@ V(data.X(:,4) == 7 | data.X(:,4) == 8 | ...
 data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'others'};
 data.X(:,4) = V;
 
-% idx_toKeep = [1 2 4 5 8 13 14]; % 11
-% %bias = data.X(:,1) - 3;
-% %hidden.Z = [bias, double(rand(N,1)>0.8)];
-% data.X = data.X(:,idx_toKeep);
-% data.C = data.C(idx_toKeep);
-% data.cat_labels = data.cat_labels(idx_toKeep);
-% data.ylabel = data.ylabel(idx_toKeep);
-% data.ylabel_long = data.ylabel_long(idx_toKeep);
+idx_toKeep = [1 2 4 5 8 13 14]; % 11
+%bias = data.X(:,1) - 3;
+%hidden.Z = [bias, double(rand(N,1)>0.8)];
+data.X = data.X(:,idx_toKeep);
+data.C = data.C(idx_toKeep);
+data.cat_labels = data.cat_labels(idx_toKeep);
+data.ylabel = data.ylabel(idx_toKeep);
+data.ylabel_long = data.ylabel_long(idx_toKeep);
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
 
 if params.save
-    output_file = sprintf( './results/prostate_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%d.mat', ...
+    output_file = sprintf( './results/prostateRed_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%d.mat', ...
         params.bias, params.simId, params.Niter, params.s2Y, params.s2B, params.alpha);
     save(output_file);
 end
@@ -123,8 +123,8 @@ if ~params.save
     %Zp(3,1) = 1;
     %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
-    Zp = Zp(1:min(3,Kest),:);
-    leg = {'F0','F1', 'F2', 'F3'};
+    Zp = Zp(1:min(5,Kest),:);
+    leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
     
     
     figure(1);
