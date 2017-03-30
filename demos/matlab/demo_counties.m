@@ -15,22 +15,23 @@ load(input_file);
 % [1 3 4] remove dimensions with excessive number of missings
 % dimension 14 = 'White' would need an inversion too, let's remove it for
 % the moment
-idx_to_remove = [1,3,4,7, 14];
+idx_to_remove = [1,3,4,7, 17];
 data.X(:,idx_to_remove) = []; 
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
 data.ylabel(idx_to_remove) = [];
 
+Xtrue = data.X;
 % pre-transform pop. variables
-idx_transform = [2 3 6 8 9 14]; %7 9 10 15];
+idx_transform = [2 3 6 8 9 13]; %7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
 for r=idx_transform
     params.t{r} = @(x) log(x + 1);
-    params.t_1{r} = @(y) e.^y - 1;
-    params.dt_1{r} = @(y) e.^y;
-    data.X(:,r) = log( data.X(:,r) + 1 ); % work in logarithm space better
+    params.t_1{r} = @(y) exp(y) - 1;
+    params.dt_1{r} = @(y) exp(y);
+    data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
     data.C(r) = 'p';
 end
 
@@ -61,7 +62,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 10; % Number of iterations for the gibbs sampler
+    params.Niter = 100; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
@@ -117,8 +118,8 @@ if ~params.save
     %Zp(3,1) = 1;
     %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
-    Zp = Zp(1:min(3,Kest),:);
-    leg = {'F0','F1', 'F2'};
+    Zp = Zp(1:min(6,Kest),:);
+    leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
     
     
     figure;
@@ -139,6 +140,9 @@ if ~params.save
         end
         legend(leg);
         subplot(2,1,2);
+        if ~isempty(params.t{d})
+            data.X(:,d) = params.t_1{d}(data.X(:,d));
+        end
         hist(data.X(:,d),100); title('Empirical');
         %     subplot(3,1,2);
         %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
