@@ -59,15 +59,15 @@ hidden.Z = Zini; % N*D
 %% DEFINE PARAMS
 params.missing = -1;
 params.s2Y = 0.5;       % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .001;      % Auxiliary variance
-params.s2B = 0.5;       % Variance of the Gaussian prior of the weigting matrices B
-params.alpha = 10;      % Concentration parameter of the IBP
+params.s2u = .005;      % Auxiliary variance
+params.s2B = 0.25;       % Variance of the Gaussian prior of the weigting matrices B
+params.alpha = 1;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 100; % Number of iterations for the gibbs sampler
+    params.Niter = 1000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
-params.func = 2*ones(1,D);
+params.func = ones(1,D);
 
 %params.simId = 1;
 if ~isfield(params,'save')
@@ -94,14 +94,14 @@ V(data.X(:,4) == 7 | data.X(:,4) == 8 | ...
 data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'others'};
 data.X(:,4) = V;
 
-idx_toKeep = [1 2 4 5 8 13 14]; % 11
-%bias = data.X(:,1) - 3;
-%hidden.Z = [bias, double(rand(N,1)>0.8)];
-data.X = data.X(:,idx_toKeep);
-data.C = data.C(idx_toKeep);
-data.cat_labels = data.cat_labels(idx_toKeep);
-data.ylabel = data.ylabel(idx_toKeep);
-data.ylabel_long = data.ylabel_long(idx_toKeep);
+% idx_toKeep = [1 2 4 5 8 13 14]; % 11
+% %bias = data.X(:,1) - 3;
+% %hidden.Z = [bias, double(rand(N,1)>0.8)];
+% data.X = data.X(:,idx_toKeep);
+% data.C = data.C(idx_toKeep);
+% data.cat_labels = data.cat_labels(idx_toKeep);
+% data.ylabel = data.ylabel(idx_toKeep);
+% data.ylabel_long = data.ylabel_long(idx_toKeep);
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
