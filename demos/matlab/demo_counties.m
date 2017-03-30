@@ -1,7 +1,7 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
-%clear
+clear
 addpath(genpath('../../src/'));
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
@@ -12,11 +12,27 @@ load(input_file);
 
 %% ADAPT INPUT DATA --> put bias
 
-idx_to_remove = [1,3,4];
-data.X(:,idx_to_remove) = []; % remove dimensions with excessive number of missings
+% [1 3 4] remove dimensions with excessive number of missings
+% dimension 14 = 'White' would need an inversion too, let's remove it for
+% the moment
+idx_to_remove = [1,3,4,7, 14];
+data.X(:,idx_to_remove) = []; 
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
 data.ylabel(idx_to_remove) = [];
+
+% pre-transform pop. variables
+idx_transform = [2 3 6 8 9 14]; %7 9 10 15];
+params.t = cell(1,size(data.X,2));
+params.t_1 = cell(1,size(data.X,2));
+params.dt_1 = cell(1,size(data.X,2));
+for r=idx_transform
+    params.t{r} = @(x) log(x + 1);
+    params.t_1{r} = @(y) e.^y - 1;
+    params.dt_1{r} = @(y) e.^y;
+    data.X(:,r) = log( data.X(:,r) + 1 ); % work in logarithm space better
+    data.C(r) = 'p';
+end
 
 % %% NO PERC
 % %
@@ -69,7 +85,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% PLOT USA map and corresponding features
-if params.save
+if ~params.save
     
     for k=2:size(hidden.Z,2)
         
@@ -93,7 +109,7 @@ if params.save
 end
 
 %% Plot Dimensions
-if params.save
+if ~params.save
     data.ylabel_long = data.ylabel;
     
     Kest = size(hidden.B,2);
