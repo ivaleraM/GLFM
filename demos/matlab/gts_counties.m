@@ -1,7 +1,14 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
-clear
+function gts_counties(s2B,func,simId,Niter, cluster)
+
+if cluster
+    output_folder = '/export/gts_usuarios/melanie/GLFM_results/';
+else
+    output_folder = './results/';
+end
+
 addpath(genpath('../../src/'));
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
@@ -57,28 +64,30 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 1;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2Y = 0;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;  % Auxiliary variance
-params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = s2B;   % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 50; % Number of iterations for the gibbs sampler
+    params.Niter = Niter; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
-params.func = 1*ones(1,D);
+params.func = func*ones(1,D);
+params.simId = simId;
+params.save = 1;
 
 %params.simId = 1;
 if ~isfield(params,'save')
-    params.save = 0;
+    params.save = 1;
 end
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
 
 if params.save
-    output_file = sprintf( './results/counties_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%d.mat', ...
-        params.bias, params.simId, params.Niter, params.s2Y, params.s2B, params.alpha);
+    output_file = [ output_folder, sprintf( 'counties_bias%d_alpha%d_simId%d_Niter%d_s2B%.2f_func%d.mat', ...
+        params.bias, params.alpha, params.simId, params.Niter, params.s2B, func) ];
     save(output_file);
 end
 

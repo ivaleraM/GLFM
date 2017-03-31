@@ -45,8 +45,10 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
             error('Some values are nan!');
         end
     end
-    if ~isempty(params.t{d}) % we have used a special transform beforehand
-        xd = params.t_1{d}(xd);
-        pdf = pdf .* abs( params.dt_1{d}(pdf) );
+    if isfield(params,'t')
+        if ~isempty(params.t{d}) % we have used a special transform beforehand
+            xd = params.t_1{d}(xd);
+            pdf = pdf .* abs( params.dt_1{d}(pdf) );
+        end
     end
 end

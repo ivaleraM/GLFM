@@ -1,3 +1,5 @@
+%% Script_ 2 biases
+
 %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
@@ -69,7 +71,7 @@ if ~isfield(params,'Niter')
     params.Niter = 500; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
-params.bias = 1;
+params.bias = 2;
 params.func = ones(1,D);
 
 %params.simId = 1;
@@ -111,6 +113,16 @@ data.cat_labels = data.cat_labels(idx_toKeep);
 data.ylabel = data.ylabel(idx_toKeep);
 data.ylabel_long = data.ylabel_long(idx_toKeep);
 
+drug_identifier = data.X(:,2) > 0.5;
+% remove drug levels
+data.X(:,2) = [];
+data.C(2) = [];
+data.cat_labels(2) = [];
+data.ylabel(2) = [];
+data.ylabel_long(2) = [];
+
+hidden.Z = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
+
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
 
@@ -124,7 +136,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
-if ~params.save
+if params.save
     
     Kest = size(hidden.B,2);
     Zp = eye(Kest);

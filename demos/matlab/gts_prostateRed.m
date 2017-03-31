@@ -1,7 +1,14 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on prostate cancer database
 %% --------------------------------------------------
-%clear
+function gts_prostateRed(s2B,func,simId,Niter, cluster)
+
+if cluster
+    output_folder = '/export/gts_usuarios/melanie/GLFM_results/';
+else
+    output_folder = './results/';
+end
+
 addpath(genpath('../../src/'));
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
@@ -15,9 +22,9 @@ data.cat_labels{1} = {'3';'4'};
 
 % change to ordinal variables
 
-% data.C(3) = 'o'; % months to follow up
-% tmp = num2str( unique(data.X(~isnan(data.X(:,3)),3)) );
-% data.cat_labels{3} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
+data.C(3) = 'o'; % months to follow up
+tmp = num2str( unique(data.X(~isnan(data.X(:,3)),3)) );
+data.cat_labels{3} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
 
 % Type of activity: confined in bed, in bed less than 1/2 daytime, ...
 data.C(7) = 'o';
@@ -62,19 +69,20 @@ params.s2Y = 0;       % Variance of the Gaussian prior on the auxiliary variable
 params.s2u = .005;      % Auxiliary variance
 %params.s2B = 0.5;       % Variance of the Gaussian prior of the weigting matrices B
 if ~isfield(params,'s2B')
-params.s2B = 1;   % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = s2B;   % Variance of the Gaussian prior of the weigting matrices B
 end
 params.alpha = 1;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 500; % Number of iterations for the gibbs sampler
+    params.Niter = Niter; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
-params.func = ones(1,D);
+params.func = func*ones(1,D);
+params.simId = simId;
 
 %params.simId = 1;
 if ~isfield(params,'save')
-    params.save = 0;
+    params.save = 1;
 end
 
 %% Reduced
@@ -97,12 +105,7 @@ V(data.X(:,4) == 7 | data.X(:,4) == 8 | ...
 data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'others'};
 data.X(:,4) = V;
 
-% for drug level, fusion 0 and 0.2
-mask = logical(data.X(:,2) < 0.5);
-data.X(mask,2) = 0;
-data.cat_labels{2}(2,:) = [];
-
-idx_toKeep = [1 2 4 8 13 ]; %15]; %[1 2 3 4 5 8  13 15]; %[1 2 4 5 8 13 14];
+idx_toKeep = [1 2 4 5 8 13 14]; % 11
 %bias = data.X(:,1) - 3;
 %hidden.Z = [bias, double(rand(N,1)>0.8)];
 data.X = data.X(:,idx_toKeep);
@@ -113,15 +116,18 @@ data.ylabel_long = data.ylabel_long(idx_toKeep);
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
+params.save = 1;
 
 if params.save
-    output_file = sprintf( './results/prostateRed_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%d.mat', ...
-        params.bias, params.simId, params.Niter, params.s2Y, params.s2B, params.alpha);
+    output_file = [ output_folder, sprintf( 'prostateRed_bias%d_alpha%d_simId%d_Niter%d_s2B%.2f_func%d.mat', ...
+        params.bias, params.alpha, params.simId, params.Niter, params.s2B, func) ];
     save(output_file);
 end
 
 %% Predict MAP estimate for each latent feature
-X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+if ~params.save
+    X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+end
 
 %% Plot Dimensions
 if ~params.save
@@ -131,13 +137,12 @@ if ~params.save
     %Zp(3,1) = 1;
     %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
-    Zp = Zp(1:min(4,Kest),:);
+    Zp = Zp(1:min(5,Kest),:);
     leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
     
     
-
+    figure(1);
     for d=1:size(data.X,2)
-            figure(d);
         subplot(2,1,1);
         [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
         if (data.C(d) == 'c') || (data.C(d) == 'o')
