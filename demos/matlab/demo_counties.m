@@ -13,9 +13,7 @@ load(input_file);
 %% ADAPT INPUT DATA --> put bias
 
 % [1 3 4] remove dimensions with excessive number of missings
-% dimension 14 = 'White' would need an inversion too, let's remove it for
-% the moment
-idx_to_remove = [1,3,4,7, 17];
+idx_to_remove = [1,3,4,7];
 data.X(:,idx_to_remove) = []; 
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
@@ -23,7 +21,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % pre-transform pop. variables
-idx_transform = [2 3 6 9 13]; %7 9 10 15];
+idx_transform = [2 3 6 9 14]; %7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -34,6 +32,14 @@ for r=idx_transform
     data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
     data.C(r) = 'p';
 end
+% dimension 13 = 'White' need an inversion too
+r = 13;
+params.t{r};
+params.t{r} = @(x) log((100-x) + 1);
+params.t_1{r} = @(y) - exp(y) + 101;
+params.dt_1{r} = @(y) - exp(y);
+data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
+data.C(r) = 'p';
 
 % %% NO PERC
 % %
@@ -59,10 +65,10 @@ hidden.Z = Zini; % N*D
 params.missing = -1;
 params.s2Y = 1;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;  % Auxiliary variance
-params.s2B = 0.5;   % Variance of the Gaussian prior of the weigting matrices B
+params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 50; % Number of iterations for the gibbs sampler
+    params.Niter = 1000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
@@ -105,7 +111,7 @@ if ~params.save
         %     Zp(:,1) = 1; % bias
         %     Zp(1,k) = 1; % feature active
         %
-        %     X_F = IBPsampler_MAP(data.C, Zp, hidden);
+        %     X_F = IBPsampler_MAP(d at a.C, Zp, hidden);
         %     idx_toRemove = [1 4 14 15 16];
         %     X_F(:,idx_toRemove) = [];
         %     labels = data.ylabel;

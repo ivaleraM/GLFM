@@ -20,9 +20,7 @@ load(input_file);
 %% ADAPT INPUT DATA --> put bias
 
 % [1 3 4] remove dimensions with excessive number of missings
-% dimension 14 = 'White' would need an inversion too, let's remove it for
-% the moment
-idx_to_remove = [1,3,4,7, 17];
+idx_to_remove = [1,3,4,7];
 data.X(:,idx_to_remove) = []; 
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
@@ -30,7 +28,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % pre-transform pop. variables
-idx_transform = [2 3 6 9 13]; %7 9 10 15];
+idx_transform = [2 3 6 9 14]; %7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -41,6 +39,14 @@ for r=idx_transform
     data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
     data.C(r) = 'p';
 end
+% dimension 13 = 'White' need an inversion too
+r = 13;
+params.t{r};
+params.t{r} = @(x) log((100-x) + 1);
+params.t_1{r} = @(y) - exp(y) + 101;
+params.dt_1{r} = @(y) - exp(y);
+data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
+data.C(r) = 'p';
 
 % %% NO PERC
 % %
