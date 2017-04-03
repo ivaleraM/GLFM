@@ -61,12 +61,18 @@ V(data.X(:,4) == 7 | data.X(:,4) == 8 | ...
 data.cat_labels{4} = {'alive', 'vascular', 'prostatic ca', 'others'};
 data.X(:,4) = V;
 
-
 %% Initialize Hidden Structure
 [N, D] = size(data.X);
-%Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
+% %Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
+% drug_identifier_low = data.X(:,2) == 1; % high level drug
+% drug_identifier_high = data.X(:,2) == 5; % high level drug
+% Zini = [ones(N,1), drug_identifier_high, double(rand(N,1)>0.9)];
 Zini = [ones(N,1), double(rand(N,1)>0.8)];
 hidden.Z = Zini; % N*D
+
+drug_identifier_low = data.X(:,2) == 1; % high level drug
+drug_identifier_high = data.X(:,2) == 5; % high level drug
+Zini = [ones(N,1), drug_identifier_high, drug_identifier_low]; %, double(rand(N,1)>0.9)];
 
 %% DEFINE PARAMS
 params.missing = -1;
