@@ -1,5 +1,5 @@
 %% --------------------------------------------------
-% DEMO: Data exploration on prostate cancer database
+% DEMO: Data exploration on counties database
 %% --------------------------------------------------
 clear
 addpath(genpath('../../src/'));
@@ -89,6 +89,12 @@ end
 
 %% PLOT USA map and corresponding features
 if ~params.save
+    
+    sum(hidden.Z)
+    feat_toRemove = find(sum(hidden.Z) < N*0.03);
+    hidden = remove_dims(hidden, feat_toRemove);
+    sum(hidden.Z)
+    [patterns, C] = get_feature_patterns(hidden.Z);
     
     for k=2:size(hidden.Z,2)
         

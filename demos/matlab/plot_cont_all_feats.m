@@ -17,11 +17,15 @@ for k = params.bias+1:Kest
     Zp(1,k) = 1; % feature active
     
     X_F = IBPsampler_MAP(data.C, Zp, hidden);
+    
     labels = data.ylabel;
      X_F(:,idx_toRemove) = [];
      labels(idx_toRemove) = [];
     
-    V = log2( X_F(1,:) ./ X_F(2,:) );
+    V = X_F(1,:) ./ X_F(2,:);
+    V(V < 0) = 0;
+    warning('Due to numerical errors, log of negative --> 0'):
+    V = log2( V );
     plot(V, colors{k-1}, 'Linewidth', 2);
     xticks(1:size(X_F,2));
     xticklabels(labels);
