@@ -14,7 +14,7 @@ load(input_file);
 
 % [1 3 4] remove dimensions with excessive number of missings
 idx_to_remove = [1,3,4,7];
-data.X(:,idx_to_remove) = []; 
+data.X(:,idx_to_remove) = [];
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
 data.ylabel(idx_to_remove) = [];
@@ -41,23 +41,9 @@ params.dt_1{r} = @(y) - exp(y);
 data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
 data.C(r) = 'p';
 
-% %% NO PERC
-% %
-% mask_noMiss = ~isnan( data.X(:,14) );
-% dem_id = (data.X(mask_noMiss,14) > data.X(mask_noMiss,15)) & (data.X(mask_noMiss,14) > data.X(mask_noMiss,16));
-% rep_id = (data.X(mask_noMiss,15) > data.X(mask_noMiss,14)) & (data.X(mask_noMiss,15) > data.X(mask_noMiss,16));
-% per_id = (data.X(mask_noMiss,16) > data.X(mask_noMiss,14)) & (data.X(mask_noMiss,16) > data.X(mask_noMiss,15));
-% %
-% idx_to_remove = [1,3,4, 14, 15, 16];
-% data.X(:,idx_to_remove) = []; % remove dimensions with excessive number of missings
-% data.C(idx_to_remove) = [];
-% data.cat_labels(idx_to_remove) = [];
-% data.ylabel(idx_to_remove) = [];
-
 %% Initialize Hidden Structure
 
 [N, D] = size(data.X);
-%Zini = [dem_id, rep_id, per_id, double(rand(N,1)>0.8)];
 Zini = [ones(N,1), double(rand(N,1)>0.8)];
 hidden.Z = Zini; % N*D
 
@@ -102,67 +88,28 @@ if ~params.save
     sum(hidden.Z)
     [patterns, C] = get_feature_patterns(hidden.Z);
     
-    for k=2:size(hidden.Z,2)
-        
-        plot_usa_map(data,hidden,k);
-        title(sprintf('Activation of F%d',k-1));
-        
-        %     Zp = zeros(2,size(hidden.Z,2));
-        %     Zp(:,1) = 1; % bias
-        %     Zp(1,k) = 1; % feature active
-        %
-        %     X_F = IBPsampler_MAP(d at a.C, Zp, hidden);
-        %     idx_toRemove = [1 4 14 15 16];
-        %     X_F(:,idx_toRemove) = [];
-        %     labels = data.ylabel;
-        %     labels(idx_toRemove) = [];
-        %
-        %     plot_cont_feat(X_F, labels, sprintf('F%d',k-1));
+    for k=1:size(patterns,1)
+        pat = patterns(k,:);
+        Zn = (C == k);%hidden.Z(:,idxF);
+        plot_usa_map(data,Zn);
+        title(sprintf('Activation of pattern (%s)',num2str(pat)));
     end
     
     plot_cont_all_feats(data, hidden, params);
 end
 
+data.ylabel_long = data.ylabel;
+
 %% Plot Dimensions
-if ~params.save
-    data.ylabel_long = data.ylabel;
-    
-    Kest = size(hidden.B,2);
-    Zp = eye(Kest);
-    %Zp(3,1) = 1;
-    %Zp = [Zp; 0 1 1];
-    Zp(:,1) = 1; % bias active
-    Zp = Zp(1:min(6,Kest),:);
-    leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5', 'F6'};
-    
-    
-    figure;
-    for d=4:D
-        subplot(2,1,1);
-        [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
-        if (data.C(d) == 'c') || (data.C(d) == 'o')
-            bar(pdf');
-        elseif (data.C(d) == 'n')
-            stem(xd, pdf');
-        else
-            plot(xd,pdf');
-        end
-        title(data.ylabel_long{d});
-        if (data.C(d) == 'c') || (data.C(d) == 'o')
-            set(gca,'XTickLabel',data.cat_labels{d});
-            set(gca,'XTickLabelRotation',45);
-        end
-        legend(leg);
-        subplot(2,1,2);
-        if ~isempty(params.t{d})
-            data.X(:,d) = params.t_1{d}(data.X(:,d));
-        end
-        hist(data.X(:,d),100); title('Empirical');
-        %     subplot(3,1,2);
-        %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
-        %     subplot(3,1,3);
-        %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
-        
-        pause;
-    end
+
+    %         if ~isempty(params.t{d})
+    %             data.X(:,d) = params.t_1{d}(data.X(:,d));
+    %         end
+
+if params.save
+    params.th = 0.1;
+    idxD = 4:size(data.X,2);
+    Zp = patterns;
+    leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
+    plot_all_dimensions(data, hidden, params, Zp, leg, idxD);
 end

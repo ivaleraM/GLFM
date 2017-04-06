@@ -1,6 +1,5 @@
-function plot_usa_map(data,hidden,idxF)
+function plot_usa_map(data,Zn)
 
-Zn = hidden.Z(:,idxF);
 statesRef = data.cat_labels{1};
 feature_level = zeros(length(statesRef),1);
 for r=1:length(statesRef)
@@ -28,14 +27,16 @@ indexHawaii = strcmp('Hawaii',names);
 indexAlaska = strcmp('Alaska',names);
 indexConus = 1:numel(states);
 indexConus(indexHawaii|indexAlaska) = [];
-surfaceColors = makesymbolspec('Polygon', {'Feature', [min([states.Feature]) max([states.Feature])], 'FaceColor', flip( autumn(numel(states)) ) });
+surfaceColors = makesymbolspec('Polygon', {'Feature', [0 1], 'FaceColor', flip( autumn(numel(states)) ) });
+%surfaceColors = makesymbolspec('Polygon', {'Feature', [min([states.Feature]) max([states.Feature])], 'FaceColor', flip( autumn(numel(states)) ) });
 
 geoshow(ax(1), states(indexConus),  'SymbolSpec', surfaceColors);
 geoshow(ax(2), states(indexAlaska),  'SymbolSpec', surfaceColors);
 geoshow(ax(3), states(indexHawaii),  'SymbolSpec', surfaceColors);
 colormap( flip( autumn(numel(states)) ) );
 colorbar;
-caxis( [min([states.Feature]) max([states.Feature])] )
+%caxis( [min([states.Feature]) max([states.Feature])] )
+caxis( [0 1] )
 %stateColor = [0.5 1 0.5];
 %geoshow(ax(1), states(indexConus),  'FaceColor', stateColor)
 %geoshow(ax(2), states(indexAlaska), 'FaceColor', stateColor)
