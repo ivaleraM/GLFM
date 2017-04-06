@@ -152,49 +152,21 @@ X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 
 %% Plot Dimensions
 if ~params.save
+    th = 0.03;
+    idxD = 4:size(data.X,2);
     
     sum(hidden.Z)
-    feat_toRemove = find(sum(hidden.Z) < N*0.03);
+    feat_toRemove = find(sum(hidden.Z) < N*th);
     hidden = remove_dims(hidden, feat_toRemove);
     sum(hidden.Z)
     [patterns, C] = get_feature_patterns(hidden.Z);
     
+    % choose patterns corresponding to activation of each feature
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
-    %Zp(3,1) = 1;
-    %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
     Zp = Zp(1:min(5,Kest),:);
     leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
     
-
-    for d=1:size(data.X,2)
-            figure(d);
-      %  subplot(2,1,1);
-        [xd, pdf]     = IBPsampler_PDF(data, Zp, hidden, params, d);
-        if (data.C(d) == 'c') || (data.C(d) == 'o')
-            h = bar(pdf');
-        elseif (data.C(d) == 'n')
-            stem(xd, pdf');
-        else
-            if ~isempty(params.t{d})
-                semilogx(xd,pdf');
-            else
-                plot(xd,pdf');
-            end
-        end
-        title(data.ylabel_long{d});
-        if (data.C(d) == 'c') || (data.C(d) == 'o')
-            set(gca,'XTickLabel',data.cat_labels{d});
-            set(gca,'XTickLabelRotation',45);
-        end
-        legend(leg);
-      %  subplot(2,1,2);
-      %  hist(data.X(:,d),100); title('Empirical');
-        %     subplot(3,1,2);
-        %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 0');
-        %     subplot(3,1,3);
-        %     hist(data.X(drug_identifier,d),100); title('Empirical Bias 1');
-        pause;
-    end
+    plot_all_dimensions(data, hidden, params, Zp, leg,idxD);
 end

@@ -3,7 +3,7 @@
 % load('./results/prostateRed_bias1_simId2_Niter10000_s2Y0.00_s2B1.00_alpha1.mat');
 % idx_featD = 4;
 
-load('./results/prostateRed_bias1_simId4_Niter10000_s2Y0.00_s2B1.00_alpha1.mat');
+load('./results/prostateRed_bias1_simId2_Niter10000_s2Y0.00_s2B1.00_alpha1.mat');
 idx_featD = 3;
 
 sum(hidden.Z)
@@ -18,7 +18,7 @@ sum(hidden.Z)
     %Zp = [Zp; 0 1 1];
     Zp(:,1) = 1; % bias active
     Zp = Zp(1:min(5,Kest),:);
-    leg = {'Empirical', 'F0','F1', 'F2', 'F3', 'F4', 'F5'};
+    leg = {' Empirical', ' F0',' F1', ' F2', ' F3', ' F4', ' F5'};
     colors = [ 0 102 255; ...
             153 51  255; ...            
             204 204 0; ...
