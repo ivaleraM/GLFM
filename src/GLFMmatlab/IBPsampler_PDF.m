@@ -13,7 +13,16 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
     % Outputs:
     %   xd: 1*numS where numS is the number of points to be considered
     %  pdf: P*numS where P is the number of patterns to consider
-    data.X(isnan(data.X(:,d)),d) = params.missing; 
+    data.X(isnan(data.X(:,d)),d) = params.missing;
+    
+    mm = min(data.X(data.X(:,d) ~= params.missing, d)); % min value
+    MM = max(data.X(data.X(:,d) ~= params.missing, d)); % max value
+    
+    if ~isempty(params.t{d}) % there is an external transformation
+        data.C(d) = params.ext_dataType{d};
+        mm = params.t_1{d}(mm);
+        MM = params.t_1{d}(MM);
+    end
     
     P = size(Zp,1);
     K = size(hidden.B,2);
@@ -22,9 +31,10 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
     end
     if (data.C(d) == 'g') || (data.C(d) == 'p')
         numS = 100;
-        xd = linspace( min(data.X(data.X(:,d) ~= params.missing, d)), max(data.X(data.X(:,d) ~= params.missing, d)), numS);
+
+        xd = linspace(mm, MM, numS);
     elseif (data.C(d) == 'n')
-        xd = min(data.X(data.X(:,d) ~= params.missing, d)):max(data.X(data.X(:,d) ~= params.missing, d));
+        xd = mm:MM;
         numS = length(xd);
     else
         xd = unique(data.X(data.X(:,d) ~= params.missing, d));
@@ -33,7 +43,7 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
     pdf = zeros(P,numS);
     for p=1:P
         switch data.C(d)
-            case 'g', pdf(p,:) = pdf_g(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.w(d), hidden.s2Y(d), params);
+            case 'g', pdf(p,:) = pdf_g(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params);
             case 'p', pdf(p,:) = pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params);
             case 'n', pdf(p,:) = pdf_n(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params);
             case 'c', pdf(p,:) = pdf_c(Zp(p,:), squeeze(hidden.B(d,:,1:hidden.R(d))), hidden.s2Y(d));
@@ -41,14 +51,20 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
             otherwise
                 error('Unknown data type');
         end
+        if (data.C(d) == 'g') || (data.C(d) == 'p')
+            trapz(xd,pdf(1,:))
+        else (data.C(d) == 'n')
+            sum(pdf(1,:))
+        end
         if (sum(isnan(pdf)) > 0)
             error('Some values are nan!');
         end
     end
+    
     if isfield(params,'t')
         if ~isempty(params.t{d}) % we have used a special transform beforehand
-            xd = params.t_1{d}(xd);
-            pdf = pdf .* abs( params.dt_1{d}(pdf) );
+            pdf = pdf .* abs( params.dt_1{d}(xd) );
+            xd = params.t{d}(xd);
         end
     end
 end

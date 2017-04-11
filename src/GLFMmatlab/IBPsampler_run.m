@@ -56,7 +56,13 @@ function hidden = IBPsampler_run(data,varargin)
         end
     end
     
-    %[Xmiss, suffStats] = preprocess(data.X, data.C, params.missing);
+    % eventually, apply external transform
+    for r=1:size(data.X,2)
+        if ~isempty(params.t{r})
+            data.X(:,r) = params.t_1{r}(data.X(:,r)); % work in logarithm space better
+            data.C(r) = params.ext_dataType{r};
+        end
+    end
     
     %% call .cpp wrapper function
     tic;

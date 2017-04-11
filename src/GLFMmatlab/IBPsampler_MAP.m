@@ -1,4 +1,4 @@
-function X_map = IBPsampler_MAP(C, Zp, hidden)
+function X_map = IBPsampler_MAP(C, Zp, hidden, params)
     % Function to generate the MAP solutions corresponding to patterns in Zp
     % Inputs:
     %   C: 1*D string with data types, D = number of dimensions
@@ -15,6 +15,11 @@ function X_map = IBPsampler_MAP(C, Zp, hidden)
     if (size(Zp,2) ~= K)
         error('Incongruent sizes between Zp and hidden.B');
     end
+    
+    if ~isempty(params.t{d}) % there is an external transformation
+        data.C(d) = params.ext_dataType{d};
+    end
+    
     X_map = zeros(P,D); % output    
     for d=1:D % for each dimension
         switch C(d)
@@ -28,5 +33,8 @@ function X_map = IBPsampler_MAP(C, Zp, hidden)
         end
         if (sum(isnan(X_map(:,d))) > 0)
             warning('Some values are nan!');
+        end
+        if ~isempty(params.t{d})
+            X_map(:,d) = params.t{d}( X_map(:,d) );
         end
     end

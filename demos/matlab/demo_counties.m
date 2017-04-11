@@ -20,26 +20,25 @@ data.cat_labels(idx_to_remove) = [];
 data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
-% pre-transform pop. variables
-idx_transform = [2 3 6 9 14]; %7 9 10 15];
+% specify external transforms for certain dimensions
+idx_transform = [2 3 6 10 15]; %7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
+params.ext_dataType = cell(1,size(data.X,2));
+
 for r=idx_transform
-    params.t{r} = @(x) log(x + 1);
-    params.t_1{r} = @(y) exp(y) - 1;
-    params.dt_1{r} = @(y) exp(y);
-    data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
-    data.C(r) = 'p';
+    params.t_1{r} = @(x) log(x + 1);
+    params.t{r} = @(y) exp(y) - 1;
+    params.dt_1{r} = @(y) 1 ./ (x + 1);
+    params.ext_dataType{r} = 'p';
 end
 % dimension 13 = 'White' need an inversion too
-r = 13;
-params.t{r};
-params.t{r} = @(x) log((100-x) + 1);
-params.t_1{r} = @(y) - exp(y) + 101;
-params.dt_1{r} = @(y) - exp(y);
-data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
-data.C(r) = 'p';
+r = 14;
+params.t_1{r} = @(x) log((100-x) + 1);
+params.t{r} = @(y) - exp(y) + 101;
+params.dt_1{r} = @(y) - 1./ (101 - x);
+params.ext_dataType{r} = 'p';
 
 %% Initialize Hidden Structure
 
@@ -49,7 +48,7 @@ hidden.Z = Zini; % N*D
 
 %% DEFINE PARAMS
 params.missing = -1;
-params.s2Y = 1;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+params.s2Y = 0;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
@@ -76,7 +75,7 @@ end
 
 %% Predict MAP estimate for each latent feature
 if ~params.save
-    X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+    X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
 end
 
 %% PLOT USA map and corresponding features
@@ -101,10 +100,6 @@ end
 data.ylabel_long = data.ylabel;
 
 %% Plot Dimensions
-
-    %         if ~isempty(params.t{d})
-    %             data.X(:,d) = params.t_1{d}(data.X(:,d));
-    %         end
 
 if params.save
     params.th = 0.1;

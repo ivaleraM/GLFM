@@ -14,3 +14,7 @@ function params = init_default_params(data, params)
     if ~isfield(params,'maxK'), params.maxK = size(data.X,2); end % max number of latent features for memory allocation inside C++ routine
     if ~isfield(params,'verbose'), params.verbose = 1; end % plot info in command line
     if ~isfield(params,'save'), params.save = 0; end
+    
+    if ~isfield(params,'t'), params.t = cell(1,size(data.X,2) ); end
+    if ~isfield(params,'t_1'), params.t = cell(1,size(data.X,2) ); end
+    if ~isfield(params,'dt_1'), params.t = cell(1,size(data.X,2) ); end
