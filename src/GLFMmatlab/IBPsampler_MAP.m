@@ -16,12 +16,11 @@ function X_map = IBPsampler_MAP(C, Zp, hidden, params)
         error('Incongruent sizes between Zp and hidden.B');
     end
     
-    if ~isempty(params.t{d}) % there is an external transformation
-        data.C(d) = params.ext_dataType{d};
-    end
-    
-    X_map = zeros(P,D); % output    
+    X_map = zeros(P,D); % output
     for d=1:D % for each dimension
+        if ~isempty(params.t{d}) % there is an external transformation
+            data.C(d) = params.ext_dataType{d};
+        end
         switch C(d)
             case 'g', X_map(:,d) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
             case 'p', X_map(:,d) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );

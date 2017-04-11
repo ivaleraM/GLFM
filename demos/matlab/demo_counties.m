@@ -13,7 +13,7 @@ load(input_file);
 %% ADAPT INPUT DATA --> put bias
 
 % [1 3 4] remove dimensions with excessive number of missings
-idx_to_remove = [1,3,4,7];
+idx_to_remove = [1,3,4,16];
 data.X(:,idx_to_remove) = [];
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
@@ -21,7 +21,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % specify external transforms for certain dimensions
-idx_transform = [2 3 6 10 15]; %7 9 10 15];
+idx_transform = [2 3 7 9 10 15]; %7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -53,7 +53,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 1000; % Number of iterations for the gibbs sampler
+    params.Niter = 100; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 params.bias = 1;
