@@ -69,7 +69,9 @@ if ~isfield(params,'Niter')
     params.Niter = 2000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
-params.bias = 1;
+if ~isfield(params,'bias')
+    params.bias = 1;
+end
 params.func = ones(1,D);
 
 if ~isfield(params,'simId')
