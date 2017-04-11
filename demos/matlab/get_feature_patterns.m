@@ -1,4 +1,4 @@
-function [patterns, C] = get_feature_patterns(Z,varargin)
+function [patterns, C, L] = get_feature_patterns(Z,varargin)
 % function to return matrix with all patterns dim = (numPatterns*numFeatures)
 % Inputs:
 %   - Z: N*K matrix

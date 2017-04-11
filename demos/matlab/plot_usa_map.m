@@ -10,7 +10,7 @@ end
 % statesRef: cell N*1
 % feature_level: vector N*1
 
-figure
+figure;
 ax = usamap('all');
 set(ax, 'Visible', 'off')
 states = shaperead('usastatelo', 'UseGeoCoords', true);
