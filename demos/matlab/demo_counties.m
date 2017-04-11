@@ -1,7 +1,6 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on counties database
 %% --------------------------------------------------
-clear
 addpath(genpath('../../src/'));
 randn('seed',round(sum(1e5*clock)));
 rand('seed',round(sum(1e5*clock)));
@@ -13,7 +12,7 @@ load(input_file);
 %% ADAPT INPUT DATA --> put bias
 
 % [1 3 4] remove dimensions with excessive number of missings
-idx_to_remove = [1,3,4,16];
+idx_to_remove = [1,3,4,19];
 data.X(:,idx_to_remove) = [];
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
@@ -53,10 +52,13 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 100; % Number of iterations for the gibbs sampler
+    params.Niter = 5000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
-params.bias = 1;
+
+if ~isfield(params,'bias')
+    params.bias = 1;
+end
 params.func = 1*ones(1,D);
 
 %params.simId = 1;
@@ -101,7 +103,7 @@ data.ylabel_long = data.ylabel;
 
 %% Plot Dimensions
 
-if params.save
+if ~params.save
     params.th = 0.1;
     idxD = 4:size(data.X,2);
     Zp = patterns;

@@ -9,7 +9,7 @@ end
 for d=idxD
     figure;
     %  subplot(2,1,1);
-    [xd, pdf]     = IBPsampler_PDF(data, Zp, hidden, params, d);
+    [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
     if (data.C(d) == 'c') || (data.C(d) == 'o')
         h = bar(pdf');
     elseif (data.C(d) == 'n')
