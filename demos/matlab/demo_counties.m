@@ -67,7 +67,7 @@ end
 if (params.bias)
     Zini = [ones(N,1), double(rand(N,1)>0.8)];
 else
-    Zini = [double(rand(N,2)>0.8)];
+    Zini = double(rand(N,2)>0.8);
 end
 hidden.Z = Zini; % N*D
 
