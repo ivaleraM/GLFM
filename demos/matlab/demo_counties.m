@@ -48,7 +48,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 5000; % Number of iterations for the gibbs sampler
+    params.Niter = 10; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 
@@ -85,7 +85,8 @@ if ~params.save
     X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
 end
 
-%% PLOT USA map and corresponding features
+%% Plot Dimensions
+
 if ~params.save
     
     sum(hidden.Z)
@@ -93,6 +94,16 @@ if ~params.save
     hidden = remove_dims(hidden, feat_toRemove);
     sum(hidden.Z)
     [patterns, C] = get_feature_patterns(hidden.Z);
+    
+    params.th = 0.1;
+    idxD = 4:size(data.X,2);
+    Zp = patterns;
+    leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
+    plot_all_dimensions(data, hidden, params, Zp, leg, idxD);
+end
+
+%% PLOT USA map and corresponding features
+if ~params.save
     
     for k=1:size(patterns,1)
         pat = patterns(k,:);
@@ -102,16 +113,4 @@ if ~params.save
     end
     
     plot_cont_all_feats(data, hidden, params);
-end
-
-data.ylabel_long = data.ylabel;
-
-%% Plot Dimensions
-
-if ~params.save
-    params.th = 0.1;
-    idxD = 4:size(data.X,2);
-    Zp = patterns;
-    leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
-    plot_all_dimensions(data, hidden, params, Zp, leg, idxD);
 end

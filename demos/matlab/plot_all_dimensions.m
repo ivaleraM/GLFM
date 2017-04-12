@@ -1,5 +1,9 @@
 function plot_all_dimensions(data, hidden, params, Zp, leg, varargin)
 
+if ~isfield(data,'ylabel_long')
+    data.ylabel_long = data.ylabel;
+end
+
 if (length(varargin) == 1)
     idxD = varargin{1};
 else
