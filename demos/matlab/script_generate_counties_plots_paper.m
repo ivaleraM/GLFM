@@ -1,7 +1,8 @@
 %% script generate plots paper
 close all
 
-load('./results/counties_bias1_alpha1_simId10_Niter10000_s2B1.00_func1.mat');
+load('./results_APR2/counties_bias1_alpha1_simId10_Niter10000_s2B1.00_func1.mat');
+%%
 data.ylabel_long = data.ylabel;
 
 sum(hidden.Z)

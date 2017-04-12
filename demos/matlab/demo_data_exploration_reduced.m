@@ -49,14 +49,9 @@ tmp = num2str(unique(data.X(:,2)));
 data.cat_labels{2} = mat2cell(tmp,ones(size(tmp,1),1),size(tmp,2));
 data.C(2) = 'o';
 
-
-%% Initialize Hidden Structure
-[N, D] = size(data.X);
-%Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
-Zini = [ones(N,1), double(rand(N,1)>0.8)];
-hidden.Z = Zini; % N*D
-
 %% DEFINE PARAMS
+[N, D] = size(data.X);
+
 params.missing = -1;
 params.s2Y = 0;       % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;      % Auxiliary variance
@@ -66,7 +61,7 @@ if ~isfield(params,'s2B')
 end
 params.alpha = 1;      % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 2000; % Number of iterations for the gibbs sampler
+    params.Niter = 100; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 if ~isfield(params,'bias')
@@ -132,13 +127,18 @@ idx_transform = size(data.X,2); %7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
+params.ext_dataType = cell(1,size(data.X,2));
 for r=idx_transform
-    params.t{r} = @(x) log(x + 1);
-    params.t_1{r} = @(y) exp(y) - 1;
-    params.dt_1{r} = @(y) exp(y);
-    data.X(:,r) = params.t{r}(data.X(:,r)); % work in logarithm space better
-    data.C(r) = 'p';
+    params.t_1{r} = @(x) log(x + 1);
+    params.t{r} = @(y) exp(y) - 1;
+    params.dt_1{r} = @(x) 1./(x+1);
+    params.ext_dataType{r} = 'p';
 end
+
+%% Initialize Hidden Structure
+%Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
+Zini = [ones(N,1), double(rand(N,1)>0.8)];
+hidden.Z = Zini; % N*D
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);
@@ -150,12 +150,12 @@ if params.save
 end
 
 %% Predict MAP estimate for each latent feature
-X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
 
 %% Plot Dimensions
 if ~params.save
     th = 0.03;
-    idxD = 4:size(data.X,2);
+    %idxD = 1:size(data.X,2);
     
     sum(hidden.Z)
     feat_toRemove = find(sum(hidden.Z) < N*th);
@@ -170,5 +170,5 @@ if ~params.save
     Zp = Zp(1:min(5,Kest),:);
     leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
     
-    plot_all_dimensions(data, hidden, params, Zp, leg,idxD);
+    plot_all_dimensions(data, hidden, params, Zp, leg);
 end

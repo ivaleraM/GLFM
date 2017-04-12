@@ -7,11 +7,26 @@ else
 end
 
 for d=idxD
-    figure;
+    figure(d); hold off;
+    % plot empirical if 'g' | 'p' | 'n'
+    if ( data.C(d) == 'g' || data.C(d) == 'p' || data.C(d) == 'n')
+        [h xx] = hist(data.X(:,d),100);
+        %xx(1) = 0.01;
+        %h = histogram(data.X(:,k),100);
+        h = h ./ sum(h * (xx(2) - xx(1)));
+        bar(h);
+        set(get(gca,'child'),'FaceColor',[0.8784 0.8784 0.8784], ...
+            'EdgeColor',[0.7529 0.7529 0.7529]);
+        hold on;
+    end
     %  subplot(2,1,1);
     [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
     if (data.C(d) == 'c') || (data.C(d) == 'o')
-        h = bar(pdf');
+        mask = ~isnan(data.X(:,d)) & (data.X(:,d) ~= params.missing);
+        tmp = hist(data.X(mask,d), unique(data.X(mask,d)));
+        tmp = tmp / sum(tmp);
+        h = bar([tmp' pdf']);
+        h(1).FaceColor = [0.8784 0.8784 0.8784];
     elseif (data.C(d) == 'n')
         plot(xd, pdf');
     else

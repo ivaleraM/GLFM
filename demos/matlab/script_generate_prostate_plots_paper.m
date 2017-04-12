@@ -3,7 +3,7 @@
 % load('./results/prostateRed_bias1_simId2_Niter10000_s2Y0.00_s2B1.00_alpha1.mat');
 % idx_featD = 4;
 
-load('./results/prostateRed_bias1_simId2_Niter10000_s2Y0.00_s2B1.00_alpha1.mat');
+load('./results_APR2/prostateRed_bias1_simId2_Niter10000_s2Y0.00_s2B1.00_alpha1.mat');
 idx_featD = 3;
 
 sum(hidden.Z)
@@ -50,7 +50,7 @@ set(gca,'xscale','log')
     for d=1:size(data.X,2)
             figure(d);
       %  subplot(2,1,1);
-        [xd, pdf]     = IBPsampler_PDF(data, Zp, hidden, params, d);
+        [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
         if (data.C(d) == 'c') || (data.C(d) == 'o')
             mask = ~isnan(data.X(:,d));
             tmp = hist(data.X(mask,d), unique(data.X(mask,d)));

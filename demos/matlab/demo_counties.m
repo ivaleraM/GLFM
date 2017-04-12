@@ -29,23 +29,19 @@ params.ext_dataType = cell(1,size(data.X,2));
 for r=idx_transform
     params.t_1{r} = @(x) log(x + 1);
     params.t{r} = @(y) exp(y) - 1;
-    params.dt_1{r} = @(y) 1 ./ (x + 1);
+    params.dt_1{r} = @(x) 1 ./ (x + 1);
     params.ext_dataType{r} = 'p';
 end
 % dimension 13 = 'White' need an inversion too
 r = 14;
 params.t_1{r} = @(x) log((100-x) + 1);
 params.t{r} = @(y) - exp(y) + 101;
-params.dt_1{r} = @(y) - 1./ (101 - x);
+params.dt_1{r} = @(x) - 1./ (101 - x);
 params.ext_dataType{r} = 'p';
 
-%% Initialize Hidden Structure
-
-[N, D] = size(data.X);
-Zini = [ones(N,1), double(rand(N,1)>0.8)];
-hidden.Z = Zini; % N*D
-
 %% DEFINE PARAMS
+[N, D] = size(data.X);
+
 params.missing = -1;
 params.s2Y = 0;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;  % Auxiliary variance
@@ -65,6 +61,15 @@ params.func = 1*ones(1,D);
 if ~isfield(params,'save')
     params.save = 0;
 end
+
+%% Initialize Hidden Structure
+
+if (params.bias)
+    Zini = [ones(N,1), double(rand(N,1)>0.8)];
+else
+    Zini = [double(rand(N,2)>0.8)];
+end
+hidden.Z = Zini; % N*D
 
 %% Inference
 hidden = IBPsampler_run(data, hidden, params);

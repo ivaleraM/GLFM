@@ -51,14 +51,14 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
             otherwise
                 error('Unknown data type');
         end
-        if (data.C(d) == 'g') || (data.C(d) == 'p')
-            trapz(xd,pdf(1,:))
-        else (data.C(d) == 'n')
-            sum(pdf(1,:))
-        end
         if (sum(isnan(pdf)) > 0)
             error('Some values are nan!');
         end
+    end
+    if ( data.C(d) == 'g' || data.C(d) == 'p' )
+        int = integrate(xd, pdf)
+    elseif (data.C(d) == 'n')
+        int = sum(pdf,2)
     end
     
     if isfield(params,'t')
