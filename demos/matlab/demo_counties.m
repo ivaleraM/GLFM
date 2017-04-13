@@ -87,7 +87,7 @@ end
 
 %% Plot Dimensions
 
-if ~params.save
+if params.save
     
     sum(hidden.Z)
     feat_toRemove = find(sum(hidden.Z) < N*0.03);

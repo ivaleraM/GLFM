@@ -18,7 +18,7 @@ for d=idxD
         %xx(1) = 0.01;
         %h = histogram(data.X(:,k),100);
         h = h ./ sum(h * (xx(2) - xx(1)));
-        bar(h);
+        bar(xx, h);
         set(get(gca,'child'),'FaceColor',[0.8784 0.8784 0.8784], ...
             'EdgeColor',[0.7529 0.7529 0.7529]);
         hold on;
