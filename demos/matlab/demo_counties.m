@@ -90,27 +90,30 @@ end
 if params.save
     
     sum(hidden.Z)
-    feat_toRemove = find(sum(hidden.Z) < N*0.03);
+    feat_toRemove = find(sum(hidden.Z) < N*0.25);
     hidden = remove_dims(hidden, feat_toRemove);
     sum(hidden.Z)
     [patterns, C] = get_feature_patterns(hidden.Z);
     
     params.th = 0.1;
-    idxD = 4:size(data.X,2);
+    idxD = 2:size(data.X,2);
     Zp = patterns;
     leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
     plot_all_dimensions(data, hidden, params, Zp, leg, idxD);
 end
 
 %% PLOT USA map and corresponding features
-if ~params.save
-    
+if params.save
+
     for k=1:size(patterns,1)
         pat = patterns(k,:);
         Zn = (C == k);%hidden.Z(:,idxF);
+        if (sum(Zn) < (size(data.X,1)*0.1))
+            continue; % only plot patterns with more than 5% of number of obs.
+        end
         plot_usa_map(data,Zn);
         title(sprintf('Activation of pattern (%s)',num2str(pat)));
     end
     
-    plot_cont_all_feats(data, hidden, params);
+    plot_cont_all_feats(data, hidden, params, patterns);
 end

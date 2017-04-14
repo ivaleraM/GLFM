@@ -10,33 +10,42 @@ colors = {'b', 'r', 'm', 'c', 'g', 'y', 'b--', 'r--', 'm--', 'c--', 'g--', 'y--'
 
 Kest = size(hidden.Z,2);
 
-idx_toRemove = [1 size(data.X,2)]; % CAREFUL: remove state and turnout
+idx_toRemove = 1; % size(data.X,2)]; % CAREFUL: remove state and turnout
 %idx_toRemove = [1 4 14 15 16]; % specific for counties DB
+
+ref = mean_not_isnan(data.X,0);
+
+ref(idx_toRemove) = [];
 
 if isempty(varargin)
 
 leg = cell(1,Kest-params.bias);
 for k = params.bias+1:Kest
-    Zp = zeros(2,Kest);
-    Zp(:,1) = 1; % bias
-    Zp(1,k) = 1; % feature active
-    
+    Zp = zeros(1,Kest);
+    Zp(k) = 1; % feature active
+    if params.bias
+        Zp(1) = 1; % bias
+    end
     X_F = IBPsampler_MAP(data.C, Zp, hidden, params);
     
     labels = data.ylabel;
     
-    X_F(:,idx_toRemove) = [];
+    X_F(idx_toRemove) = [];
     labels(idx_toRemove) = [];
     
-    V = X_F(1,:) ./ X_F(2,:);
+    V = X_F ./ ref; %X_F(1,:) ./ X_F(2,:);
     V(V < 0) = 0;
     warning('Due to numerical errors, log of negative --> 0');
     V = log2( V );
-    plot(V, colors{k-1}, 'Linewidth', 2);
+    plot(V, colors{k}, 'Linewidth', 2);
     xticks(1:size(X_F,2));
     xticklabels(labels);
     xtickangle(90);
-    leg{k-1} = sprintf('F%d',k-1);
+    if params.bias
+        leg{k-1} = sprintf('F%d',k-1);
+    else
+        leg{k} = sprintf('F%d',k-1);
+    end
 end
 legend(leg);
 grid;
@@ -56,7 +65,7 @@ elseif (length(varargin) == 1)
         X_F(:,idx_toRemove) = [];
         labels(idx_toRemove) = [];
     
-        V = X_F(1,:) ./ mean_not_isnan(data.Xtrue(:,2:(end-1)),0); % X_F(2,:);
+        V = X_F(1,:) ./ mean_not_isnan(data.X(:,2:end),0); % X_F(2,:);
         V(V < 0) = 0;
         warning('Due to numerical errors, log of negative --> 0');
         V = log2( V );
@@ -64,9 +73,9 @@ elseif (length(varargin) == 1)
         xticks(1:size(X_F,2));
         xticklabels(labels);
         xtickangle(90);
-        %leg{k} = sprintf('F%d',k-1);
+        leg{k} = sprintf('[ %s ]', num2str(Zp));
     end
-    legend({'(1 0 0)','(1 0 1)','(1 1 0)','(1 1 1)'});
+    legend(leg);
     legend('Location','south');
     grid;
 else
