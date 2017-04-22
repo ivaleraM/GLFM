@@ -10,11 +10,13 @@ else
     idxD = 1:size(data.X,2);
 end
 
+leg = [{'Empirical'}, leg];
+
 for d=idxD
     figure(d); hold off;
     % plot empirical if 'g' | 'p' | 'n'
     if ( data.C(d) == 'g' || data.C(d) == 'p' || data.C(d) == 'n')
-        [h xx] = hist(data.X(:,d),100);
+        [h xx] = hist(data.X(:,d),1000);
         %xx(1) = 0.01;
         %h = histogram(data.X(:,k),100);
         h = h ./ sum(h * (xx(2) - xx(1)));
@@ -32,7 +34,7 @@ for d=idxD
         h = bar([tmp' pdf']);
         h(1).FaceColor = [0.8784 0.8784 0.8784];
     elseif (data.C(d) == 'n')
-        plot(xd, pdf');
+        plot(xd, pdf', 'Linewidth', 2);
     else
         if ~isempty(params.t{d})
             semilogx(xd,pdf', 'Linewidth', 2);
@@ -46,5 +48,6 @@ for d=idxD
         set(gca,'XTickLabelRotation',45);
     end
     legend(leg);
-    pause;
+    grid;
+    %pause;
 end

@@ -1,5 +1,5 @@
 clear
-for ll=1:10
+for ll=1:5
     params.simId = ll;
     params.Niter = 10000;
     params.save = 1;

@@ -110,12 +110,6 @@ data.cat_labels = data.cat_labels(idx_toKeep);
 data.ylabel = data.ylabel(idx_toKeep);
 data.ylabel_long = data.ylabel_long(idx_toKeep);
 
-drug_identifier = data.X(:,2) > 0.5;
-drug_identifier_low = data.X(:,2) == 1; % high level drug
-drug_identifier_high = data.X(:,2) == 5; % high level drug
-%Zini = [ones(N,1), drug_identifier];
-Zini = [ones(N,1), drug_identifier_high, drug_identifier_low]; %, double(rand(N,1)>0.9)];
-
 % data.X(:,2) = [];
 % data.C(2) = [];
 % data.cat_labels(2) = [];
@@ -136,8 +130,18 @@ for r=idx_transform
 end
 
 %% Initialize Hidden Structure
+
+drug_identifier = data.X(:,2) > 0.5;
+drug_identifier_low = data.X(:,2) == 1; % high level drug
+drug_identifier_high = data.X(:,2) == 5; % high level drug
+%Zini = [ones(N,1), drug_identifier];
+Zini = [drug_identifier_high, drug_identifier_low]; %, double(rand(N,1)>0.9)];
 %Zini = [drug_identifier, not(drug_identifier), double(rand(N,1)>0.8)];
-Zini = [ones(N,1), double(rand(N,1)>0.8)];
+if params.bias
+    Zini = [ones(N,1), double(rand(N,1)>0.8)];
+else
+    Zini = double(rand(N,1)>0.8);
+end
 hidden.Z = Zini; % N*D
 
 %% Inference
@@ -153,7 +157,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
 
 %% Plot Dimensions
-if ~params.save
+if params.save
     th = 0.03;
     %idxD = 1:size(data.X,2);
     

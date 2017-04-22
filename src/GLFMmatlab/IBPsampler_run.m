@@ -5,7 +5,7 @@ function hidden = IBPsampler_run(data,varargin)
     %       data: structure with all input data information
     %           (*) data.X: N*D observation matrix (raw)
     %           (*) data.C: 1*D string array with input data types
-    %       (*) means mandatory
+    %       (*) mandatory
     %
     %       ------------- optional ---------------------
     %
