@@ -22,11 +22,11 @@ function X_map = IBPsampler_MAP(C, Zp, hidden, params)
     
     X_map = zeros(P,D); % output
     for d=1:D % for each dimension
-        if isfield(params,'t') % if external transformations have been defined
-            if ~isempty(params.t{d}) % there is an external transform for data type d
-                data.C(d) = params.ext_dataType{d}; % set new type of data
-            end
-        end
+%         if isfield(params,'t') % if external transformations have been defined
+%             if ~isempty(params.t{d}) % there is an external transform for data type d
+%                 data.C(d) = params.ext_dataType{d}; % set new type of data
+%             end
+%         end
         switch C(d)
             case 'g', X_map(:,d) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
             case 'p', X_map(:,d) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
@@ -39,9 +39,9 @@ function X_map = IBPsampler_MAP(C, Zp, hidden, params)
         if (sum(isnan(X_map(:,d))) > 0)
             warning('Some values are nan!');
         end
-        if isfield(params,'t')
-            if ~isempty(params.t{d})
-                X_map(:,d) = params.t{d}( X_map(:,d) );
-            end
-        end
+%         if isfield(params,'t')
+%             if ~isempty(params.t{d})
+%                 X_map(:,d) = params.t{d}( X_map(:,d) );
+%             end
+%         end
     end

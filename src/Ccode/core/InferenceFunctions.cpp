@@ -16,6 +16,7 @@
 
 // Functions
 int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, double alpha, double s2B, double *s2Y, gsl_matrix **Y, gsl_matrix *Z, int *nest, gsl_matrix *P, gsl_matrix *Pnon, gsl_matrix **lambda, gsl_matrix **lambdanon){
+   int flagErr=0;
    int TK=2;
    gsl_matrix_view Zn;
    gsl_matrix_view Ydn;
@@ -113,7 +114,10 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                }
                p1_n=p1_n/(p1_n+p0_n);
                //printf("p1_n=%f ", p1_n);
-                
+//                if (isinf(p1_n) || isnan(p1_n)){
+//                     printf("error: numerical error at sampling Z for observation %d \n",n);
+//                     return 0;
+//                     }
                //sampling znk
                if (drand48()>p1_n){
                    gsl_matrix_set (&Zn.matrix, k, 0, 0);
@@ -307,6 +311,10 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                 }else{
                     gsl_matrix_set (Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), sYd, f_1(xnd, fd, mud, wd),f_1(xnd+1, fd, mud, wd)));
                 }
+                if (isinf(gsl_matrix_get(Yd, 0, n)) || isnan(gsl_matrix_get(Yd, 0, n)) ){
+                    printf("error: numerical error at sampling Y for observation %d in dimension %d \n",n,d);
+                    break;
+                }
             }
             gsl_matrix_free(muy); 
             break;
@@ -414,10 +422,10 @@ double Samples2Y (double missing, int N, int d, int K, char Cd,  int Rd, double 
 int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u,int maxK,int Nsim){
 //Starting C function
     
-    // For debugging, print input parameters
-    printf("X[0,0]=%f,X[0,1]=%f,X[1,0]=%f\n", gsl_matrix_get(X,0,0), gsl_matrix_get(X,0,1), gsl_matrix_get(X,1,0));
-    printf("Z[0,0]=%f,Z[0,1]=%f,Z[1,0]=%f\n", gsl_matrix_get(Z,0,0), gsl_matrix_get(Z,0,1), gsl_matrix_get(Z,1,0));
-    printf("C[0]=%f,C[1]=%f,C[2]=%f\n", C[0], C[1], C[2]);
+//     // For debugging, print input parameters
+//     printf("X[0,0]=%f,X[0,1]=%f,X[1,0]=%f\n", gsl_matrix_get(X,0,0), gsl_matrix_get(X,0,1), gsl_matrix_get(X,1,0));
+//     printf("Z[0,0]=%f,Z[0,1]=%f,Z[1,0]=%f\n", gsl_matrix_get(Z,0,0), gsl_matrix_get(Z,0,1), gsl_matrix_get(Z,1,0));
+//     printf("C[0]=%f,C[1]=%f,C[2]=%f\n", C[0], C[1], C[2]);
     printf("N=%d, D=%d, K=%d\n", N, D, K);
 
     printf("Running inference algorithm (currently inside C++ routine...)\n");
@@ -548,8 +556,9 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     printf("Nsim=%d\n", Nsim);
     //....Body functions....//      
     for (int it=0; it<Nsim; it++){
+//         if (it==0){
         Kest=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon);
-        
+//         }
         gsl_matrix_view P_view = gsl_matrix_submatrix (P, 0, 0, Kest, Kest);
         gsl_matrix *S= gsl_matrix_calloc(Kest,Kest);
         gsl_matrix_memcpy (S, &P_view.matrix);
@@ -565,6 +574,10 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                     Bd_view =  gsl_matrix_subcolumn (B[d], r, 0, Kest);
                     gsl_vector_view MuB_view =  gsl_matrix_column (MuB, 0);
                     mvnrnd(&Bd_view.vector, S, &MuB_view.vector, Kest, seed);
+                    if (isinf(compute_vector_mean(K, missing, &Bd_view.vector)) || isnan(compute_vector_mean(K, missing, &Bd_view.vector)) ){
+                        printf("error: numerical error at sampling B in dimension %d \n",d);
+                        break;
+                    }
                     
                  }  
                  Bd_view =  gsl_matrix_subcolumn (B[d], R[d]-1, 0, Kest);
@@ -575,8 +588,13 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                 
                 gsl_vector_view Bd_view =  gsl_matrix_subcolumn (B[d], 0, 0, Kest);
                 gsl_vector_view MuB_view =  gsl_matrix_subcolumn (MuB, 0, 0, Kest);
-                mvnrnd(&Bd_view.vector, S, &MuB_view.vector, Kest, seed);   
+                mvnrnd(&Bd_view.vector, S, &MuB_view.vector, Kest, seed);  
+                if (isinf(compute_vector_mean(K, missing, &Bd_view.vector)) || isnan(compute_vector_mean(K, missing, &Bd_view.vector)) ){
+                    printf("error: numerical error at sampling B in dimension %d \n",d);
+                    break;
+                }
              }
+             
              
          //Sample Y  
          SampleY (missing, N, d, Kest, C[d],  R[d], f[d], mu[d], w[d], s2Y[d], s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);

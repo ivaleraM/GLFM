@@ -12,11 +12,11 @@ s2x = 0.5;      % observation noise
 [data,gT] = generate_toy_images(N,s2x);
 
 %% INITIALIZATION + PARAMETER SETTINGS
-hidden.Zini = double(rand(N,1)>0.8); % initialize N*K feature assignment matrix
+hidden.Z = double(rand(N,1)>0.8); % initialize N*K feature assignment matrix
 
 % define params
 params.missing = -10;%
-params.s2Y = 1;      % Variance of the Gaussian prior for the pseudo-observations
+% params.s2Y = 1;      % Variance of the Gaussian prior for the pseudo-observations
 params.alpha = 5;    % Concentration parameter of the IBP
 params.Niter = 100;  % Number of iterations for the Gibbs sampler
 params.maxK = 10;    % Maximum number of latent features (for memory allocation)

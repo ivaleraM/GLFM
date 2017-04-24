@@ -23,7 +23,7 @@ data.C = repmat('n',1,size(Xmiss,2)); % data type, here pixel values onsidered a
 
 %% Define parameter default values for algorithm
 params.bias = 1;        % bias feature (active for all obs. to capture mean effects)
-params.s2Y = 0;         % variance noise for pseudo-observations
+%params.s2Y = 0;         % variance noise for pseudo-observations
 params.s2B = 1;         % variance noise for feature matrix
 params.alpha = 10;      % concentration parameter for the Indian Buffet Process
 params.Niter = 10;      % number of iterations to train the GLFM model

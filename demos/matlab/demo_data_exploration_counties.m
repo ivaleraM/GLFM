@@ -45,7 +45,7 @@ params.ext_dataType{r} = 'p';
 [N, D] = size(data.X);
 
 params.missing = -1;
-params.s2Y = 0;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
+%%params.s2Y = 0;     % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
@@ -84,7 +84,7 @@ end
 
 %% Predict MAP estimate for each latent feature
 if ~params.save
-    X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
+    X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
 end
 
 %% Plot Dimensions

@@ -1,3 +1,4 @@
+
 function y = df_p_1(x, mu, w)
     % derivative of transformation function for positive data
     % X -> Y (from data to pseudo-obversations)

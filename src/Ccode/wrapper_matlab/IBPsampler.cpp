@@ -10,13 +10,13 @@
 #define input_bias prhs[3]
 #define input_F prhs[4]
 //#define input_W prhs[4]
-#define input_s2Y prhs[5]
-#define input_s2u prhs[6]
-#define input_s2B prhs[7]
-#define input_alpha prhs[8]
-#define input_Nsim prhs[9]
-#define input_maxK prhs[10]
-#define input_missing prhs[11]
+//#define input_s2Y prhs[5]
+#define input_s2u prhs[5]
+#define input_s2B prhs[6]
+#define input_alpha prhs[7]
+#define input_Nsim prhs[8]
+#define input_maxK prhs[9]
+#define input_missing prhs[10]
 
 //*********************************OUTPUTS**************************//
 #define output_Z plhs[0]
@@ -31,7 +31,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     //..................CHECKING INPUTS AND OUTPUTS.............//
     /* Matrices are arranged per column */
 
-    if (nrhs!=12) {
+    if (nrhs!=11) {
         mexErrMsgTxt("Invalid number of arguments\n");
     }
 
@@ -47,8 +47,10 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 //     size_t D = Xdim[1];
     int D = Xdim[1];
     int K = Zdim[1];
-    //printf("C1 %d, C2 %d \n",Cdim[0], Cdim[1]);
     if (Cdim[1]!=D & Cdim[0]!=1){
+        mexErrMsgTxt("Invalid number of dimensions for vector C\n");
+        }
+    if (Zdim[0]!=N){
         mexErrMsgTxt("Invalid number of dimensions for vector C\n");
         }
 
