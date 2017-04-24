@@ -164,7 +164,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double *pW=mxGetPr(output_W);
     output_s2Y = mxCreateDoubleMatrix(D, 1,mxREAL);
     double *ps2Y=mxGetPr(output_s2Y);
-    
+
     for (int d=0; d<D; d++){
          pMU[d]=mu[d];
          pW[d]=w[d];

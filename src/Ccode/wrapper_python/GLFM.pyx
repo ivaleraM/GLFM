@@ -12,10 +12,13 @@ cdef extern from "stdio.h":
     int tolower(int c)
 
 cdef extern from "../core/InferenceFunctions.h":
-    int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double s2Y, double s2u, int maxK,int Nsim)
+    int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char *C, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, double *s2Y)
+
+cdef extern from "../core/InferenceFunctions.h":
+    int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u, int maxK,int Nsim)
     # This is the C++ function to perform inference for the GLFM model
     # Inputs:
-    #           missing: value of missings, can be nan or any integer # TODO: check
+    #           missing: value of missings, cannot be nan, should be an integer
     #           X: observation matrix # TODO: Add matrix dimensions
     #           C: char vector to specify datatype of each dimension in X
     #           Z: binary matrix (feature activation matrix)
@@ -40,8 +43,8 @@ cdef extern from "../core/InferenceFunctions.h":
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
-        Cin, np.ndarray[double, ndim=2, mode="c"] Zin not None,\
-        np.ndarray[double, ndim=1, mode="c"] Fin, int bias=0, double s2Y=1.0, double s2u=1.0,\
+        Cin not None, np.ndarray[double, ndim=2, mode="c"] Zin not None,\
+        np.ndarray[double, ndim=1, mode="c"] Fin, int bias=0, double s2u=1.0,\
         double s2B=1.0, double alpha=1.0, int Nsim=100,\
         int maxK=50, double missing=-1, int verbose=0):#\
     """
@@ -95,9 +98,6 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
     if len(Cin) != D:
         raise Exception('Size of C and X are not consistent!')
 
-    Xview = gsl_matrix_view_array(&Xin[0,0],D,N)
-    X = &Xview.matrix
-
     Zview = gsl_matrix_view_array(&Zin[0,0], K,N)
     Zm = &Zview.matrix # we need to allocate input matrix Z to [maxK*N] matrix
     cdef gsl_matrix* Z = gsl_matrix_calloc(maxK,N)
@@ -105,65 +105,48 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
         for k in xrange(K):
              gsl_matrix_set (Z, k, i,gsl_matrix_get (Zm, k, i))
 
-    cdef Pool mem = Pool()
-    cdef gsl_matrix** B = <gsl_matrix**>mem.alloc(D, sizeof(gsl_matrix*));
-    cdef gsl_vector** theta = <gsl_vector**>mem.alloc(D, sizeof(gsl_vector*));
-
-    ##...............BODY CODE.......................##
-
     C = ''
     for d in xrange(D):
         C += chr( tolower(ord(Cin[d])) ) # convert to lower case
 
+    ##...............BODY CODE.......................##
+
+    Xview = gsl_matrix_view_array(&Xin[0,0],D,N)
+    X = &Xview.matrix
+
+    cdef Pool mem = Pool()
+    cdef gsl_matrix** B = <gsl_matrix**>mem.alloc(D, sizeof(gsl_matrix*));
+    cdef gsl_vector** theta = <gsl_vector**>mem.alloc(D, sizeof(gsl_vector*));
+
+    cdef np.ndarray[double, ndim=1, mode="c"] w = np.empty(D)
+    cdef np.ndarray[double, ndim=1, mode="c"] mu = np.empty(D)
+    cdef np.ndarray[double, ndim=1, mode="c"] s2Y = np.empty(D)
     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)
-    cdef np.ndarray[double, ndim=1, mode="c"] maxX = np.empty(D)
-    cdef int maxR = 1
+    print "In C++: transforming input data..."
+    cdef int maxR = initialize_func(N, D, maxK, missing, X, C, B, theta,\
+            <int*> R.data, &Fin[0], &mu[0], &w[0], &s2Y[0])
+    print "done\n"
+    #cdef int maxR = 1
     #cdef np.ndarray[double, ndim=1, mode="c"] Win = np.empty(D)
 
-    cdef gsl_vector_view Xd_view
-    for d in xrange(D):
-        Xd_view = gsl_matrix_row(X,d)
-        maxX[d] = gsl_vector_max(&Xd_view.vector)
-        if verbose:
-            print "maxX[%d] = %f\n" % (d,maxX[d])
-        R[d] = 1
-        #Win[d] = 1
-        if C[d] == 'g':
-            B[d] = gsl_matrix_alloc(maxK,1)
-        elif C[d] == 'p':
-            B[d] = gsl_matrix_alloc(maxK,1)
-            #Win[d]=2/maxX[d]
-        elif C[d] == 'n':
-            B[d] = gsl_matrix_alloc(maxK,1)
-            #Win[d] = 2/maxX[d]
-        elif C[d] == 'c':
-            R[d] = <int>maxX[d]
-            B[d] = gsl_matrix_alloc(maxK,R[d])
-            if (R[d] > maxR):
-                maxR = R[d]
-        elif C[d] == 'o':
-            R[d] = <int>maxX[d];
-            print 'Setting R[d]=%f' % R[d]
-            B[d] = gsl_matrix_alloc(maxK,1)
-            theta[d] = gsl_vector_alloc(R[d])
-            if (R[d] > maxR):
-                maxR = R[d]
     if verbose:
         print "maxR = %d" % maxR
 
     ##...............Inference Function.......................##
-    print '\nEntering C function...'
+    print '\Entering C++: Running Inference Routine...\n'
     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
-            <int*> R.data, &Fin[0],\
-            maxR, bias,  N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
-    print 'Back to Python OK'
+            <int*> R.data, &Fin[0], &mu[0], &w[0],\
+            maxR, bias,  N, D, K, alpha, s2B, &s2Y[0], s2u, maxK, Nsim);
+    print 'Back to Python: OK\n'
 
     ##...............Set Output Pointers.......................##
     cdef np.ndarray[double, ndim=2] Z_out = np.zeros((Kest,N))
     cdef np.ndarray[double, ndim=3] B_out = np.zeros((D,Kest,maxR))
     cdef np.ndarray[double, ndim=2] Theta_out = np.zeros((D,maxR))
-    #cdef np.ndarray[np.int32_t, ndim=1] result = np.zeros((len(arg)), dtype =
-    #        np.int32)
+#    cdef np.ndarray[double, ndim=1] Mu_out = np.zeros(D)
+#    cdef np.ndarray[double, ndim=1] W_out = np.zeros(D)
+#    cdef np.ndarray[double, ndim=1] s2Y_out = np.zeros(D)
+
     if verbose:
         print "Kest=%d, N=%d" % (Kest,N)
 
@@ -214,4 +197,33 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
             gsl_vector_free(theta[d])
     gsl_matrix_free(Z)
 
-    return (Z_out,B_out,Theta_out)
+    return (Z_out,B_out,Theta_out,mu, w, s2Y)
+
+#    cdef gsl_vector_view Xd_view
+#    for d in xrange(D):
+#        Xd_view = gsl_matrix_row(X,d)
+#        maxX[d] = gsl_vector_max(&Xd_view.vector)
+#        if verbose:
+#            print "maxX[%d] = %f\n" % (d,maxX[d])
+#        R[d] = 1
+#        #Win[d] = 1
+#        if C[d] == 'g':
+#            B[d] = gsl_matrix_alloc(maxK,1)
+#        elif C[d] == 'p':
+#            B[d] = gsl_matrix_alloc(maxK,1)
+#            #Win[d]=2/maxX[d]
+#        elif C[d] == 'n':
+#            B[d] = gsl_matrix_alloc(maxK,1)
+#            #Win[d] = 2/maxX[d]
+#        elif C[d] == 'c':
+#            R[d] = <int>maxX[d]
+#            B[d] = gsl_matrix_alloc(maxK,R[d])
+#            if (R[d] > maxR):
+#                maxR = R[d]
+#        elif C[d] == 'o':
+#            R[d] = <int>maxX[d];
+#            print 'Setting R[d]=%f' % R[d]
+#            B[d] = gsl_matrix_alloc(maxK,1)
+#            theta[d] = gsl_vector_alloc(R[d])
+#            if (R[d] > maxR):
+#                maxR = R[d]

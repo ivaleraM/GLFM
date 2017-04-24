@@ -29,14 +29,14 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
    gsl_matrix *aux;
    gsl_matrix *Snon;
    double s2y_num;
-   
+
    gsl_matrix_memcpy (Pnon, P);
    for (int d =0; d<D; d++){
         gsl_matrix_memcpy (lambdanon[d], lambda[d]);
     }
-   
+
    for (int n=0; n<N; n++){
-       double p[TK];       
+       double p[TK];
        // Pnon, LambdaNon
        Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
        Pnon_view = gsl_matrix_submatrix (Pnon, 0, 0, K, K);
@@ -52,7 +52,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
        // Sampling znk for k=1...K
        for (int k=bias; k<K; k++){
            if (gsl_matrix_get(&Zn.matrix,k,0)==1){nest[k]--;}
-          
+
            if (nest[k]>0){
                aux = gsl_matrix_alloc(1,K);
                // z_nk=0
@@ -80,7 +80,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                // z_nk=1
                gsl_matrix_set (&Zn.matrix, k, 0, 1);
                matrix_multiply(&Zn.matrix,Snon,aux,1,0,CblasTrans,CblasNoTrans);
-               
+
                double lik1=0;
                for (int d =0; d<D; d++){        
                    gsl_matrix_set(s2y_p,0,0,s2Y[d]);//TODO
@@ -128,9 +128,8 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                gsl_matrix_free(aux);
            }else{
                gsl_matrix_set (&Zn.matrix, k, 0, 0);
-           } 
-           
-        
+           }
+
        }
        gsl_matrix_free(Snon);
 
@@ -147,17 +146,16 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                     nest[kk]=nest[kk+1];
                 }
             }
-               
+
        }
        for (int k=K-Kdel; k<K; k++){
            gsl_vector_view Zrow= gsl_matrix_row (Z,k);
            gsl_vector_set_zero (&Zrow.vector);
            nest[k]=0;
-           }       
+           }
        K-=Kdel;
-       
-       
-       if (flagDel){ 
+
+       if (flagDel){
            gsl_matrix_set_identity (P);
            matrix_multiply(Z,Z,P,1,s2B,CblasNoTrans,CblasTrans);
            gsl_matrix_memcpy (Pnon, P);
@@ -247,10 +245,10 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
         matrix_multiply(&Zn.matrix,&Ydn.matrix,&Lnon_view.matrix,1,1,CblasNoTrans,CblasTrans);
         gsl_matrix_memcpy (lambda[d], lambdanon[d]);
    }
-   
+
    }
-   gsl_matrix_free(s2y_p);    
-   
+   gsl_matrix_free(s2y_p);
+
    return K;
 }
 
@@ -404,16 +402,16 @@ double Samples2Y (double missing, int N, int d, int K, char Cd,  int Rd, double 
     muy= gsl_matrix_alloc(1,1);
 
     for (int n=0; n<N; n++){
-    	for(int r=0; r<Rd; r++){
+        for(int r=0; r<Rd; r++){
                 xnd=gsl_matrix_get (X, d, n);
                 Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
                 Bd_view = gsl_matrix_submatrix (Bd, 0, 0, K, 1);
                 matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
                 sumY+=pow(gsl_matrix_get (Yd, 0, n)-gsl_matrix_get(muy,0,0),2);
          }
-	}
-    gsl_matrix_free(muy);    
-            
+    }
+    gsl_matrix_free(muy);
+
     double precision= gsl_ran_gamma (seed, a+N/2, 1/(b+sumY/2));
     return 1/precision;
 }
@@ -421,7 +419,7 @@ double Samples2Y (double missing, int N, int d, int K, char Cd,  int Rd, double 
 
 int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u,int maxK,int Nsim){
 //Starting C function
-    
+
 //     // For debugging, print input parameters
 //     printf("X[0,0]=%f,X[0,1]=%f,X[1,0]=%f\n", gsl_matrix_get(X,0,0), gsl_matrix_get(X,0,1), gsl_matrix_get(X,1,0));
 //     printf("Z[0,0]=%f,Z[0,1]=%f,Z[1,0]=%f\n", gsl_matrix_get(Z,0,0), gsl_matrix_get(Z,0,1), gsl_matrix_get(Z,1,0));
@@ -604,17 +602,17 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                 s2Y[d]=aux;
              }
          }
-         
+
          //Update lambda
          matrix_multiply(Z,Y[d],lambda[d],1,0,CblasNoTrans,CblasTrans);     
-            
+
          }
         gsl_matrix_free(S);
         printf("\n");
         }
         printf("After IT loop...\n");
 
-    for (int d=0; d<D; d++){    
+    for (int d=0; d<D; d++){
         gsl_matrix_free(Y[d]);
         gsl_matrix_free(lambda[d]);
         gsl_matrix_free(lambdanon[d]);
@@ -625,12 +623,12 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     free(lambda);
     free(lambdanon);
     free(Y);
-    
+
     return Kest;
 }
 
 int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char *C, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, double *s2Y){
-    
+
     int maxR=1;
     double  maxX[D], minX[D], meanX[D],varX[D];
     gsl_vector_view Xd_view;
