@@ -18,5 +18,5 @@ function params = init_default_params(data, params)
     % parameters for optional external transformation
     if ~isfield(params,'t'), params.t = cell(1,size(data.X,2) ); end % eventual external transform of obs. X = params.t{d}(Xraw)
     if ~isfield(params,'t_1'), params.t = cell(1,size(data.X,2) ); end % inverse transform
-    if ~isfield(params,'dt_1'), params.t = cell(1,size(data.X,2) ); endi % derivative of the inverse transform
+    if ~isfield(params,'dt_1'), params.t = cell(1,size(data.X,2) ); end % derivative of the inverse transform
     if ~isfield(params,'func'), params.func = 1*ones(1,size(Xmiss,2)); end % type of internal transformation for positive real-valued data
