@@ -7,7 +7,7 @@ Description
 -----------
 
 This code implements inference for an Indian Buffet process with heterogeneous
-observations. The core code is in C++, but user interfaces in both Matlab and
+observations. The core code is in C++. User interfaces in both Matlab and
 Python are provided.
 
 You can find some demos of GLFM in action in the demos folder.
@@ -22,21 +22,21 @@ exploration of a given dataset.
 
 Calling from Matlab
 -------------------
-    hidden = IBPsampler_run(data, hidden, params);
+    hidden = IBPsampler_run(data);
 
 where data is a structure containing:
-    X: N*D observation matrix of N samples and D dimensions 
+    X: N*D observation matrix of N samples and D dimensions
     C: 1*D string array indicating type of data for each dimension
 
 --- Alternative calls ---
-    
+
     hidden = IBPsampler_run(data, hidden);
 OR
     hidden = IBPsampler_run(data, hidden, params);
 
 where hidden is a structure of latent variables:
     Z: N*K binary matrix of feature assignments (initialization for the IBP)
-and parans is a structure containing all simulation parameters and model
+and params is a structure containing all simulation parameters and model
     hyperparameters (see documentation for further details).
 
 Calling from Python
@@ -71,7 +71,6 @@ To use GLFM for the first time, follow the installation instructions on our
 project wiki.
 Once installed, please visit the Configuration wiki page to learn how to
 configure where data is saved and loaded from on disk.
-All documentation can be found on the project wiki.
 
 --------------------------
 In order to run GLFM on your data, you need to:
@@ -88,12 +87,12 @@ In order to run GLFM on your data, you need to:
     - For MATLAB:
         - Add path 'Ccode' and its children to Matlab workspace
         - From matlab command window, execute:
-            //mex  -lgsl -lgmp IBPsampler.cpp
             mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
     - For PYTHON:
         - Go to src/GLFMpython folder
-        - run command: python setup.py build_ext --inplace
+        - run command from terminal:
+            python setup.py build_ext --inplace
 
 --------
 Citation

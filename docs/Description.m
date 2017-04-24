@@ -1,6 +1,7 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%% Description of variables and structs for IBPsampler %%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%-----------------------------------------------------------------
+% Description of variables and structs for IBPsampler
+%%-----------------------------------------------------------------
+(inner description, not necessary for user)
 
 %% Inputs
 % X:       Observation matrix of size $N x D$ where N is number of observations and
