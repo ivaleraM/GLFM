@@ -5,5 +5,5 @@ for ll=1:5
     params.save = 1;
     params.bias = 0;
     params.s2B = 1;
-    demo_data_exploration_reduced; %_bias2;
+    demo_data_exploration_prostate;
 end
