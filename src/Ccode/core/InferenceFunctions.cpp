@@ -475,7 +475,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                 Y[d] =gsl_matrix_alloc(1,N); 
                 for (int n=0; n<N; n++){
                     xnd=gsl_matrix_get (X, d, n);
-                    
+
                     if (xnd==missing || gsl_isnan(xnd)){
                          gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, sqrt(s2Y[d])));
                     }else{
@@ -490,7 +490,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
                 matrix_multiply(Z,Y[d],lambda[d],1,0,CblasNoTrans,CblasTrans);
                 for (int n=0; n<N; n++){
                     xnd=gsl_matrix_get (X, d, n);
-                    
+
                     if (xnd==missing || gsl_isnan(xnd)){
                          gsl_matrix_set (Y[d], 0, n, gsl_ran_gaussian (seed, sqrt(s2Y[d])));
                     }else{
@@ -567,33 +567,35 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
              if (C[d]=='c'){
                  gsl_vector_view Bd_view;
                  for (int r=0; r<R[d]-1; r++){
-                    gsl_matrix_view L_view= gsl_matrix_submatrix (lambda[d], 0, r, Kest, 1);                       
-                    matrix_multiply(S,&L_view.matrix,MuB,1,0,CblasNoTrans,CblasNoTrans);                       
+                    gsl_matrix_view L_view= gsl_matrix_submatrix (lambda[d], 0, r, Kest, 1);
+                    matrix_multiply(S,&L_view.matrix,MuB,1,0,CblasNoTrans,CblasNoTrans);
+                    // gsl_vector_view gsl_matrix_subcolumn (gsl_matrix * m,
+                    // size_t j, size_t offset, size_t n)
                     Bd_view =  gsl_matrix_subcolumn (B[d], r, 0, Kest);
                     gsl_vector_view MuB_view =  gsl_matrix_column (MuB, 0);
                     mvnrnd(&Bd_view.vector, S, &MuB_view.vector, Kest, seed);
-                    if (isinf(compute_vector_mean(K, missing, &Bd_view.vector)) || isnan(compute_vector_mean(K, missing, &Bd_view.vector)) ){
-                        printf("error: numerical error at sampling B in dimension %d \n",d);
-                        break;
-                    }
-                    
+//                    if (isinf(compute_vector_mean(K, missing, &Bd_view.vector)) || isnan(compute_vector_mean(K, missing, &Bd_view.vector)) ){
+//                        printf("error: numerical error at sampling B in dimension %d \n",d);
+//                        break;
+//                    }
+
                  }  
                  Bd_view =  gsl_matrix_subcolumn (B[d], R[d]-1, 0, Kest);
                  gsl_vector_set_zero (&Bd_view.vector);
              }else{
                 gsl_matrix_view Lnon_view= gsl_matrix_submatrix (lambda[d], 0, 0, Kest, 1);
                 matrix_multiply(S,&Lnon_view.matrix,MuB,1,0,CblasNoTrans,CblasNoTrans);
-                
+
                 gsl_vector_view Bd_view =  gsl_matrix_subcolumn (B[d], 0, 0, Kest);
                 gsl_vector_view MuB_view =  gsl_matrix_subcolumn (MuB, 0, 0, Kest);
                 mvnrnd(&Bd_view.vector, S, &MuB_view.vector, Kest, seed);  
-                if (isinf(compute_vector_mean(K, missing, &Bd_view.vector)) || isnan(compute_vector_mean(K, missing, &Bd_view.vector)) ){
-                    printf("error: numerical error at sampling B in dimension %d \n",d);
-                    break;
-                }
+//                if (isinf(compute_vector_mean(K, missing, &Bd_view.vector)) || isnan(compute_vector_mean(K, missing, &Bd_view.vector)) ){
+//                    printf("error: numerical error at sampling B in dimension %d \n",d);
+//                    break;
+//                }
              }
-             
-             
+
+
          //Sample Y  
          SampleY (missing, N, d, Kest, C[d],  R[d], f[d], mu[d], w[d], s2Y[d], s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
          if (C[d]!='c' && C[d]!='o'){
