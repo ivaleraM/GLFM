@@ -1,31 +1,25 @@
+% -------------------
 %% demo TOY IMAGES
-close
+% -------------------
 clear
-addpath(genpath('../../src/GLFMmatlab/'));
-addpath(genpath('../../src/Ccode/'));
+addpath( genpath('../../src/') );
 
-randn('seed',round(sum(1e5*clock)));
-rand('seed',round(sum(1e5*clock)));
+rng( round(sum(1e5*clock)) );
 
 %% GENERATIVE MODEL
-N =1000;
-s2x = 0.5;
+N =1000;        % number of observations to generate
+s2x = 0.5;      % observation noise
 [data,gT] = generate_toy_images(N,s2x);
 
 %% INITIALIZATION + PARAMETER SETTINGS
-Zini = double(rand(N,1)>0.8);
-hidden.Z = Zini;
+hidden.Zini = double(rand(N,1)>0.8); % initialize N*K feature assignment matrix
 
 % define params
-params.missing = -10;
-params.s2Y = 1;    % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-params.s2u = .01;
-params.s2B = 1;      % Variance of the Gaussian prior of the weigting matrices B
+params.missing = -10;%
+params.s2Y = 1;      % Variance of the Gaussian prior for the pseudo-observations
 params.alpha = 5;    % Concentration parameter of the IBP
-params.Niter = 100;  % Number of iterations for the gibbs sampler
-params.maxK = 10;
-params.bias = 0;
-params.func = 1*ones(1,size(data.X,2));
+params.Niter = 100;  % Number of iterations for the Gibbs sampler
+params.maxK = 10;    % Maximum number of latent features (for memory allocation)
 
 %% INFERENCE
 hidden = IBPsampler_run(data, hidden, params);
