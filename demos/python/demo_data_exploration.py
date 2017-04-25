@@ -41,8 +41,8 @@ C = str(data['C'][0])
 for r in xrange(len(xx)):
     X[xx[r],yy[r]] = -1
 
-# prepare input data for C++ inference routine # TODO: hide from user
-X = preprocess(X,C)
+# # prepare input data for C++ inference routine # TODO: hide from user
+# X = preprocess(X,C)
 
 # ---------------------------------------------
 # 2. INITIALIZATION FOR GLFM ALGORITHM
@@ -73,7 +73,7 @@ print '\n 3. INFERENCE\n'
 
 print '\tInfering latent features...'
 tic = time.time()
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=Niter,s2Y=s2y, s2B=s2B, maxK=D, bias=bias)
+(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=Niter, s2B=s2B, maxK=D, bias=bias)
 toc = time.time()
 time = tic - toc
 print '\tElapsed: %.2f seconds.' % (toc-tic)

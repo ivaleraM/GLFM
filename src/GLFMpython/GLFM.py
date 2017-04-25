@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-import time
+import time as timeI
 import os
 import sys
 root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
@@ -11,18 +11,19 @@ import GLFMlib # python wrapper library in order to run C++ inference routine
 from aux import preprocess
 import mapping_functions as mf
 
-def infer(Xin,Cin,Zin,bias=0,s2Y=1.0, s2u=0.001, s2B=1.0,
-        alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0, transform='on'):
-    # prepare input data for C++ inference routine
-    if transform=='on':
-        (Xin,suffStats) = preprocess(Xin,Cin,missing)
+def infer(Xin,Cin,Zin,bias=0, s2u=0.001, s2B=1.0,
+        alpha=1.0, Nsim=100, maxK=50, missing=-1, verbose=0, transform='off'):
+    # # prepare input data for C++ inference routine
+    #if transform=='on':
+    #    (Xin,suffStats) = preprocess(Xin,Cin,missing)
     Fin = np.ones(Xin.shape[0])
     Xin = np.ascontiguousarray( Xin ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( Zin ) # compatible with C code
-    tic = time.time()
-    (Z_out,B_out,Theta_out) = GLFMlib.infer(Xin, Cin, Zin, Fin, bias, s2Y, s2u, s2B, alpha, Nsim,\
+    tic = timeI.time()
+    (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out) = \
+            GLFMlib.infer(Xin, Cin, Zin, Fin, bias, s2u, s2B, alpha, Nsim,\
         maxK, missing, verbose)
-    toc = time.time()
+    toc = timeI.time()
     time = tic - toc
     print '\tElapsed: %.2f seconds.' % (toc-tic)
     return (Z_out,B_out,Theta_out)
@@ -66,7 +67,7 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     Kinit = 3
     Zini = (np.random.rand(Kinit,N) > 0.8).astype('float64')
     # Call inner C function
-    (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,bias,s2Y,s2u,s2B,alpha,Niter,maxK,missing)
+    (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,bias,s2u,s2B,alpha,Niter,maxK,missing)
 
     Xcompl=np.copy(Xmiss)
     [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
@@ -79,6 +80,7 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
             aux = Zest[:,n].reshape(-1,1) # Zest(:,n)'
             M = np.inner(aux.transpose(),Br)
             if (C[d] != 'c'):
+                a = 1
                 # TODO
             if (C[d] == 'g'):
                 # branch checked, working

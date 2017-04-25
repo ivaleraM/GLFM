@@ -610,7 +610,7 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
 
          }
         gsl_matrix_free(S);
-        printf("\n");
+        //printf("\n");
         }
         printf("After IT loop...\n");
 
