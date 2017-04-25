@@ -16,7 +16,7 @@ def infer(Xin,Cin,Zin,bias=0, s2u=0.001, s2B=1.0,
     # # prepare input data for C++ inference routine
     #if transform=='on':
     #    (Xin,suffStats) = preprocess(Xin,Cin,missing)
-    Fin = np.ones(Xin.shape[0])
+    Fin = 1.0 * np.ones(Xin.shape[0])
     Xin = np.ascontiguousarray( Xin ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( Zin ) # compatible with C code
     tic = timeI.time()
@@ -67,7 +67,7 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     Kinit = 3
     Zini = (np.random.rand(Kinit,N) > 0.8).astype('float64')
     # Call inner C function
-    (Zest, B, Theta)= GLFMlib.infer(Xmiss,C,Zini,bias,s2u,s2B,alpha,Niter,maxK,missing)
+    (Zest, B, Theta)= infer(Xmiss,C,Zini,bias,s2u,s2B,alpha,Niter,maxK,missing)
 
     Xcompl=np.copy(Xmiss)
     [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
