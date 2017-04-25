@@ -27,7 +27,7 @@ params.bias = 1;        % bias feature (active for all obs. to capture mean effe
 params.s2B = 1;         % variance noise for feature matrix
 params.alpha = 10;      % concentration parameter for the Indian Buffet Process
 params.Niter = 10;      % number of iterations to train the GLFM model
-params.maxK = 50;       % maximum number of latent features (for memory allocation)
+params.maxK = 100;       % maximum number of latent features (for memory allocation)
 params.missing = -100;  % values for missings
 
 %% INFERENCE

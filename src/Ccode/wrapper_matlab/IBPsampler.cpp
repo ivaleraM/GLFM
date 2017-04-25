@@ -115,7 +115,8 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
 //     size_t Kest2 = (size_t) Kest;
 //     size_t dimB[3]={D,Kest2,maxR};
-    size_t dimB[3]={D,Kest,maxR};
+//     size_t dimB[3]={D,Kest,maxR};
+    int dimB[3]={D,Kest,maxR};
     output_B = mxCreateNumericArray(3,dimB,mxDOUBLE_CLASS,mxREAL);
     double *pB=mxGetPr(output_B);
 

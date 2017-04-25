@@ -92,7 +92,7 @@ double compute_vector_min(int N, double missing, gsl_vector *v){
 }
 double logFun(double x)
 {
-	if (x==0){return GSL_NEGINF;}
+	if (x==0){fprintf(stderr, "logarithm of 0 is -inf \n"); return GSL_NEGINF;}
     else if(x<0){fprintf(stderr, "Error: logarithm is not defined for negative numbers\n"); return -1;}
     else{return gsl_sf_log(x);}
 }
@@ -119,7 +119,7 @@ int factorial (int N){
 void matrix_multiply(gsl_matrix *A,gsl_matrix *B,gsl_matrix *C,double alpha,double beta,CBLAS_TRANSPOSE_t TransA,CBLAS_TRANSPOSE_t TransB) {
     /* Las matrices tienen que estar ordenadas por filas */
     
-    /* Compute C = A B */
+    /* Compute C = alpha* A B + beta *C */
     
     gsl_blas_dgemm(TransA, TransB, alpha, A, B, beta, C);
     
