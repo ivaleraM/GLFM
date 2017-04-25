@@ -1,6 +1,6 @@
-for ll=1:5
+for ll=3:5
     params.simId = ll;
-    params.bias = 1;
+    params.bias = 0;
     params.Niter = 10000;
     params.save = 1;
     demo_data_exploration_counties;
