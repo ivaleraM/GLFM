@@ -65,11 +65,6 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
         if ~isempty(params.t{d}) % we have used a special transform beforehand
             xd = params.t{d}(xd);
             pdf = pdf .* abs( params.dt_1{d}(xd) );
-            if ( data.C(d) == 'g' || data.C(d) == 'p' )
-                int = integrate(xd, pdf)
-            elseif (data.C(d) == 'n')
-                int = sum(pdf,2)
-            end
         end
     end
 end
