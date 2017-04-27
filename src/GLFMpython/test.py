@@ -1,5 +1,5 @@
-from aux import plot_dim
-from aux import plot_dim_1feat
+from GLFM import plot_dim
+from GLFM import plot_dim_1feat
 import numpy as np
 
 N = 50

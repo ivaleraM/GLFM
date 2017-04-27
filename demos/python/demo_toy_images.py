@@ -40,7 +40,7 @@ for i in xrange(len(Btrue)):
     V[i].set_ylim(0,5) # set Y-axis limits
     V[i].set_xlim(0,5) # set X-axis limits
     V[i].set_title('Image %d' % (i+1)) # set subplot title
-plt.ion()  # turn on interactive mode for plotting (so that the script continues)
+#plt.ion()  # turn on interactive mode for plotting (so that the script continues)
 plt.show() # display images component
 plt.pause(0.0001)
 
@@ -71,10 +71,6 @@ print '\tInitialization of variables needed for the GLFM model...'
 C = np.tile('g',(1,X.shape[0]))[0].tostring() # vector to indicate datatype of each dimension
 
 Niter = 100  # number of algorithm iterations
-s2y = 1      # noise variance for pseudo-obervations
-s2B = 1      # noise variance for feature values
-
-
 
 # In[4]:
 
@@ -82,7 +78,7 @@ s2B = 1      # noise variance for feature values
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
 print '\tInfering latent features...'
-(Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z,Nsim=Niter, s2B=s2B, s2u=0.005, maxK=10, transform='off')
+(Z_out,B_out,Theta_out,mu_out,w_out,s2y_out) = GLFM.infer(X,C,Z,Nsim=Niter, s2u=0.005, maxK=10)
 
 
 # In[5]:
@@ -94,12 +90,12 @@ Kest = B_out.shape[1] # number of inferred latent features
 D = B_out.shape[0]    # number of dimensions
 
 print '\tPrint inferred latent features...'
-f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) =         plt.subplots(3, 3, sharex='col', sharey='row')
+f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = plt.subplots(3, 3, sharex='col', sharey='row')
 V = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]
 for k in xrange(B_out.shape[1]):
     if k>len(V):
         break;
-        
+
     # visualize each inferred dimension
     Zp = np.zeros(Kest)
     Zp[k] = 1.0
@@ -112,7 +108,7 @@ for k in xrange(B_out.shape[1]):
     V[k].set_ylim(0,5)
     V[k].set_xlim(0,5)
     V[k].set_title('Feature %d' % (k+1))
-plt.ion()  # interactive mode for plotting (script continues)
+#plt.ion()  # interactive mode for plotting (script continues)
 plt.show() # display figure
 plt.pause(0.0001)
 

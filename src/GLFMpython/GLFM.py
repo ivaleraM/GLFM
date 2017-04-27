@@ -282,7 +282,7 @@ def plot_dim(X,B,Theta,C,d,Zp,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     else:
         print 'Unknown datatype'
     plt.legend()
-    plt.ion()
+    #plt.ion()
     plt.show()
     plt.pause(0.0001)
 

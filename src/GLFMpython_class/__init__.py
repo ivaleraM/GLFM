@@ -4,8 +4,6 @@ import os
 import sys
 
 # Configure PYTHONPATH before importing any bnpy modules
-path = '/home/melanie/Documents/UC3M/Workspace/GIBP_Isabel/GLFM/'
-sys.path.append(path+'src/Ccode/wrapper_python/')
 root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
 print 'root=' + root
 sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
