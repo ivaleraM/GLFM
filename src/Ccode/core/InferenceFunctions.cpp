@@ -139,7 +139,8 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
        int flagDel=0;
        int Kdel=0;
        for (int k=0; k<K;k++){
-           if ((nest[k]==0) & (K>1)){
+           if (nest[k]==0 && K-Kdel>1){
+                printf("K= %d",K);
                 Kdel++;
                 flagDel=1;
                 for (int kk=k; kk<K-1; kk++){
@@ -156,7 +157,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
            nest[k]=0;
            }
        K-=Kdel;
-
+       //printf("K= %d \n",K);
        if (flagDel){
            gsl_matrix_set_identity (P);
            matrix_multiply(Z,Z,P,1,1/s2B,CblasNoTrans,CblasTrans);
