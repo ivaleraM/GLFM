@@ -5,7 +5,6 @@
 
 addpath(genpath('../../src/'));
 rng( round(sum(1e5*clock)) );
-rng( round(sum(1e5*clock)) );
 savePath = './results/';
 
 %% LOAD DATA
@@ -75,7 +74,7 @@ hidden.Z = Zini; % N*K matrix of feature assignments
 hidden = IBPsampler_run(data, hidden, params);
 
 if params.save
-    output_file = [savePath, sprintf('prostateRed_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%d.mat', ...
+    output_file = [savePath, sprintf('prostateRed_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%.2f.mat', ...
         params.bias, params.simId, params.Niter, params.s2Y, params.s2B, params.alpha)];
     save(output_file);
 end
@@ -84,7 +83,7 @@ end
 X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
 
 %% Plot Dimensions
-if params.save
+if ~params.save
     
     sum(hidden.Z)
     th = 0.03; % threshold to filter out latent features that are not significant

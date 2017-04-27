@@ -1,4 +1,4 @@
-function plot_all_dimensions(data, hidden, params, Zp, leg, varargin)
+function plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles, varargin)
 
 if ~isfield(data,'ylabel_long')
     data.ylabel_long = data.ylabel;
@@ -16,7 +16,7 @@ for d=idxD
     figure(d); hold off;
     % plot empirical if 'g' | 'p' | 'n'
     if ( data.C(d) == 'g' || data.C(d) == 'p' || data.C(d) == 'n')
-        [h xx] = hist(data.X(:,d),1000);
+        [h xx] = hist(data.X(:,d),100);
         %xx(1) = 0.01;
         %h = histogram(data.X(:,k),100);
         h = h ./ sum(h * (xx(2) - xx(1)));
@@ -34,12 +34,35 @@ for d=idxD
         h = bar([tmp' pdf']);
         h(1).FaceColor = [0.8784 0.8784 0.8784];
     elseif (data.C(d) == 'n')
-        plot(xd, pdf', 'Linewidth', 2);
+        h = plot(xd, pdf', 'Linewidth', 2);
     else
         if ~isempty(params.t{d})
-            semilogx(xd,pdf', 'Linewidth', 2);
+            h = semilogx(xd,pdf', 'Linewidth', 2);
         else
-            plot(xd,pdf', 'Linewidth', 2);
+            h = plot(xd,pdf', 'Linewidth', 2);
+        end
+    end
+    if ~isempty(colors)
+        for k=1:length(colors)
+            if (data.C(d) == 'c') || (data.C(d) == 'o')
+                ll = k+1;
+            else
+                ll = k;
+            end
+            h(ll).Color = colors(k,:);
+        end
+    end
+    if ~isempty(styles)
+        for k=1:length(styles)
+            if isempty(styles{k})
+                continue;
+            end
+            if (data.C(d) == 'c') || (data.C(d) == 'o')
+                ll = k+1;
+            else
+                ll = k;
+            end
+            h(ll).LineStyle = styles{k};
         end
     end
     title(data.ylabel_long{d});

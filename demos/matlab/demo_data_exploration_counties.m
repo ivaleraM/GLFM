@@ -14,7 +14,7 @@ load(input_file);
 data.X(:,9) = data.X(:,8) + data.X(:,9);
 data.ylabel{9} = 'age >= 65';
 % [1 3 4] remove dimensions with excessive number of missings
-idx_to_remove = [1,3,4,5,6, 7,8, 10,19]; % [1, 3, 4, 19]
+idx_to_remove = [1,3,4, 6, 7,8, 10,19]; % [1, 3, 4, 19]
 data.X(:,idx_to_remove) = [];
 data.C(idx_to_remove) = [];
 data.cat_labels(idx_to_remove) = [];
@@ -22,7 +22,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % specify external transforms for certain dimensions
-idx_transform = [4 5 10]; %[2 3 7 9 10 15];
+idx_transform = [2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -35,7 +35,7 @@ for r=idx_transform
     params.ext_dataType{r} = 'p';
 end
 % dimension 13 = 'White' need an inversion too
-r = 9; %14;
+r = 10; %9; %14;
 params.t_1{r} = @(x) log((100-x) + 1);
 params.t{r} = @(y) - exp(y) + 101;
 params.dt_1{r} = @(x) - 1./ (101 - x);
@@ -50,7 +50,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 100; % Number of iterations for the gibbs sampler
+    params.Niter = 10000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 
@@ -61,7 +61,7 @@ params.func = 1*ones(1,D);
 
 %params.simId = 1;
 if ~isfield(params,'save')
-    params.save = 0;
+    params.save = 1;
 end
 
 %% Initialize Hidden Structure
@@ -77,8 +77,8 @@ hidden.Z = Zini; % N*D
 hidden = IBPsampler_run(data, hidden, params);
 
 if params.save
-    output_file = sprintf( './results/counties_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%d.mat', ...
-        params.bias, params.simId, params.Niter, params.s2Y, params.s2B, params.alpha);
+    output_file = sprintf( './results/counties_bias%d_simId%d_Niter%d_s2B%.2f_alpha%d.mat', ...
+        params.bias, params.simId, params.Niter, params.s2B, params.alpha);
     save(output_file);
 end
 

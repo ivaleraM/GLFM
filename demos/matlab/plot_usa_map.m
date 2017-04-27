@@ -34,7 +34,7 @@ geoshow(ax(1), states(indexConus),  'SymbolSpec', surfaceColors);
 geoshow(ax(2), states(indexAlaska),  'SymbolSpec', surfaceColors);
 geoshow(ax(3), states(indexHawaii),  'SymbolSpec', surfaceColors);
 colormap( flip( autumn(numel(states)) ) );
-colorbar;
+colorbar('Fontsize', 30);
 %caxis( [min([states.Feature]) max([states.Feature])] )
 caxis( [0 1] )
 %stateColor = [0.5 1 0.5];
