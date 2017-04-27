@@ -55,11 +55,11 @@ function [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d)
             error('Some values are nan!');
         end
     end
-    if ( data.C(d) == 'g' || data.C(d) == 'p' )
-        int = integrate(xd, pdf)
-    elseif (data.C(d) == 'n')
-        int = sum(pdf,2)
-    end
+%     if ( data.C(d) == 'g' || data.C(d) == 'p' )
+%         int = integrate(xd, pdf)
+%     elseif (data.C(d) == 'n')
+%         int = sum(pdf,2)
+%     end
     
     if isfield(params,'t')
         if ~isempty(params.t{d}) % we have used a special transform beforehand
