@@ -3,7 +3,7 @@ function pdf = pdf_c(Zp, B, s2Y)
     % Inputs:
     %   B: K*R
     %   Zp: 1*K, where K: number of latent features
-    
+
     numMC = 1000; % number of Monte Carlo samples to approximate the Expectation
     R = size(B,2);
     pdf = zeros(1,R);
@@ -19,5 +19,5 @@ function pdf = pdf_c(Zp, B, s2Y)
         end
         pdf(r) = mean(aux);
     end
-    pdf = pdf ./ sum(pdf); 
+    pdf = pdf ./ sum(pdf);
 end
