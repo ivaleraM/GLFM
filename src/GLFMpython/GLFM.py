@@ -56,7 +56,7 @@ def infer(Xin,Cin,Zin,bias=0, s2u=0.001, s2B=1.0,
     print '\tElapsed: %.2f seconds.' % (toc-tic)
     return (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out)
 
-def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
+def complete(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
     """
     Function to complete missing values of a certain numpy 2dim array
 
@@ -99,7 +99,7 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
     Xcompl=np.copy(Xmiss)
     [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
 
-    for ii in xrange(len(idxs_n)):
+    for ii in xrange(len(idxs_n)): # for each missing
         if Xmiss[idxs_d[ii],idxs_n[ii]] == missing: # will always be the case
             d = idxs_d[ii]
             n = idxs_n[ii]
@@ -129,7 +129,61 @@ def complete_matrix(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, mi
                 Xcompl[d,n] = np.floor(mf.fpos(M))
     return Xcompl
 
+def computeMAP(C, Zp, hidden, params, idxsD=[]):
+    """
+    Function to generate the MAP solution corresponding to patterns in Zp
+    Inputs:
+      C: 1*D string with data types, D = number of dimensions
+      Zp: P * K matrix of feature activation for which to compute the MAP estimate
+          (P is the number of obs.)
+      hidden: structure with latent variables learned by the model
+          - B: latent feature matrix (D * K * maxR)  where
+                  D: number of dimensions
+                  K: number of latent variables
+               maxR: maximum number of categories across all dimensions
+          - mu: 1*D shift parameter
+          - w:  1*D scale parameter
+          - theta: D*maxR matrix of auxiliary vars (for ordinal variables)
+    ----------------(optional) ------------------
+          - idxsD: dimensions to infer
 
+    Outputs:
+      X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
+    """
+
+    if (len(idxsD) == 0):
+        idxsD = range(hidden['B'].shape[0])
+
+    P = Zp.shape[0]
+    K = hidden['B'].shape[1]
+    assert(Zp.shape[1] ~= K), "Incongruent sizes between Zp and hidden.B: number of latent variables should not be different"
+
+    X_map = np.zeros((P,len(idxsD))) # output
+    for dd in xrange(len(idxsD)): # for each dimension
+        d = idxsD[dd]
+        # if params.has_key('t'): # if external transformations have been defined
+        #     if len(params['t'][d]) > 0: # there is an external transform for data type d
+        #         C(d) = params.ext_dataType{d}; # set new type of data
+
+        if C[d] == 'g':
+            X_map[:,d] = mf.f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) )
+        elif C[d] == 'p':
+            X_map(:,d) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) )
+        elif C[d] == 'n':
+            X_map(:,d) = f_n( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) )
+        elif C[d] == 'c':
+            X_map(:,d) = f_c( Zp * squeeze(hidden.B(d,:,1:hidden.R(d))) )
+        elif C[d] == 'o':
+            X_map(:,d) = f_o( Zp * squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)) )
+        else:
+            raise ValueError('Unknown data type')
+        end
+        if (sum(np.isnan(X_map[:,d])) > 0):
+            raise ValueError('Some values are nan!')
+        # if params.has_key('t'):
+        #     if len(params['t'][d]) > 0: # there is an external transform for data type d
+        #         X_map[:,d] = params['t'][d]( X_map[:,d] )
+    return X_map
 
 def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     """

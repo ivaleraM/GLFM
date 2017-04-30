@@ -8,118 +8,105 @@ from scipy.stats import norm
 import pdb
 
 # --------------------
-# Auxiliary Functions
-# --------------------
-
-def exp_count(Zn,Bd, s2y, fpos_1_handler, w, maxX):
-    # function to compute expectation of random variable
-    # Zn: 1*K nparray
-    # Bd: K*1 nparray
- #   s2y = params{1}
- #   fpos_1_handler = params{2}
- #   w = params{3} # function to compute normalization weights w
- #   maxX = params{4}
-    xin = range(1,maxX+1)
-    func = lambda x: pdf_count(x,Zn,Bd,w, s2y,fpos_1_handler)
-    expect = np.inner(xin,func(xin))
-    return expect
-
-def rnd_pos(Zn,Bd,numSamples,s2y,s2u,fpos_1_handler,dfpos_1_handler,w,maxX):
-    # function to get random samples from the distribution
-
-  #  s2y = params{1}
-  #  s2u = params{2}
-  #  fpos_1_handler = params{3}
-  #  dfpos_1_handler = params{4}
-  #  w = params{5} # function to compute normalization weights w
-  #  maxX = params{6}
-
-    func = lambda x: np.log( pdf_pos(x,Zn,Bd,w, s2y ,s2u, fpos_1_handler, dfpos_1_handler) )
-    a = 10**-6
-    b = maxX
-    domain = [a,b+5]
-
-    # FIND ARS IN PYTHON
-    samples = ars(func, a, b, domain, numSamples, [])
-    samples = np.exp(samples)
-    return samples
-
-def rnd_real(Zn,Bd,numSamples, s2y, s2u):
-    # function to get random samples from the distribution
-    x = np.sqrt(s2u+s2y) * np.random.randn(numSamples) + np.inner(Zn,Bd)
-    return x
-
-# --------------------
 # Mapping Functions
 # --------------------
 
-def freal(y, s2u):
-#    # Mapping function for real values
-#    # s2u: auxiliary noise
-#    dim = len(y.shape)
-#    if dim == 1:
-#        tmp = randn(y.shape[0])
-#    elif dim == 2:
-#        tmp = randn(y.shape[0],y.shape[1])
-#    else:
-#        print 'undefined dimensions for y'
-#    x = y + np.sqrt(s2u) * tmp
-    x = y
+def f_g(y, mu, w):
+    # Mapping function for real-valued data
+    #  Y -> X (from pseudo-obversations to data)
+    assert (w == 0), 'scaling factor should never be 0'
+    x = y./w + mu;
     return x
 
-def fpos(y):
-    # Inputs:
-    #   Pseudo-observations y: [N*D] # Check dimensions
-    x = np.log(np.exp(y)+1)
+def f_p(y, mu, w):
+    # transformation function for positive data
+    # Y -> X (from pseudo-obversations to data)
+    assert (w == 0), 'scaling factor should never be 0'
+    x = np.log( np.exp(y) + 1 )./w + mu
     return x
 
-def fcat(y):
+def f_c(y):
+    # transformation function for categorical data
     # input argument y: [N*R]
-    # output: x [1*N]
-    x = np.max(y,1) # .reshape(-1,1)
+    # output: x [N*1]
+    x = np.zeros((y.shape[0],1))
+    for n=1 in xrange(y.shape[0]):
+        val = max(y[n,:])
+        x[i] = np.where(y[n,:] == val)[0][0]
+    # [a,x] = max(y,[],2);
     return x
 
-def fcount(y):
+def f_n(y,mu,w):
+    # transformation function for count data
+    # Y -> X (from pseudo-obversations to data)
     # Inputs:
     #   Pseudo-observations y: [N*D]
-    x = np.floor( fpos(y) )
+    assert (w == 0), 'scaling factor should never be 0'
+    x = np.floor( fpos(y,mu,w) )
     return x
 
-def ford(y, theta):
+def f_o(y, theta):
     # Mapping function for ordinal data
     # Inputs:
     #       y: [1*R] Pseudo-observations
     #   theta: [1*(R-1)] Thresholds that divide the real line into R regions
-    for r in xrange(len(theta)): #= 1:length(theta)
-        val = theta[r]
-        if (y < val):
-            x = r
-            break
-        if r == size(theta,3):
-            x = r+1
+    x = np.zeros((y.shape[0],y.shape[1])) # column vector
+    for j=0 in xrange(len(theta)):
+        if (j == 0):
+            mask = (y <= theta[0])
+        else:
+            mask = (y > theta[j-1]) and (y <= theta[j])
+        x[mask] = j
+    x[x == 0] = len(theta) # last ordinal category
+    #for r in xrange(len(theta)): #= 1:length(theta)
+    #    val = theta[r]
+    #    if (y < val):
+    #        x = r
+    #        break
+    #    if r == size(theta,3):
+    #        x = r+1
     return x
 
-def fpos_1(x):
-    y = np.log( np.exp(x) - 1 )
+def y = f_g_1(x, mu, w):
+    # transformation function for real-valued data
+    # X -> Y (from data to pseudo-obversations)
+    assert (w == 0), 'scaling factor should never be 0'
+    y = w * (x - mu)
     return y
 
-def fpos_1_sq(x):
-    y = np.sqrt(x)
+def y = f_n_1(x, mu, w):
+    # transformation function for positive data
+    # X -> Y (from data to pseudo-obversations)
+    y = f_p_1(x, mu, w)
     return y
 
-def fpos_sq(y):
-    # Inputs:
-    #   y: pseudo-observations
-    x =  y**2
-    return x
-
-def dfpos_1(x):
-    y = 1.0 / ( 1 - np.exp(-x) )
+def y = f_p_1(x, mu, w):
+    # transformation function for positive data
+    # X -> Y (from data to pseudo-obversations)
+    assert (w == 0), 'scaling factor should never be 0'
+    y = np.log( np.exp(w*(x-mu) - 1) )
     return y
 
-def dfpos_1_xi(x):
-    y = -0.5* (x**(-1.5))
+def y = df_p_1(x, mu, w):
+    # derivative of transformation function for positive data
+    # X -> Y (from data to pseudo-obversations)
+    assert (w == 0), 'scaling factor should never be 0'
+    y = ( w * np.exp(w*(x-mu)) ) / ( np.exp(w*(x-mu) - 1) )
     return y
+
+#def fpos_1_sq(x):
+#    y = np.sqrt(x)
+#    return y
+#
+#def fpos_sq(y):
+#    # Inputs:
+#    #   y: pseudo-observations
+#    x =  y**2
+#    return x
+#
+#def dfpos_1_xi(x):
+#    y = -0.5* (x**(-1.5))
+#    return y
 
 # ------------------------------------------
 # Functions to compute pdf values
@@ -204,3 +191,45 @@ def pdf_pos(X,Zn,Bd,w,s2y,s2u, fpos_1_handler, dfpos_1_handler):
             -1.0/(2.0*(s2y+s2u)) * (fpos_1_handler(X,w) - np.inner(Zn,Bd))**2)\
             * np.abs( dfpos_1_handler(X,w) )
     return pdf
+
+# --------------------
+# Auxiliary Functions
+# --------------------
+
+def exp_count(Zn,Bd, s2y, fpos_1_handler, w, maxX):
+    # function to compute expectation of random variable
+    # Zn: 1*K nparray
+    # Bd: K*1 nparray
+ #   s2y = params{1}
+ #   fpos_1_handler = params{2}
+ #   w = params{3} # function to compute normalization weights w
+ #   maxX = params{4}
+    xin = range(1,maxX+1)
+    func = lambda x: pdf_count(x,Zn,Bd,w, s2y,fpos_1_handler)
+    expect = np.inner(xin,func(xin))
+    return expect
+
+def rnd_pos(Zn,Bd,numSamples,s2y,s2u,fpos_1_handler,dfpos_1_handler,w,maxX):
+    # function to get random samples from the distribution
+
+  #  s2y = params{1}
+  #  s2u = params{2}
+  #  fpos_1_handler = params{3}
+  #  dfpos_1_handler = params{4}
+  #  w = params{5} # function to compute normalization weights w
+  #  maxX = params{6}
+
+    func = lambda x: np.log( pdf_pos(x,Zn,Bd,w, s2y ,s2u, fpos_1_handler, dfpos_1_handler) )
+    a = 10**-6
+    b = maxX
+    domain = [a,b+5]
+
+    # FIND ARS IN PYTHON
+    samples = ars(func, a, b, domain, numSamples, [])
+    samples = np.exp(samples)
+    return samples
+
+def rnd_real(Zn,Bd,numSamples, s2y, s2u):
+    # function to get random samples from the distribution
+    x = np.sqrt(s2u+s2y) * np.random.randn(numSamples) + np.inner(Zn,Bd)
+    return x
