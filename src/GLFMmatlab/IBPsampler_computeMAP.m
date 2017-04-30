@@ -17,7 +17,7 @@ function X_map = IBPsampler_computeMAP(C, Zp, hidden, params, varargin)
     %
     % Outputs:
     %   X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
-    
+
     if (length(varargin) == 1)
         idxsD = varargin{1};
     elseif (length(varargin) > 1)
@@ -30,7 +30,7 @@ function X_map = IBPsampler_computeMAP(C, Zp, hidden, params, varargin)
     if (size(Zp,2) ~= K)
         error('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different');
     end
-    
+
     X_map = zeros(P,length(idxsD)); % output
     for d=idxsD % for each dimension
         if isfield(params,'t') % if external transformations have been defined

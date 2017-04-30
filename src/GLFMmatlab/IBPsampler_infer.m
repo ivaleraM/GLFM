@@ -16,6 +16,15 @@ function hidden = IBPsampler_infer(data,varargin)
     %       hidden: hidden structure to initialize inference algorithm
     %             hidden.Z: feature assignment N*K matrix
     %       params: structure with sim. parameters and hyperparameters
+    %   Outputs:
+    %       hidden: hidden structure with samples from posterior, as well as
+    %               inner transformation parameters
+    %           hidden.Z    : N*K feature activation matrix
+    %           hidden.B    : K*D feature effect matrix
+    %           hidden.theta: D*maxR matrix with aux. variables for ordinal data
+    %           hidden.mu   : 1*D shift parameter for inner transformation
+    %           hidden.w    : 1*D scale parameter for inner transformation
+    %           hidden.s2y  : 1*D per-dim inferred noise variance for pseudo-obs
 
     switch length(varargin)
         case 0

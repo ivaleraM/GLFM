@@ -21,7 +21,7 @@ function [Xcompl,hidden] = IBPsampler_complete(data,varargin)
     %       Xcompl: N*D input matrix with imputed missing values
     %       hidden: structure with latent parameters (same output as
     %       IBPsampler_infer function).
-    
+
     switch length(varargin)
         case 0
             hidden = [];
@@ -37,15 +37,15 @@ function [Xcompl,hidden] = IBPsampler_complete(data,varargin)
         otherwise
             error('Incorrect number of input parameters: should be 1, 2 or 3');
     end
-    
+
     % Run inference
     hidden = IBPsampler_infer(data,hidden,params);
-    
+
     % just in case there is any missing
     data.X(isnan(data.X)) = params.missing;
-    
+
     [xx_miss, yy_miss] = find(data.X == params.missing);
-    
+
     Xcompl = data.X;
     for i=1:length(xx_miss) % for each missing value, compute MAP estimate
         Xcompl(xx_miss(i),yy_miss(i)) = IBPsampler_computeMAP( data.C, hidden.Z(xx_miss(i),:), hidden, params, yy_miss(i));
