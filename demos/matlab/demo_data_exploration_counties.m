@@ -2,8 +2,7 @@
 % DEMO: Data exploration on counties database
 %% --------------------------------------------------
 addpath(genpath('../../src/'));
-randn('seed',round(sum(1e5*clock)));
-rand('seed',round(sum(1e5*clock)));
+rng(round(sum(1e5*clock)));
 
 %% LOAD DATA
 input_file = '../../datasets/mat/counties.mat';
@@ -50,16 +49,18 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 10000; % Number of iterations for the gibbs sampler
+    params.Niter = 10; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 
 if ~isfield(params,'bias')
-    params.bias = 0;
+    params.bias = 1;
 end
 params.func = 1*ones(1,D);
 
-%params.simId = 1;
+if ~isfield(params,'simId')
+    params.simId = 1;
+end
 if ~isfield(params,'save')
     params.save = 1;
 end
@@ -74,7 +75,7 @@ end
 hidden.Z = Zini; % N*D
 
 %% Inference
-hidden = IBPsampler_run(data, hidden, params);
+hidden = IBPsampler_infer(data, hidden, params);
 
 if params.save
     output_file = sprintf( './results/counties_bias%d_simId%d_Niter%d_s2B%.2f_alpha%d.mat', ...
@@ -84,7 +85,7 @@ end
 
 %% Predict MAP estimate for each latent feature
 if ~params.save
-    X_map = IBPsampler_MAP(data.C, hidden.Z, hidden);
+    X_map = IBPsampler_computeMAP(data.C, hidden.Z, hidden);
 end
 
 %% Plot Dimensions
@@ -108,7 +109,8 @@ if params.save
     leg = num2str(Zp);
     leg = mat2cell(leg, ones(size(hidden.Z,2),1), size(leg,2))';
     
-    plot_all_dimensions(data, hidden, params, Zp, leg, idxD);
+    colors = []; styles = [];
+    plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles, idxD);
 end
 
 %% PLOT USA map and corresponding features
@@ -136,12 +138,12 @@ if params.save
         %Zn = (C == k);
         Zn = hidden.Z(:,k);
         
-        if (sum(Zn) < (size(data.X,1)*0.01))
+        if (sum(Zn) < (size(data.X,1)*0.05))
             continue; % only plot patterns with more than 5% of number of obs.
         end
         plot_usa_map(data,Zn);
         title(sprintf('Activation of pattern (%s)',num2str(pat)));
     end
     
-    plot_cont_all_feats(data, hidden, params, patterns);
+    %plot_cont_all_feats(data, hidden, params, patterns);
 end

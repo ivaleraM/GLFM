@@ -22,13 +22,13 @@ params.Niter = 100;  % Number of iterations for the Gibbs sampler
 params.maxK = 10;    % Maximum number of latent features (for memory allocation)
 
 %% INFERENCE
-hidden = IBPsampler_run(data, hidden, params);
+hidden = IBPsampler_infer(data, hidden, params);
 
 %% PLOT REAL Vs INFERRED LATENT FEATURE
 Kest = size(hidden.B,2);
 Zp = eye(Kest);
 % compute observations resulting when each of the latent features is active
-X_map = IBPsampler_MAP(data.C, Zp, hidden);
+X_map = IBPsampler_computeMAP(data.C, Zp, hidden, params);
 
 figure(1); title('Ground truth');
 for k=1:size(gT.B,1)

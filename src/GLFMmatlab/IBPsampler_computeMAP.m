@@ -1,9 +1,9 @@
-function X_map = IBPsampler_MAP(C, Zp, hidden, params)
-    % Function to generate the MAP solutions corresponding to patterns in Zp
+function X_map = IBPsampler_computeMAP(C, Zp, hidden, params, varargin)
+    % Function to generate the MAP solution corresponding to patterns in Zp
     % Inputs:
     %   C: 1*D string with data types, D = number of dimensions
-    %   Zp: P * K matrix of patterns for which to compute the MAP estimate
-    %       (P is the number of patterns)
+    %   Zp: P * K matrix of feature activation for which to compute the MAP estimate
+    %       (P is the number of obs.)
     %   hidden: structure with latent variables learned by the model
     %       - B: latent feature matrix (D * K * maxR)  where
     %               D: number of dimensions
@@ -12,21 +12,32 @@ function X_map = IBPsampler_MAP(C, Zp, hidden, params)
     %       - mu: 1*D shift parameter
     %       - w:  1*D scale parameter
     %       - theta: D*maxR matrix of auxiliary vars (for ordinal variables)
+    % ----------------(optional) ------------------
+    %       - idxsD: dimensions to infer
+    %
+    % Outputs:
+    %   X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
     
-    D = size(hidden.B,1);
+    if (length(varargin) == 1)
+        idxsD = varargin{1};
+    elseif (length(varargin) > 1)
+        error('Too many input arguments');
+    else
+        idxsD = 1:size(hidden.B,1);
+    end
     P = size(Zp,1);
     K = size(hidden.B,2);
     if (size(Zp,2) ~= K)
         error('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different');
     end
     
-    X_map = zeros(P,D); % output
-    for d=1:D % for each dimension
-%         if isfield(params,'t') % if external transformations have been defined
-%             if ~isempty(params.t{d}) % there is an external transform for data type d
-%                 data.C(d) = params.ext_dataType{d}; % set new type of data
-%             end
-%         end
+    X_map = zeros(P,length(idxsD)); % output
+    for d=idxsD % for each dimension
+        if isfield(params,'t') % if external transformations have been defined
+            if ~isempty(params.t{d}) % there is an external transform for data type d
+                C(d) = params.ext_dataType{d}; % set new type of data
+            end
+        end
         switch C(d)
             case 'g', X_map(:,d) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
             case 'p', X_map(:,d) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
@@ -39,9 +50,9 @@ function X_map = IBPsampler_MAP(C, Zp, hidden, params)
         if (sum(isnan(X_map(:,d))) > 0)
             warning('Some values are nan!');
         end
-%         if isfield(params,'t')
-%             if ~isempty(params.t{d})
-%                 X_map(:,d) = params.t{d}( X_map(:,d) );
-%             end
-%         end
+        if isfield(params,'t')
+            if ~isempty(params.t{d})
+                X_map(:,d) = params.t{d}( X_map(:,d) );
+            end
+        end
     end

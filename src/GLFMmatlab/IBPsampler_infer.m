@@ -1,9 +1,9 @@
-function hidden = IBPsampler_run(data,varargin)
+function hidden = IBPsampler_infer(data,varargin)
     % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     % Three possible calls:
-    %           hidden = IBPsampler_run(data)
-    %           hidden = IBPsampler_run(datai,hidden)
-    %           hidden = IBPsampler_run(datai,hidden,params)
+    %           hidden = IBPsampler_infer(data)
+    %           hidden = IBPsampler_infer(data,hidden)
+    %           hidden = IBPsampler_infer(data,hidden,params)
     %
     %   Inputs:
     %       data: structure with all input data information
@@ -36,7 +36,7 @@ function hidden = IBPsampler_run(data,varargin)
     D = size(data.X,2);
     N = size(data.X,1);
 
-    % initialize Z
+    % initialize Z if necessary
     if isempty(hidden)
         clearvars hidden
         hidden.Z = double(rand(N,2)>0.8);
@@ -47,7 +47,7 @@ function hidden = IBPsampler_run(data,varargin)
         end
     end
 
-    % replace missings + preprocess
+    % replace missings + preprocess categorical
     data.X(isnan(data.X)) = params.missing;
 
     % change labels for categorical and ordinal vars such that > 0

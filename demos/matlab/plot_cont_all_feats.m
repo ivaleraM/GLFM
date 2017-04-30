@@ -26,7 +26,7 @@ for k = params.bias+1:Kest
     if params.bias
         Zp(1) = 1; % bias
     end
-    X_F = IBPsampler_MAP(data.C, Zp, hidden, params);
+    X_F = IBPsampler_computeMAP(data.C, Zp, hidden, params);
     
     labels = data.ylabel;
     
@@ -58,7 +58,7 @@ elseif (length(varargin) == 1)
         Zp(1,:) = patterns(k,:);
         %Zp(2,:) = patterns(end,:); % reference
         
-        X_F = IBPsampler_MAP(data.C, Zp, hidden, params);
+        X_F = IBPsampler_computeMAP(data.C, Zp, hidden, params);
         
         labels = data.ylabel;
         

@@ -5,7 +5,7 @@ function x = f_n(y, mu, w)
         error('scaling factor should never be 0');
     end
     x = floor( log( exp(y) + 1 )./w + mu );
-    if sum(x == 0)>0 % TODO: verify if that would be a problem
-        warning('when transforming y to x, x has been rounded to zero (count data)');
-    end
+    %if sum(x == 0)>0 % TODO: verify if that would be a problem % DONE, OK
+    %    warning('when transforming y to x, x has been rounded to zero (count data)');
+    %end
 end

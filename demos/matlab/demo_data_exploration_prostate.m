@@ -71,7 +71,7 @@ end
 hidden.Z = Zini; % N*K matrix of feature assignments
 
 %% Inference
-hidden = IBPsampler_run(data, hidden, params);
+hidden = IBPsampler_infer(data, hidden, params);
 
 if params.save
     output_file = [savePath, sprintf('prostateRed_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%.2f.mat', ...
@@ -80,7 +80,7 @@ if params.save
 end
 
 %% Predict MAP estimate for the whole matrix X
-X_map = IBPsampler_MAP(data.C, hidden.Z, hidden, params);
+X_map = IBPsampler_computeMAP(data.C, hidden.Z, hidden, params);
 
 %% Plot Dimensions
 if ~params.save
@@ -100,5 +100,6 @@ if ~params.save
     Zp = Zp(1:min(5,Kest),:);
     leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
     
-    plot_all_dimensions(data, hidden, params, Zp, leg);
+    colors = []; styles = [];
+    plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles);
 end
