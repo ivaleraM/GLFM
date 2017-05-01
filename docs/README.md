@@ -33,7 +33,7 @@ where hidden is a structure of latent variables:
 and params is a structure containing all simulation parameters and model
     hyperparameters (see [description of structures](doc_struct.html) for further details).
 
-Check further [documentation](doc_matlab.html) for MATLAB functions.
+Check further documentation for available [MATLAB functions](doc_matlab.html).
 
 **Calling from Python**
 
@@ -85,6 +85,8 @@ In order to run GLFM on your data, you need to:
         * run command from terminal:
 
             python setup.py build_ext --inplace
+
+Check documented list of [problems at installation time](FAQ_errors.md) and how to solve them.
 
 Citation and contact
 --------------------
