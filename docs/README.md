@@ -65,23 +65,25 @@ Installation Instructions
 
 In order to run GLFM on your data, you need to:
 
-1) Download the latest git repository
-2) Install Anaconda, Cython, and a few additional libraries:
-    - Anaconda: https://www.continuum.io/downloads
-    - Library gsl: conda install gsl
-    - Cython: conda install -c anaconda cython=0.25.2
-    - Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
-    - cymsm library: conda install -c anaconda cymem=1.31.2
+1. Download the latest git repository
+2. Install Anaconda, Cython, and a few additional libraries:
+    * Anaconda: https://www.continuum.io/downloads
+    * Library gsl: conda install gsl
+    * Cython: conda install -c anaconda cython=0.25.2
+    * Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
+    * cymsm library: conda install -c anaconda cymem=1.31.2
 
-3) Compile the C++ code, either for MATLAB or for PYTHON
-    - For MATLAB:
-        - Add path 'Ccode' and its children to Matlab workspace
-        - From matlab command window, execute:
+3. Compile the C++ code, either for MATLAB or for PYTHON
+    * For MATLAB:
+        * Add path 'Ccode' and its children to Matlab workspace
+        * From matlab command window, execute:
+
             mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
-    - For PYTHON:
-        - Go to src/GLFMpython folder
-        - run command from terminal:
+    * For PYTHON:
+        * Go to src/GLFMpython folder
+        * run command from terminal:
+
             python setup.py build_ext --inplace
 
 Citation and contact
