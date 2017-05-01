@@ -39,13 +39,12 @@ where hidden is a structure of latent variables:
 and params is a structure containing all simulation parameters and model
     hyperparameters (see documentation for further details).
 
+Check further documentation for MATLAB functions [here](doc_matlab.html)
+
 Calling from Python
 -------------------
     import GLFM
     (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
-
-# print help message for required arguments
-python -m GLFM.infer --help
 
 ------------
 Requirements

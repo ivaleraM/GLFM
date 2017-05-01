@@ -44,9 +44,6 @@ Calling from Python
     import GLFM
     (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
 
-# print help message for required arguments
-python -m GLFM.infer --help
-
 ------------
 Requirements
 ------------
