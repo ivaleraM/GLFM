@@ -15,7 +15,7 @@ You can use GLFM from within Matlab or Python.
 Below we show an example of how to call GLFM for matrix completion and data
 exploration of a given dataset.
 
-## Calling from Matlab
+**Calling from Matlab**
 
     hidden = IBPsampler_run(data);
 
@@ -36,7 +36,7 @@ and params is a structure containing all simulation parameters and model
 
 Check further documentation for MATLAB functions [here](doc_matlab.html)
 
-## Calling from Python
+**Calling from Python**
 
     import GLFM
     (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)

@@ -1,7 +1,7 @@
 ## Documentation of available MATLAB functions
 -----------------------------------------------
 
-### function hidden = IBPsampler_infer(data,varargin)
+**function hidden = IBPsampler_infer(data,varargin)**
 
     % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     % Three possible calls:
