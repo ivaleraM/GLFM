@@ -1,5 +1,5 @@
- DOCUMENTATION MATLAB PACKAGE
- -----------------------------
+ Documentation of available MATLAB functions
+ -------------------------------------------
 
  ## function hidden = IBPsampler_infer(data,varargin)
 
@@ -46,7 +46,7 @@
     %       hidden: structure with latent parameters (same output as
     %       IBPsampler_infer function).
 
- function X_map = IBPsampler_computeMAP(C, Zp, hidden, params)
+# function X_map = IBPsampler_computeMAP(C, Zp, hidden, params)
 
     % Function to generate the MAP solution corresponding to patterns in Zp
     % Inputs:
@@ -66,7 +66,7 @@
     %   X_map: P*D matrix with MAP estimate
 
 
- function [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d)
+# function [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d)
 
     % Function to generate the PDF solutions corresponding to patterns in
     % Zp, and dimension d
