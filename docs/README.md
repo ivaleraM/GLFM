@@ -2,7 +2,6 @@
 General Latent Feature Model (GLFM) for matlab and python
 ---------------------------------------------------------
 
------------
 Description
 -----------
 
@@ -12,7 +11,6 @@ Python are provided.
 
 You can find some demos of GLFM in action in the demos folder.
 
-------------
 Quick start
 ------------
 
@@ -46,7 +44,6 @@ Calling from Python
     import GLFM
     (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
 
-------------
 Requirements
 ------------
 
@@ -62,16 +59,9 @@ For Python:
     - Cython 0.25.2 or higher
     - Libraries: cymsm, cython_gsl
 
---------------------------
 Installation Instructions
 --------------------------
 
-To use GLFM for the first time, follow the installation instructions on our
-project wiki.
-Once installed, please visit the Configuration wiki page to learn how to
-configure where data is saved and loaded from on disk.
-
---------------------------
 In order to run GLFM on your data, you need to:
 
 1) Download the latest git repository
@@ -93,14 +83,12 @@ In order to run GLFM on your data, you need to:
         - run command from terminal:
             python setup.py build_ext --inplace
 
---------
 Citation
 --------
 
 Please, cite it as detailed below:
 I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
--------
 Contact
 -------
 

@@ -1,8 +1,8 @@
-% -----------------------------
-% DOCUMENTATION MATLAB PACKAGE
-% -----------------------------
+ DOCUMENTATION MATLAB PACKAGE
+ -----------------------------
 
-%% function hidden = IBPsampler_infer(data,varargin)
+ function hidden = IBPsampler_infer(data,varargin)
+
     % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     % Three possible calls:
     %           hidden = IBPsampler_infer(data)
@@ -20,8 +20,9 @@
     %       hidden: hidden structure to initialize inference algorithm
     %             hidden.Z: feature assignment N*K matrix
     %       params: structure with sim. parameters and hyperparameters
- 
+
 function [Xcompl,hidden] = IBPsampler_complete(data,varargin)
+
     % Function to complete a matrix that has missing values
     % Possible calls:
     %           hidden = IBPsampler_infer(data)
@@ -43,8 +44,8 @@ function [Xcompl,hidden] = IBPsampler_complete(data,varargin)
     %   Output:
     %       Xcompl: N*D input matrix with imputed missing values
     %       hidden: structure with latent parameters (same output as
-    %       IBPsampler_infer function).  
- 
+    %       IBPsampler_infer function).
+
 %% function X_map = IBPsampler_computeMAP(C, Zp, hidden, params)
     % Function to generate the MAP solution corresponding to patterns in Zp
     % Inputs:
