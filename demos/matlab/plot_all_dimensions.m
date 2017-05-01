@@ -43,7 +43,7 @@ for d=idxD
         end
     end
     if ~isempty(colors)
-        for k=1:length(colors)
+        for k=1:size(h,1)
             if (data.C(d) == 'c') || (data.C(d) == 'o')
                 ll = k+1;
             else
@@ -53,7 +53,7 @@ for d=idxD
         end
     end
     if ~isempty(styles)
-        for k=1:length(styles)
+        for k=1:size(h,1)
             if isempty(styles{k})
                 continue;
             end

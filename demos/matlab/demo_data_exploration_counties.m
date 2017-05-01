@@ -21,7 +21,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % specify external transforms for certain dimensions
-idx_transform = [2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
+idx_transform = [2 4 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -49,7 +49,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 10; % Number of iterations for the gibbs sampler
+    params.Niter = 10000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 
@@ -114,7 +114,7 @@ if params.save
 end
 
 %% PLOT USA map and corresponding features
-if params.save
+if ~params.save
     
     for k=5:size(patterns,1)
         pat = patterns(k,:);
