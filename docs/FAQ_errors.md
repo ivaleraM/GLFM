@@ -1,3 +1,16 @@
+Frequently Asked Questions
+---------------------------
+
+**Which types of data can the GLFM handle?**
+
+This model is specially suitable to deal with very heterogeneous data. There are currently five types of data defined:
+
+* 'g': continuous real-valued
+* 'p': continuous positive real-valued
+* 'n': discrete count data
+* 'c': discrete categorical
+* 'o': discrete ordinal
+
 Documented Errors in MATLAB
 ----------------------------
 
