@@ -40,6 +40,8 @@ Check further documentation for available [MATLAB functions](doc_matlab.html).
     import GLFM
     (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
 
+Several optional parameters can be provided in the function call, check further documentation for available [PYTHON functions](doc_python.html).
+
 Requirements
 -------------
 
