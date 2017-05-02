@@ -1,7 +1,7 @@
 
 ## Documentation for MATLAB functions
 
-See complete description of [data structures](doc_struct.html)
+See complete description of [data structures](doc_struct.html).
 
 **function hidden = IBPsampler_infer(data,varargin)**
 
