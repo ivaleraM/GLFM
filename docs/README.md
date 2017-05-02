@@ -109,7 +109,7 @@ Please, cite it as detailed below:
 > I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
 For further information or contact:
-    * Isabel Valera: isabel.valera.martinez (at) gmail.com
-    * Melanie F. Pradier: melanie.fpradier (at) gmail.com
+* Isabel Valera: isabel.valera.martinez (at) gmail.com
+* Melanie F. Pradier: melanie.fpradier (at) gmail.com
 
 
