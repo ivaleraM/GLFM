@@ -14,19 +14,19 @@ function [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d)
     % Outputs:
     %   xd: 1*numS where numS is the number of points to be considered
     %  pdf: P*numS where P is the number of patterns to consider
-    
+
     data.X(isnan(data.X(:,d)),d) = params.missing;
-    
+
     % compute x-domain [mm MM] to compute pdf
     mm = min(data.X(data.X(:,d) ~= params.missing, d)); % min value
     MM = max(data.X(data.X(:,d) ~= params.missing, d)); % max value
-    
+
     if ~isempty(params.t{d}) % if there is an external transformation
         data.C(d) = params.ext_dataType{d};
         mm = params.t_1{d}(mm);
         MM = params.t_1{d}(MM);
     end
-    
+
     P = size(Zp,1);
     K = size(hidden.B,2);
     if (size(Zp,2) ~= K)
@@ -64,7 +64,7 @@ function [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d)
 %     elseif (data.C(d) == 'n')
 %         int = sum(pdf,2)
 %     end
-    
+
     if isfield(params,'t')
         if ~isempty(params.t{d}) % we have used a special transform beforehand
             xd = params.t{d}(xd); % if there was an additional external transformation, transform pdf

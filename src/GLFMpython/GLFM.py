@@ -22,7 +22,7 @@ def infer(Xin,Cin,Zin,bias=0, s2u=0.001, s2B=1.0,
                 N = number of observations
                 D = number of dimensions
         Cin: array indicating types of data ('g': real,'p': positive real-valued,
-            'c': categorical; 'o': ordinal; 'n': count data)
+            'c': categorical 'o': ordinal 'n': count data)
         Zin: initial feature activation matrix: K*N
                 K = number of latent dimensions
         bias: indicator of whether to include or not a bias
@@ -53,7 +53,7 @@ def infer(Xin,Cin,Zin,bias=0, s2u=0.001, s2B=1.0,
         maxK, missing, verbose)
     toc = timeI.time()
     time = tic - toc
-    print '\tElapsed: %.2f seconds.' % (toc-tic)
+    print '\tElapsed: #.2f seconds.' # (toc-tic)
     return (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out)
 
 def complete(Xmiss, C, bias=0, s2Y=1, s2u=1, s2B=1, alpha=1, Niter=50, missing=-1):
@@ -163,7 +163,7 @@ def computeMAP(C, Zp, hidden, params, idxsD=[]):
         d = idxsD[dd]
         # if params.has_key('t'): # if external transformations have been defined
         #     if len(params['t'][d]) > 0: # there is an external transform for data type d
-        #         C(d) = params.ext_dataType{d}; # set new type of data
+        #         C(d) = params.ext_dataType{d} # set new type of data
 
         if C[d] == 'g':
             X_map[:,d] = mf.f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) )
@@ -184,6 +184,57 @@ def computeMAP(C, Zp, hidden, params, idxsD=[]):
         #     if len(params['t'][d]) > 0: # there is an external transform for data type d
         #         X_map[:,d] = params['t'][d]( X_map[:,d] )
     return X_map
+
+def computePDF(data, Zp, B, s2y, missing_val=-1,  params, d):
+    """
+    Function to compute probability density function for dimension d
+    """
+    X[np.isnan(X[:,d]),d] = missing_val
+
+    # compute x-domain [mm MM] to compute pdf
+    mm = np.min(X[X[:,d] ~= missing_val, d]) # min value
+    MM = np.max(X[X[:,d] ~= params.missing, d]) # max value
+
+    if (len(params['t'][d]) == 0): # if there is an external transformation
+        C[d] = params['ext_dataType'][d]
+        mm = params['t_1'][d][mm]
+        MM = params['t_1'][d][MM]
+
+    P = Zp.shape[0]
+    K = B.shape[1]
+    assert (Zp.shape[1] == K), "Incongruent sizes between Zp and hidden.B"
+    if (C[d] == 'g') || (C[d] == 'p'):
+        if not(params.has_key('numS')):
+            numS = 100
+        xd = np.linspace(mm, MM, num=numS)
+    elseif (C[d] == 'n'):
+        xd = range(mm,MM+1)
+        numS = len(xd)
+    else:
+        xd = np.unique(X[X[:,d] ~= missing_val, d])
+        numS = length(xd) # number of labels for categories or ordinal data
+    pdf = np.zeros((P,numS))
+    for p in xrange(P):
+        if C[d] == 'g':
+            pdf[p,:] = mf.pdf_g(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params)
+        elif C[d] == 'p':
+            pdf[p,:] = mf.pdf_p(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params)
+        elif C[d] == 'n':
+            pdf[p,:] = mf.pdf_n(xd,Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d), hidden.s2Y(d), params)
+        elif C[d] == 'c':
+            pdf[p,:] = mf.pdf_c(Zp(p,:), squeeze(hidden.B(d,:,1:hidden.R(d))), hidden.s2Y(d))
+        elif C[d] == 'o':
+            pdf[p,:] = mf.pdf_o(Zp(p,:), squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)), hidden.s2Y(d))
+        else:
+                error('Unknown data type')
+        assert (np.sum(np.isnan(pdf)) == 0), "Some values are nan!"
+
+    if params.has_key('t'):
+        if len(params['t'] == 0: # we have used a special transform beforehand
+            xd = params['t'][d](xd) # if there was an external transformation, transform pdf
+            pdf = pdf .* np.abs( params['dt_1'][d](xd) )
+
+
 
 def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     """
@@ -226,7 +277,7 @@ def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
         Bdv = B[d,:,0]
         w = 2.0 / max(Xd[mask]) # TODO: put function handler
         pdf = mf.pdf_pos(xx,Zn,Bdv,w,s2Y,s2u,lambda x,w: mf.fpos_1(x,w), \
-                lambda x,w: mf.dfpos_1(x, w));
+                lambda x,w: mf.dfpos_1(x, w))
         plt.plot(xx,pdf)
 
     elif Cd == 'n':
