@@ -50,10 +50,16 @@ by
 
 ------------------------------
 
+**ERROR CYTHON.DISTUTILS**
+
+The following error occurs at compilation time when Cython has not been properly installed:
+
 > Traceback (most recent call last):
 >  File "setup.py", line 2, in <module>
 >      from Cython.Distutils import Extension
 >      ImportError: No module named Cython.Distutils
+
+Please install again Cython, following our [Installation Instructions](README.html)
 
 --------------------------
 
