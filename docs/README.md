@@ -90,15 +90,12 @@ In order to run GLFM on your data, you need to:
         sudo apt-get install libgmp3-dev
 
 3. Compile the C++ code, either for MATLAB or for PYTHON
-    * For MATLAB:
 
-You should add the path 'Ccode' and its children to Matlab workspace. Then, from matlab command window, execute:
+For MATLAB, you should add the path 'Ccode' and its children to Matlab workspace. Then, from matlab command window, execute:
 
     mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
-    * For PYTHON:
-
-Go to src/GLFMpython folder and execute the following command from terminal:
+For PYTHON, go to src/GLFMpython folder and execute the following command from terminal:
 
     python setup.py build_ext --inplace
 
