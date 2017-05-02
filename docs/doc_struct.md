@@ -1,6 +1,5 @@
 Description of all used structures. See full description of [available functions](doc_matlab.html) in MATLAB. See full description of [available functions](doc_python.html) in PYTHON.
 
-
 N: number of observations
 D: number of dimensions
 K: number of inferred latent features
