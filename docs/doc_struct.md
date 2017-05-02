@@ -1,4 +1,4 @@
-Description of all used structures in MATLAB
+Description of all used structures in MATLAB. See full description of [available functions](doc_matlab.html) in MATLAB.
 
 N: number of observations
 D: number of dimensions
