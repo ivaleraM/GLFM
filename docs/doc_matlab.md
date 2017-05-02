@@ -1,3 +1,4 @@
+[MATLAB functions](doc_matlab.html) | [PYTHON functions](doc_python.html) | [Demos](demos.html) | [FAQ](FAQ_errors.html)
 
 ## Documentation for MATLAB functions
 
