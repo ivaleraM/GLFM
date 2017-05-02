@@ -23,7 +23,6 @@ data.C = repmat('n',1,size(Xmiss,2)); % data type, here pixel values onsidered a
 
 %% Define parameter default values for algorithm
 params.bias = 1;        % bias feature (active for all obs. to capture mean effects)
-%params.s2Y = 0;         % variance noise for pseudo-obs. (inferred inside C++)
 params.s2B = 1;         % variance noise for feature matrix
 params.alpha = 10;      % concentration parameter for the Indian Buffet Process
 params.Niter = 10;      % number of iterations to train the GLFM model
@@ -31,10 +30,11 @@ params.maxK = 100;       % maximum number of latent features (for memory allocat
 params.missing = -100;  % values for missings
 
 %% INFERENCE
-hidden = IBPsampler_infer(data,[],params); % no need to initialize Z
-X_map = IBPsampler_computeMAP(data.C, hidden.Z, hidden, params);
 
-[Xcompl, hidden] = IBPsampler_complete(data,[],params); % no need to initialize Z
+[Xcompl, hidden] = GLFM_complete(data,[],params); % no need to initialize Z
+% Alternatively, we can compute the whole MAP solution X_map
+% hidden = GLFM_infer(data,[],params); % no need to initialize Z
+% X_map = GLFM_computeMAP(data.C, hidden.Z, hidden, params);
 
 %% Visualize random image
 idx = randi(N,1);

@@ -75,7 +75,7 @@ end
 hidden.Z = Zini; % N*D
 
 %% Inference
-hidden = IBPsampler_infer(data, hidden, params);
+hidden = GLFM_infer(data, hidden, params);
 
 if params.save
     output_file = sprintf( './results/counties_bias%d_simId%d_Niter%d_s2B%.2f_alpha%d.mat', ...
@@ -85,42 +85,41 @@ end
 
 %% Predict MAP estimate for each latent feature
 if ~params.save
-    X_map = IBPsampler_computeMAP(data.C, hidden.Z, hidden);
+    X_map = GLFM_computeMAP(data.C, hidden.Z, hidden);
 end
 
 %% Plot Dimensions
-
 if params.save
-    
+
     sum(hidden.Z)
     feat_toRemove = find(sum(hidden.Z) < N*0.03);
     hidden = remove_dims(hidden, feat_toRemove);
     hidden = sort_hidden(hidden);
     sum(hidden.Z)
-    
+
     [patterns, C] = get_feature_patterns(hidden.Z);
-    
+
     idxD = 2:size(data.X,2);
-    
+
     %Zp = patterns;
     %leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
-    
+
     Zp = eye(size(hidden.Z,2));
     leg = num2str(Zp);
     leg = mat2cell(leg, ones(size(hidden.Z,2),1), size(leg,2))';
-    
+
     colors = []; styles = [];
     plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles, idxD);
 end
 
 %% PLOT USA map and corresponding features
 if ~params.save
-    
+
     for k=5:size(patterns,1)
         pat = patterns(k,:);
         Zn = (C == k);
         %Zn = hidden.Z(:,k);
-        
+
         if (sum(Zn) < (size(data.X,1)*0.01))
             continue; % only plot patterns with more than 5% of number of obs.
         end
@@ -130,20 +129,18 @@ if ~params.save
         matlab2tikz(sprintf('./figs/counties_new/counties_map%d.tex', k));
         saveas(gca,sprintf('./figs/counties_new/counties_map%d.fig', k) );
     end
-    
+
     Zp = eye(size(hidden.Z,2));
     Zp(:,1) = 1;
     for k=1:size(Zp,1)
         pat = Zp(k,:);
         %Zn = (C == k);
         Zn = hidden.Z(:,k);
-        
+
         if (sum(Zn) < (size(data.X,1)*0.05))
             continue; % only plot patterns with more than 5% of number of obs.
         end
         plot_usa_map(data,Zn);
         title(sprintf('Activation of pattern (%s)',num2str(pat)));
     end
-    
-    %plot_cont_all_feats(data, hidden, params, patterns);
 end

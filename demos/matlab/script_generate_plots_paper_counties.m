@@ -7,6 +7,8 @@ addpath(genpath('/home/melanie/Documents/UC3M/Workspace/additional_software/matl
 load('./results/counties_bias1_simId2_Niter10000_s2B1.00_alpha1.mat')
 savepath = './figs/counties_bias1_mode2/';
 
+saveFigs = 1;
+
 %%
 sum(hidden.Z)
 feat_toRemove = find(sum(hidden.Z) < N*0.03);
@@ -74,18 +76,19 @@ for d=idxD
     else
         legend off;
     end
-    title('')
-    cleanfigure;
-    matlab2tikz([savepath, sprintf('dim%d.tex', d)] );
-    saveas(gca,[savepath, sprintf('dim%d.fig', d)] );
-    figurapdf(7,7)
-    print([savepath, sprintf('dim%d.pdf', d)],['-d','pdf'],'-r150');
+    if saveFigs
+        title('')
+        cleanfigure;
+        matlab2tikz([savepath, sprintf('dim%d.tex', d)] );
+        saveas(gca,[savepath, sprintf('dim%d.fig', d)] );
+        figurapdf(7,7)
+        print([savepath, sprintf('dim%d.pdf', d)],['-d','pdf'],'-r150');
+    end
 end
 %%
 for k=1:5%size(patterns,1)
     pat = patterns(k,:);
     Zn = (C == k);
-    
     if (sum(Zn) < (size(data.X,1)*0.01))
         continue; % only plot patterns with more than X% of number of obs.
     end
@@ -93,22 +96,26 @@ for k=1:5%size(patterns,1)
     if (k ~=3)
         colorbar off;
     end
-    %title(sprintf('Activation of pattern (%s)',num2str(pat)));
-    cleanfigure;
-    matlab2tikz([savepath, sprintf('clusters_map%d.tex', k)]);
-    saveas(gca,[savepath, sprintf('clusters_map%d.fig', k) ] );
-    figurapdf(7,7);
-    print([savepath, sprintf('clusters_map%d.pdf', k) ],['-d','pdf'],'-r150');
+    if saveFigs
+        %title(sprintf('Activation of pattern (%s)',num2str(pat)));
+        cleanfigure;
+        matlab2tikz([savepath, sprintf('clusters_map%d.tex', k)]);
+        saveas(gca,[savepath, sprintf('clusters_map%d.fig', k) ] );
+        figurapdf(7,7);
+        print([savepath, sprintf('clusters_map%d.pdf', k) ],['-d','pdf'],'-r150');
+    end
 end
 
-% for k=2:4
-%     Zn = (hidden.Z(:,k) == 1);
-%     plot_usa_map(data,Zn);
-%     if (k ~=4)
-%         colorbar off;
-%     end
-%     matlab2tikz([savepath, sprintf('features_map%d.tex', k)]);
-%     saveas(gca,[savepath, sprintf('features_map%d.fig', k) ] );
-%     figurapdf(7,7);
-%     print([savepath, sprintf('features_map%d.pdf', k) ],['-d','pdf'],'-r150');
-% end
+for k=2:4
+    Zn = (hidden.Z(:,k) == 1);
+    plot_usa_map(data,Zn);
+    if (k ~=4)
+        colorbar off;
+    end
+    if saveFigs
+        matlab2tikz([savepath, sprintf('features_map%d.tex', k)]);
+        saveas(gca,[savepath, sprintf('features_map%d.fig', k) ] );
+        figurapdf(7,7);
+        print([savepath, sprintf('features_map%d.pdf', k) ],['-d','pdf'],'-r150');
+    end
+end

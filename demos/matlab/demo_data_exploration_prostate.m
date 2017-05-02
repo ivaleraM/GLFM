@@ -20,7 +20,6 @@ data.cat_labels = data.cat_labels(idx_toKeep);
 data.ylabel = data.ylabel(idx_toKeep);
 data.ylabel_long = data.ylabel_long(idx_toKeep);
 
-
 %% DEFINE PARAMS (optional parameters for GLFM model)
 [N, D] = size(data.X);
 
@@ -36,7 +35,6 @@ for r=idx_transform
     params.dt_1{r} = @(x) 1./(x+1);  % derivative of inverse transform
     params.ext_dataType{r} = 'p';    % change type of data due to transformation
 end
-
 
 params.missing = -1;
 params.s2Y = 0;         % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
@@ -71,7 +69,7 @@ end
 hidden.Z = Zini; % N*K matrix of feature assignments
 
 %% Inference
-hidden = IBPsampler_infer(data, hidden, params);
+hidden = GLFM_infer(data, hidden, params);
 
 if params.save
     output_file = [savePath, sprintf('prostateRed_bias%d_simId%d_Niter%d_s2Y%.2f_s2B%.2f_alpha%.2f.mat', ...
@@ -80,26 +78,26 @@ if params.save
 end
 
 %% Predict MAP estimate for the whole matrix X
-X_map = IBPsampler_computeMAP(data.C, hidden.Z, hidden, params);
+X_map = GLFM_computeMAP(data.C, hidden.Z, hidden, params);
 
 %% Plot Dimensions
 if ~params.save
-    
+
     sum(hidden.Z)
     th = 0.03; % threshold to filter out latent features that are not significant
     feat_toRemove = find(sum(hidden.Z) < N*th); % filter features with insufficient number of obs. assigned
     hidden = remove_dims(hidden, feat_toRemove); % remove latent dimensions
-    
+
     sum(hidden.Z)
     [patterns, C] = get_feature_patterns(hidden.Z);
-    
+
     % choose patterns corresponding to activation of each feature
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
     Zp(:,1) = 1; % bias active
     Zp = Zp(1:min(5,Kest),:);
     leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
-    
+
     colors = []; styles = [];
     plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles);
 end

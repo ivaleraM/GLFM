@@ -24,11 +24,11 @@ sum(hidden.Z)
     hidden = remove_dims(hidden, feat_toRemove);
     sum(hidden.Z)
     [patterns, C] = get_feature_patterns_sorted(hidden.Z);
-    
+
     order = [1 5 4 3 2];
     hidden.Z = hidden.Z(:,order);
     hidden.B = hidden.B(:,order,:);
-    
+
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
     %Zp(3,1) = 1;
@@ -37,27 +37,27 @@ sum(hidden.Z)
     Zp = Zp(1:min(5,Kest),:);
     leg_tmp = num2str(Zp(:,2:end));
     leg_tmp = mat2cell(leg_tmp, ones(size(Zp,1),1), size(leg_tmp,2))';
-    
+
     leg = [{' Empirical'}, leg_tmp]; % ' F0',' F1', ' F2', ' F3', ' F4', ' F5'};
     colors = [ 0 102 255; ...
-            153 51  255; ...            
+            153 51  255; ...
             204 204 0; ...
             255 102  102; ...
             0   204 102];
     colors = colors ./ 255; %repmat(sum(colors,2),1,3);
     colors(3,:) = [0.9290    0.6940    0.1250];
     colors(5,:) = [0.4660    0.6740    0.1880];
-    
+
     % change order of colors
     colors = colors([1 2 4 3 5],:);
     %colors = colors([3 5 4 1 2],:);
-    
+
 %     colors = [  0    0.4470    0.7410; ...
 %         0.8500    0.3250    0.0980; ...
 %         0.9290    0.6940    0.1250; ...
 %         0.4940    0.1840    0.5560; ...
 %         0.4660    0.6740    0.1880];
-    
+
 Nhist = [100, 1000];
 for k=4:5
 figure(k); hold off;
@@ -75,7 +75,7 @@ set(gca,'xscale','log')
     for d=1:size(data.X,2)
             figure(d);
       %  subplot(2,1,1);
-        [xd, pdf] = IBPsampler_PDF(data, Zp, hidden, params, d);
+        [xd, pdf] = GLFM_PDF(data, Zp, hidden, params, d);
         if (data.C(d) == 'c') || (data.C(d) == 'o')
             mask = ~isnan(data.X(:,d));
             tmp = hist(data.X(mask,d), unique(data.X(mask,d)));
@@ -90,7 +90,7 @@ set(gca,'xscale','log')
                     h(k+1).EdgeColor = [0.4016 0 0]; %[0.8 0 0]; %'red';
                 end
             end
-            
+
         elseif (data.C(d) == 'n')
             h = stem(xd, pdf');
             for k=1:length(colors)
@@ -117,9 +117,9 @@ set(gca,'xscale','log')
         legend(leg);
         grid;
     end
-    
+
     sort(sum(hidden.Z),'descend')
-    
+
     for k=1:5
         figure(k);
         title('');
