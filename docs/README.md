@@ -66,37 +66,36 @@ In order to run GLFM on your data, you need to:
 2. Install the necessary libraries:
 
     * **For Python**
-        * Anaconda, Cython, and a few additional libraries:
         * Anaconda: https://www.continuum.io/downloads
-        * Cython:
+        * Cython: http://cython.org
+        * Libraries gsl, cython_gsl and cymsm
 
-    conda install -c anaconda cython=0.25.2
+    Once Anaconda is available, you can directly install all the rest as:
 
-        * Libraries gsl, cython_gsl and cymsm:
-
-    conda install gsl
-    conda install -c pesoto cython_gsl=1.0.0
-    conda install -c anaconda cymem=1.31.2
+        conda install -c anaconda cython=0.25.2
+        conda install gsl
+        conda install -c pesoto cython_gsl=1.0.0
+        conda install -c anaconda cymem=1.31.2
 
     * **For Matlab**
-        * GSL library, (in Ubuntu)
+        * GSL library
+        * GMP library
 
-    sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
+    In Ubuntu, these libraries can be easily installed executing from a terminal:
 
-        * GMP library, (in Ubuntu)
-
-    sudo apt-get install libgmp3-dev
+        sudo apt-get install libgsl0ldbl
+            OR
+        sudo apt-get install libgsl0-dev
+        sudo apt-get install libgmp3-dev
 
 3. Compile the C++ code, either for MATLAB or for PYTHON
     * For MATLAB:
-        * Add path 'Ccode' and its children to Matlab workspace
-        * From matlab command window, execute:
+    You should add the path 'Ccode' and its children to Matlab workspace. Then, from matlab command window, execute:
 
     mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
     * For PYTHON:
-        * Go to src/GLFMpython folder
-        * run command from terminal:
+    Go to src/GLFMpython folder and execute the following command from terminal:
 
     python setup.py build_ext --inplace
 
