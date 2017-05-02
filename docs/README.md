@@ -1,5 +1,7 @@
 [MATLAB functions](doc_matlab.html) | [PYTHON functions](doc_python.html) | [Demos](demos.html) | [FAQ](FAQ_errors.html)
 
+[Graphical Model](model.pdf)
+
 Description
 -----------
 
