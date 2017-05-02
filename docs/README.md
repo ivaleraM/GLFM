@@ -41,23 +41,18 @@ Check further documentation for available [MATLAB functions](doc_matlab.html).
     (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
 
 Requirements
-------------
+-------------
 
 * For Matlab:
     * Matlab 2012b or higher
-    * GSL library,
-        In UBUNTU:
-
-           sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
-
-    * GMP library,
-        In UBUNTU:
-
-            sudo apt-get install libgmp3-dev
+    * MEX environment (to compile C++ from Matlab terminal)
+    * C++ compiler (typically already installed)
+    * Libraries: gsl, gmp
 
 * For Python:
     * Python 2.7 or higher
     * Cython 0.25.2 or higher
+    * C++ compiler (typically already installed)
     * Libraries: cymsm, cython_gsl
 
 Installation Instructions
@@ -66,12 +61,29 @@ Installation Instructions
 In order to run GLFM on your data, you need to:
 
 1. Download the latest git repository
-2. Install Anaconda, Cython, and a few additional libraries:
-    * Anaconda: https://www.continuum.io/downloads
-    * Library gsl: conda install gsl
-    * Cython: conda install -c anaconda cython=0.25.2
-    * Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
-    * cymsm library: conda install -c anaconda cymem=1.31.2
+2. Install the necessary libraries:
+
+    * **For Python**
+        * Anaconda, Cython, and a few additional libraries:
+        * Anaconda: https://www.continuum.io/downloads
+        * Cython:
+
+            conda install -c anaconda cython=0.25.2
+
+        * Libraries gsl, cython_gsl and cymsm:
+
+            conda install gsl
+            conda install -c pesoto cython_gsl=1.0.0
+            conda install -c anaconda cymem=1.31.2
+
+    * **For Matlab**
+        * GSL library, (in Ubuntu)
+
+            sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
+
+        * GMP library, (in Ubuntu)
+
+            sudo apt-get install libgmp3-dev
 
 3. Compile the C++ code, either for MATLAB or for PYTHON
     * For MATLAB:
@@ -94,7 +106,8 @@ Citation and contact
 Please, cite it as detailed below:
 > I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
-For further information or contact: Isabel Valera at
-isabel.valera.martinez@gmail.com or Melanie F. Pradier at melanie.fpradier@gmail.com
+For further information or contact:
+    * Isabel Valera: isabel.valera.martinez (at) gmail.com
+    * Melanie F. Pradier: melanie.fpradier (at) gmail.com
 
 
