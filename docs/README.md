@@ -1,4 +1,4 @@
-[Data structures](doc_struct.md) | [MATLAB functions](doc_matlab.html) | [PYTHON functions](doc_matlab.html) | [FAQ](FAQ_errors.html)
+[Data structures](doc_struct.md) | [MATLAB functions](doc_matlab.html) | [PYTHON functions](doc_matlab.html) | [Demos](demos.html) | [FAQ](FAQ_errors.html)
 
 Description
 -----------
