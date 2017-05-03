@@ -12,7 +12,7 @@ function params = init_default_params(data, params)
     if ~isfield(params,'Niter'), params.Niter = 1000; end % number of iterations to run
     if ~isfield(params,'maxK'), params.maxK = size(data.X,2); end % max number of latent features for memory allocation inside C++ routine
     if ~isfield(params,'verbose'), params.verbose = 1; end % plot info in command line
-    %if ~isfield(params,'save'), params.save = 0; end % if =1, save results
+    if ~isfield(params,'numS'), params.numS = 100; end % number of points to plot in PDF
 
     % parameters for optional external transformation
     if ~isfield(params,'t'), params.t = cell(1,size(data.X,2) ); end % eventual external transform of obs. X = params.t{d}(Xraw)

@@ -15,6 +15,11 @@ function [xd, pdf] = GLFM_computePDF(data, Zp, hidden, params, d)
     %   xd: 1*numS where numS is the number of points to be considered
     %  pdf: P*numS where P is the number of patterns to consider
 
+    %if (length(varargin) > 1)
+    %    error('Too many input parameters');
+    %elseif (length(varargin) == 1)
+    %    numS = varargin{1};
+    %end
     data.X(isnan(data.X(:,d)),d) = params.missing;
 
     % compute x-domain [mm MM] to compute pdf
