@@ -140,7 +140,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
        int Kdel=0;
        for (int k=0; k<K;k++){
            if (nest[k]==0 && K-Kdel>1){
-                printf("K= %d",K);
+                //printf("K= %d\n",K);
                 Kdel++;
                 flagDel=1;
                 for (int kk=k; kk<K-1; kk++){
