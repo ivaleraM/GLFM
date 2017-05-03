@@ -101,7 +101,7 @@ print 'Visualizing ground truth example'
 f, ((ax1, ax2, ax3)) = plt.subplots(1, 3, sharex='col', sharey='row')
 V = [ax1, ax2, ax3]
 # Reshape the array into 28 x 28 array (2-dimensional array)
-idx_ran = np.random.randint(0,Xmiss.shape[1])
+idx_ran = np.random.randint(0,data['X'].shape[0])
 
 pixels = Xtrue[:,idx_ran]
 pixels = np.array(pixels, dtype='uint8')
@@ -110,18 +110,18 @@ pixels = pixels.reshape((28, 28))
 V[0].imshow(pixels, cmap='gray',interpolation='none')
 
 print 'Visualizing a single example with missing...'
-pixels = Xmiss[:,idx_ran]
+pixels = data['X'][idx_ran,:]
 pixels = np.array(pixels, dtype='uint8')
 pixels = pixels.reshape((28, 28))
 V[1].imshow(pixels, cmap='gray',interpolation='none')
 
 print 'Visualizing a single example without missing...'
-pixels = Xcompl[:,idx_ran]
+pixels = Xcompl[idx_ran,:]
 pixels = np.array(pixels, dtype='uint8')
 pixels = pixels.reshape((28, 28))
 # Plot
 V[2].imshow(pixels, cmap='gray',interpolation='none')
-plt.ion() # interactive mode for plotting (script continues)
+#plt.ion() # interactive mode for plotting (script continues)
 plt.show()
 plt.pause(0.0001)
 
