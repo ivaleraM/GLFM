@@ -1,4 +1,4 @@
-function X_map = IBPsampler_computeMAP(C, Zp, hidden, params, varargin)
+function X_map = GLFM_computeMAP(C, Zp, hidden, params, varargin)
     % Function to generate the MAP solution corresponding to patterns in Zp
     % Inputs:
     %   C: 1*D string with data types, D = number of dimensions

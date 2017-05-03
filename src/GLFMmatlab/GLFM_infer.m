@@ -56,7 +56,7 @@ function hidden = IBPsampler_infer(data,varargin)
         end
     end
 
-    % replace missings + preprocess categorical
+    % replace missings
     data.X(isnan(data.X)) = params.missing;
 
     % change labels for categorical and ordinal vars such that > 0
@@ -77,11 +77,14 @@ function hidden = IBPsampler_infer(data,varargin)
         end
     end
 
+    func = 1*ones(1,size(data.X,2)); % type of internal transformation for positive real-valued data
+
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w s2Y]= IBPsampler(data.X,data.C, hidden.Z, params.bias,params.func, ...
+    [Z B theta mu w s2Y]= IBPsampler(data.X,data.C, hidden.Z, params.bias, func, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
+    fprintf('Elapsed time %.2f seconds.', num2str(hidden.time) );
 
     %% prepare output structure
     hidden.Z = Z'; % it returns a K*N matrix, should be inverted

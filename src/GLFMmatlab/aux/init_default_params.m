@@ -12,10 +12,9 @@ function params = init_default_params(data, params)
     if ~isfield(params,'Niter'), params.Niter = 1000; end % number of iterations to run
     if ~isfield(params,'maxK'), params.maxK = size(data.X,2); end % max number of latent features for memory allocation inside C++ routine
     if ~isfield(params,'verbose'), params.verbose = 1; end % plot info in command line
-    if ~isfield(params,'save'), params.save = 0; end % if =1, save results
+    %if ~isfield(params,'save'), params.save = 0; end % if =1, save results
 
     % parameters for optional external transformation
     if ~isfield(params,'t'), params.t = cell(1,size(data.X,2) ); end % eventual external transform of obs. X = params.t{d}(Xraw)
     if ~isfield(params,'t_1'), params.t_1 = cell(1,size(data.X,2) ); end % inverse transform
     if ~isfield(params,'dt_1'), params.dt_1 = cell(1,size(data.X,2) ); end % derivative of the inverse transform
-    if ~isfield(params,'func'), params.func = 1*ones(1,size(data.X,2)); end % type of internal transformation for positive real-valued data

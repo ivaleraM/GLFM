@@ -1,4 +1,4 @@
-function [Xcompl,hidden] = IBPsampler_complete(data,varargin)
+function [Xcompl,hidden] = GLFM_complete(data,varargin)
     % Function to complete a matrix that has missing values
     % Possible calls:
     %           hidden = IBPsampler_infer(data)
@@ -38,10 +38,16 @@ function [Xcompl,hidden] = IBPsampler_complete(data,varargin)
             error('Incorrect number of input parameters: should be 1, 2 or 3');
     end
 
+    if (sum(isnan(data.X(:)) || data.X(:) == params.missing) == 0)
+        prinf('The input matrix X has no missing values to complete.')
+        Xcompl = []
+        return
+    end
+
     % Run inference
     hidden = IBPsampler_infer(data,hidden,params);
 
-    % just in case there is any missing
+    % just in case there is any nan (also considered as missing)
     data.X(isnan(data.X)) = params.missing;
 
     [xx_miss, yy_miss] = find(data.X == params.missing);

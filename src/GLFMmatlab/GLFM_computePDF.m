@@ -1,4 +1,4 @@
-function [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d)
+function [xd, pdf] = GLFM_computePDF(data, Zp, hidden, params, d)
     % Function to generate the PDF solutions corresponding to patterns in
     % Zp, and dimension d
     % Inputs:
