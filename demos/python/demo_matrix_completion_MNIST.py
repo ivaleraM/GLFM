@@ -64,6 +64,25 @@ mask_missing = np.random.rand(Xtrue.shape[0],Xtrue.shape[1]) < perc_missing
 Xmiss = np.copy(Xtrue)
 Xmiss[mask_missing] = missing_val
 
+# In[ ]:
+
+# ---------------------------------------------
+# 3. CREATING DATA STRUCTURES
+# ---------------------------------------------
+print 'Creating data structures...'
+
+data = dict()
+hidden = dict()
+params = dict()
+
+data['X'] = Xmiss.transpose()
+data['C'] = C
+
+Kinit = 20
+hidden['Z'] = np.random.randint(0,2,size=(N,Kinit)).astype('float64')
+
+params['missing'] = -100
+params['Niter'] = 10
 
 # In[ ]:
 
@@ -71,12 +90,7 @@ Xmiss[mask_missing] = missing_val
 # 4. RUN ALGORITHM
 # ---------------------------------------------
 print 'Complete matrix...'
-Kinit = 20
-Z = np.random.randint(0,2,size=(Kinit,N)).astype('float64')
-
-#(Z_out,B_out,Theta_out) = GLFM.infer(Xmiss,C,Z)
-Xcompl = GLFM.complete_matrix(Xmiss, C, Niter=100, missing=missing_val) #, bias=0, s2Y=1, s2B=1, alpha=1, Niter=50, missing=-1)
-
+Xcompl = GLFM.complete(data, hidden, params)
 
 # In[ ]:
 

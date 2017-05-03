@@ -6,6 +6,8 @@ from cymem.cymem cimport Pool
 import numpy as np
 cimport numpy as np
 
+import pdb
+
 # declare the interface to the C code
 #cdef extern void c_multiply (double* array, double value, int m, int n)
 cdef extern from "stdio.h":
@@ -70,7 +72,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
                features, and maxR is the maximum number of categories
         Z_out: activation matrix: np.arry of dimensions (Kest,N) where Kest is
                the number of inferred latent features, and N = number of obs.
-        Theta_out: auxiliary variables for ordinal variables, ndarray of size
+        theta_out: auxiliary variables for ordinal variables, ndarray of size
                    (D,maxR) where D = nr. of dimensions, maxR = max nr. of
                    categories
     """
@@ -133,22 +135,24 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
         print "maxR = %d" % maxR
 
     ##...............Inference Function.......................##
-    print '\Entering C++: Running Inference Routine...\n'
+    print '\nEntering C++: Running Inference Routine...\n'
     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
             <int*> R.data, &Fin[0], &mu[0], &w[0],\
             maxR, bias,  N, D, K, alpha, s2B, &s2Y[0], s2u, maxK, Nsim);
-    print 'Back to Python: OK\n'
+    print '\nBack to Python: OK\n'
+
+    #print "w[0]=%.2f, w[1]=%.2f\n" % (float(w[0]), float(w[1]))
 
     ##...............Set Output Pointers.......................##
     cdef np.ndarray[double, ndim=2] Z_out = np.zeros((Kest,N))
     cdef np.ndarray[double, ndim=3] B_out = np.zeros((D,Kest,maxR))
-    cdef np.ndarray[double, ndim=2] Theta_out = np.zeros((D,maxR))
-#    cdef np.ndarray[double, ndim=1] Mu_out = np.zeros(D)
-#    cdef np.ndarray[double, ndim=1] W_out = np.zeros(D)
-#    cdef np.ndarray[double, ndim=1] s2Y_out = np.zeros(D)
+    cdef np.ndarray[double, ndim=2] theta_out = np.zeros((D,maxR))
+    #cdef np.ndarray[double, ndim=1] mu_out = np.zeros(D)
+    #cdef np.ndarray[double, ndim=1] w_out = np.zeros(D)
+    #cdef np.ndarray[double, ndim=1] s2Y_out = np.zeros(D)
 
     if verbose:
-        print "Kest=%d, N=%d" % (Kest,N)
+        print "Kest=%d, N=%d\n" % (Kest,N)
 
     # #Zview = gsl_matrix_submatrix(Z, 0, 0, Kest, N)
     #print 'N=%d, K=%d, Kest=%d' % (N,K,Kest)
@@ -185,10 +189,24 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
     for d in xrange(D):
         for i in xrange(maxR):
             if (C[d]=='o' and i<(R[d]-1)):
-                Theta_out[d,i] = gsl_vector_get(theta[d],i)
+                theta_out[d,i] = gsl_vector_get(theta[d],i)
     if verbose:
-        print "Theta_out loaded"
+        print "theta_out loaded"
 
+#    for d in xrange(D):
+#        mu_out[d] = gsl_vector_get(mu,d)
+#    if verbose:
+#        print "mu_out loaded"
+#
+#    for d in xrange(D):
+#        w_out[d] = gsl_vector_get(w,d)
+#    if verbose:
+#        print "w_out loaded"
+#
+#    for d in xrange(D):
+#        s2Y_out[d] = gsl_vector_get(s2Y,d)
+#    if verbose:
+#        print "s2Y_out loaded"
 
     ##..... Free memory.....##
     for d in xrange(D):
@@ -197,7 +215,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
             gsl_vector_free(theta[d])
     gsl_matrix_free(Z)
 
-    return (Z_out,B_out,Theta_out,mu, w, s2Y)
+    return (Z_out,B_out,theta_out,mu, w, s2Y)
 
 #    cdef gsl_vector_view Xd_view
 #    for d in xrange(D):

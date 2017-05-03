@@ -14,15 +14,15 @@ import pdb
 def f_g(y, mu, w):
     # Mapping function for real-valued data
     #  Y -> X (from pseudo-obversations to data)
-    assert (w == 0), 'scaling factor should never be 0'
-    x = y./w + mu;
+    assert not(w == 0), 'scaling factor should never be 0'
+    x = (y*1.0)/w + mu;
     return x
 
 def f_p(y, mu, w):
     # transformation function for positive data
     # Y -> X (from pseudo-obversations to data)
     assert (w == 0), 'scaling factor should never be 0'
-    x = np.log( np.exp(y) + 1 )./w + mu
+    x = np.log( np.exp(y) + 1 )*1.0/w + mu
     return x
 
 def f_c(y):
@@ -30,7 +30,7 @@ def f_c(y):
     # input argument y: [N*R]
     # output: x [N*1]
     x = np.zeros((y.shape[0],1))
-    for n=1 in xrange(y.shape[0]):
+    for n in xrange(y.shape[0]):
         val = max(y[n,:])
         x[i] = np.where(y[n,:] == val)[0][0]
     # [a,x] = max(y,[],2);
@@ -51,7 +51,7 @@ def f_o(y, theta):
     #       y: [1*R] Pseudo-observations
     #   theta: [1*(R-1)] Thresholds that divide the real line into R regions
     x = np.zeros((y.shape[0],y.shape[1])) # column vector
-    for j=0 in xrange(len(theta)):
+    for j in xrange(len(theta)):
         if (j == 0):
             mask = (y <= theta[0])
         else:
@@ -67,27 +67,27 @@ def f_o(y, theta):
     #        x = r+1
     return x
 
-def y = f_g_1(x, mu, w):
+def f_g_1(x, mu, w):
     # transformation function for real-valued data
     # X -> Y (from data to pseudo-obversations)
     assert (w == 0), 'scaling factor should never be 0'
     y = w * (x - mu)
     return y
 
-def y = f_n_1(x, mu, w):
+def f_n_1(x, mu, w):
     # transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
     y = f_p_1(x, mu, w)
     return y
 
-def y = f_p_1(x, mu, w):
+def f_p_1(x, mu, w):
     # transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
     assert (w == 0), 'scaling factor should never be 0'
     y = np.log( np.exp(w*(x-mu) - 1) )
     return y
 
-def y = df_p_1(x, mu, w):
+def df_p_1(x, mu, w):
     # derivative of transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
     assert (w == 0), 'scaling factor should never be 0'
@@ -112,19 +112,19 @@ def y = df_p_1(x, mu, w):
 # Functions to compute pdf values
 # ------------------------------------------
 
-def pdf_g(X,Zn,Bd,mu,w, s2y, s2u):
+def pdf_g(X,Zp, B,mu , w, s2y, s2u):
     # Probability Density Function for real variables
     # Inputs:
     #   X: observations (dimensions?)
-    #   Zn: 1*K array
-    #   Bd: 1*K array
+    #   Zp: 1*K array
+    #   B: K*D array
     #  s2y: noise variance for pseudo-observations (scalar)
     #  s2u: auxiliary noise variance (scalar)
-    df_1 = @(x) w*(x-mu)
-    pdf = norm.pdf( df_1(X) , np.inner(Zn,Bd) , np.sqrt(s2y + s2u)*w )
+    df_1 = lambda x: w*(x-mu)
+    pdf = norm.pdf( df_1(X) , np.dot(Zp,Bd) , np.sqrt(s2y + s2u)*w )
     return pdf
 
-def pdf_cat(Zn,B,s2y,numMC_samples=100):
+def pdf_c(Zn,B,s2y,numMC_samples=100):
     # Function to compute pdf of an ordinal variable. It returns the whole
     # pdf, a probability vector of length R (number of categories)
     # Input parameters:

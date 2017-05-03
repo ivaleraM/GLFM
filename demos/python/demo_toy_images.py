@@ -1,6 +1,3 @@
-
-# coding: utf-8
-
 # # Introduction to the General Latent Feature Model (GLFM)
 # # DEMO_TOY_IMAGES
 
@@ -15,6 +12,7 @@ import sys
 sys.path.append('../../src/GLFMpython/')
 import GLFM
 
+import pdb
 
 # In[2]:
 
@@ -50,9 +48,9 @@ s2x = 1            # noise variance for the observations
 
 print '\tGenerating data with N=%d and noise variance s2x=%.2f' % (N,s2x)
 # generate matrix Z
-Ztrue = np.random.randint(0,2,size=(K,N)).astype('float64')
+Ztrue = np.random.randint(0,2,size=(N,K)).astype('float64')
 # Next line generates the toy database
-X = np.sqrt(s2x) * np.random.randn(D,N) + np.inner(Btrue.transpose(),Ztrue.transpose())
+X = np.sqrt(s2x) * np.random.randn(N,D) + np.inner(Ztrue, Btrue.transpose())
 
 
 # In[3]:
@@ -64,45 +62,52 @@ X = np.sqrt(s2x) * np.random.randn(D,N) + np.inner(Btrue.transpose(),Ztrue.trans
 print '\n 2. INITIALIZATION\n'
 
 print '\tInitializing Z...'
-Kinit = 1 # initial number of latent features
-Z = np.random.randint(0,2,size=(Kinit,N)).astype('float64')
+hidden = dict()
+Kinit = 2 # initial number of latent features
+hidden['Z'] = np.random.randint(0,2,size=(N,Kinit)).astype('float64')
 
 print '\tInitialization of variables needed for the GLFM model...'
-C = np.tile('g',(1,X.shape[0]))[0].tostring() # vector to indicate datatype of each dimension
+data = dict()
+data['X'] = X
+data['C'] = np.tile('g',(1,X.shape[1]))[0].tostring() # datatype vector
 
-Niter = 100  # number of algorithm iterations
+# params is optional
+params = dict()
+params['Niter'] = 10000 # number of algorithm iterations
+params['s2u'] = 0.005 # auxiliary noise variance
+params['maxK'] = 10
 
 # In[4]:
 
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
-print '\tInfering latent features...'
-(Z_out,B_out,Theta_out,mu_out,w_out,s2y_out) = GLFM.infer(X,C,Z,Nsim=Niter, s2u=0.005, maxK=10)
-
+print '\tInfering latent features...\n'
+hidden = GLFM.infer(data, hidden, params)
 
 # In[5]:
 
 # ---------------------------------------------
 # 4. PROCESS RESULTS
 # ---------------------------------------------
-Kest = B_out.shape[1] # number of inferred latent features
-D = B_out.shape[0]    # number of dimensions
+Kest = hidden['B'].shape[1] # number of inferred latent features
+D = hidden['B'].shape[0]    # number of dimensions
 
 print '\tPrint inferred latent features...'
 f, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = plt.subplots(3, 3, sharex='col', sharey='row')
 V = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]
-for k in xrange(B_out.shape[1]):
+for k in xrange(hidden['B'].shape[1]):
     if k>len(V):
         break;
 
     # visualize each inferred dimension
     Zp = np.zeros(Kest)
     Zp[k] = 1.0
-    Bpred = GLFM.predict(X,C,Zp,B_out,Theta_out) # MAP prediction for each dimension d, X necessary to know suffStats
-    B_out[:,k]
-    pixels = B_out[:,k].reshape((int(np.sqrt(D)),int(np.sqrt(D))))
-    pixels
+
+    #hidden['B'][:,k]
+    #pixels = hidden['B'][:,k].reshape((int(np.sqrt(D)),int(np.sqrt(D))))
+    Bpred = GLFM.computeMAP(data['C'],Zp, hidden) # MAP prediction for each dim d
+    pixels = Bpred.reshape((int(np.sqrt(D)),int(np.sqrt(D))))
     # Plot
     V[k].imshow(pixels, cmap='gray',interpolation='none')
     V[k].set_ylim(0,5)

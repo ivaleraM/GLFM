@@ -13,29 +13,31 @@ print('\n\n# -------------------------------------------------')
 print('# SCRIPT TO CHECK CALL TO GLFM LIBRARY')
 print('# -------------------------------------------------\n')
 
-Z = np.array([[1.0,0],[1,1],[1,1]]) # dimensions (N,K)
-X = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 3, 4.1, 4]]) # (N,D)
-C = 'goGN'
-#W = 2.0 / np.max(X,0)
+data = dict()
+data['X'] = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 3, 4.1, 4]]) # (N,D)
+data['C'] = 'goGN'
+
+hidden = dict()
+hidden['Z'] = np.array([[1.0,0],[1,1],[1,1]]) # dimensions (N,K)
 
 print 'First, in Python'
-print X
-print Z
-
-X2 = np.ascontiguousarray(X.transpose())
-Z2 = np.ascontiguousarray(Z.transpose())
+print data['X']
+print hidden['Z']
 
 print '\nNow, inside C\n'
-(Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out) = GLFM.infer(X2,C,Z2)
+hidden = GLFM.infer(data,hidden)
 
 print '\nBack to Python\n'
-print Z_out
+print hidden['Z']
 print "\n"
-print B_out
+print hidden['B']
 print "\n"
-print Theta_out
+print hidden['theta']
+print hidden['mu']
+print hidden['w']
+print hidden['s2Y']
 
-print('\n\n# -------------------')
+print('\n# -------------------')
 print "# SUCCESSFUL"
 print('# -------------------')
 
