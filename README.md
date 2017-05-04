@@ -15,11 +15,17 @@ GLFM Description
 
 GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables. The GLFM assumes that an observation matrix can be explained by a low-rank matrix factorization, such that:
 
+<p align="center">
+  <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/matrix_factorization.png" width="350"/>
+</p>
+![alt text](https://github.com/ivaleraM/GLFM/blob/master/figures/matrix_factorization.png)
+
+where f
 
 
 The builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), to account for an infinite number of (binary) latent variables. 
 
-![alt text](https://github.com/ivaleraM/GLFM/blob/master/figures/matrix_factorization.png)
+
 
 ------------
 GLFM Toolbox
