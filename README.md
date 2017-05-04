@@ -10,19 +10,13 @@ To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
------------------
 GLFM Description
 -----------------
 
 GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables.
 
-
------------------
-GLFM Toolbox
------------------
-
-
-Quick start
+------------
+GLFM Toolbox: Quick start
 ------------
 
 You can use GLFM from within Matlab or Python.
@@ -72,6 +66,7 @@ where hidden is a structure of latent variables:
 and params is a structure containing all simulation parameters and model
     hyperparameters (see documentation for further details).
 
+------------
 Requirements
 ------------
 
@@ -87,7 +82,7 @@ For Python:
     - Cython 0.25.2 or higher
     - Libraries: cymsm, cython_gsl
 
-
+--------------------------
 Installation Instructions
 --------------------------
 
