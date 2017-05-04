@@ -30,7 +30,6 @@ where every attribute of in the observation matrix might correspond to a continu
 	1. Categorical data, i.e., the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
 	2. Ordinal data, i.e., the attribute takes values in a finite ordered set, e.g., {‘never’,‘sometimes’, ‘often’, ‘usually’, ‘always’}.
 	3. Count data, i.e., the attribute takes values in the set {0,...,∞}.
-
 Moreover, since the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), it accounts for an infinite number of binary latent variables. As an example, a real-valued attribute can be represented using the GLFM as
 
 <p align="center">
