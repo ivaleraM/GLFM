@@ -1,4 +1,3 @@
----------------------------------------------------------
 GLFM: General Latent Feature Modeling toolbox for matlab and python
 ---------------------------------------------------------
 
@@ -10,10 +9,11 @@ To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
+-----------------
 GLFM Description
 -----------------
 
-GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables.
+GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables. The GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), to account for an infinite number of (binary) latent variables. 
 
 ------------
 GLFM Toolbox
