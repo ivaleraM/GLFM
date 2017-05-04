@@ -3,7 +3,7 @@ GLFM: General Latent Feature Modeling toolbox for matlab and python
 
 This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
 observations. The core code is in C++. User interfaces in both Matlab and
-Python are provided. Moreover, several demos are provided to illustrate different applications of the GLFM.
+Python are provided. Moreover, several demos are provided to illustrate different applications, including missing data estimation and data exploratory analysis, of the GLFM.
 
 To cite this work, please use
 
@@ -135,6 +135,13 @@ In order to run GLFM on your data, you need to:
         - Go to src/GLFMpython folder
         - run command from terminal:
             python setup.py build_ext --inplace
+
+------------
+GLFM Demos
+------------
+The folder `demos' contains scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
+
+As an example, the script `demo_data_exploration_toyImages'
 
 
 -------
