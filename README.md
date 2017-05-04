@@ -20,12 +20,15 @@ GLFM is a general Bayesian nonparametric latent feature model suitable for heter
 </p>
 
 
-where f
+where every attribute of in the observation matrix might correspond to a continuous or discrete variable, and f() is a transformation function that maps the real numbers to the observation space of each attribute.  The GLFM accounts for real-valued and positive real-valued as examples of continuous variables, and categorical, ordinal and count data as examples of discrete variables. Moreover, since the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), it accounts for an infinite number of binary latent variables. 
 
+As an example, a real-valued attribute can be represented using the GLFM as
 
-The builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), to account for an infinite number of (binary) latent variables. 
+<p align="center">
+  <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/GaussianIBP.png" width="550"/>
+</p>
 
-
+For more details on the GLMF, please rever to our paper. 
 
 ------------
 GLFM Toolbox
