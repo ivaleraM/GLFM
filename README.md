@@ -6,11 +6,9 @@ General Latent Feature Model (GLFM) for matlab and python
 Description
 -----------
 
-This code implements inference for an Indian Buffet process with heterogeneous
+This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
 observations. The core code is in C++. User interfaces in both Matlab and
-Python are provided.
-
-You can find some demos of GLFM in action in the demos folder.
+Python are provided. Moreover, several demos are provided to illustrate different applications of the GLFM.
 
 ------------
 Quick start
@@ -22,7 +20,7 @@ exploration of a given dataset.
 
 Calling from Matlab
 -------------------
-    hidden = IBPsampler_run(data);
+    hidden = GLFM_infer(data);
 
 where data is a structure containing:
     X: N*D observation matrix of N samples and D dimensions
@@ -30,9 +28,9 @@ where data is a structure containing:
 
 --- Alternative calls ---
 
-    hidden = IBPsampler_run(data, hidden);
+    hidden = GLFM_infer(data, hidden);
 OR
-    hidden = IBPsampler_run(data, hidden, params);
+    hidden = GLFM_infer(data, hidden, params);
 
 where hidden is a structure of latent variables:
     Z: N*K binary matrix of feature assignments (initialization for the IBP)
@@ -42,7 +40,14 @@ and params is a structure containing all simulation parameters and model
 Calling from Python
 -------------------
     import GLFM
-    (Z_out,B_out,Theta_out) = GLFM.infer(X,C,Z)
+    (hidden) = GLFM.infer(data)
+
+--- Alternative calls ---
+
+    hidden = GLFM.infer(data, hidden);
+OR
+    hidden = GLFM.infer(data, hidden, params);
+
 
 ------------
 Requirements

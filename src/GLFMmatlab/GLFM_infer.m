@@ -1,4 +1,4 @@
-function hidden = IBPsampler_infer(data,varargin)
+function hidden = GLFM_infer(data,varargin)
     % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     % Three possible calls:
     %           hidden = IBPsampler_infer(data)
