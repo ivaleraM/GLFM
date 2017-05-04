@@ -2,13 +2,17 @@
 General Latent Feature Model (GLFM) for matlab and python
 ---------------------------------------------------------
 
------------
-Description
------------
-
 This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
 observations. The core code is in C++. User interfaces in both Matlab and
 Python are provided. Moreover, several demos are provided to illustrate different applications of the GLFM.
+
+To cite this work, please use
+
+I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
+
+-----------
+GLFM Description
+-----------
 
 ------------
 Quick start
@@ -108,12 +112,6 @@ In order to run GLFM on your data, you need to:
         - run command from terminal:
             python setup.py build_ext --inplace
 
---------
-Citation
---------
-
-Please, cite it as detailed below:
-I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
 -------
 Contact
