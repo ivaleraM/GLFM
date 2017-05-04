@@ -25,7 +25,7 @@ where every attribute of in the observation matrix might correspond to a continu
 As an example, a real-valued attribute can be represented using the GLFM as
 
 <p align="center">
-  <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/GaussianIBP.png" width="550"/>
+  <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/GaussianIBP.png" width="350"/>
 </p>
 
 For more details on the GLMF, please rever to our paper. 
