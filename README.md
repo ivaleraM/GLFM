@@ -48,10 +48,12 @@ where data is a structure containing:
     C: 1*D string array indicating type of data for each dimension
 
 --- Alternative calls ---
-
+    
+    import GLFM
     hidden = GLFM.infer(data, hidden);
 OR
 
+    import GLFM
     hidden = GLFM.infer(data, hidden, params);
 
 where hidden is a structure of latent variables:
