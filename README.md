@@ -30,6 +30,7 @@ where data is a structure containing:
 
     hidden = GLFM_infer(data, hidden);
 OR
+
     hidden = GLFM_infer(data, hidden, params);
 
 where hidden is a structure of latent variables:
@@ -46,6 +47,7 @@ Calling from Python
 
     hidden = GLFM.infer(data, hidden);
 OR
+
     hidden = GLFM.infer(data, hidden, params);
 
 
