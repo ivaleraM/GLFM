@@ -139,16 +139,19 @@ In order to run GLFM on your data, you need to:
 ------------
 GLFM Demos
 ------------
-The folder `demos' contains scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
+The folder `demos' contain scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
 
-As an example, the script `demo_data_exploration_toyImages'
+As an example, the script `demo_data_exploration_toyImages' generates a small set of images composed by different combinations of four original images plus noise. Using the GLFM, we are able to recover the original images seamlessly.
 
+Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available both in MATLAB and PYTHON.
 
 -------
 Contact
 -------
 
-For further information or contact: Isabel Valera at
-isabel.valera.martinez@gmail.com or Melanie F. Pradier at melanie.fpradier@gmail.com
+For further information or contact:
+
+    Isabel Valera: isabel.valera.martinez (at) gmail.com
+    Melanie F. Pradier: melanie.fpradier (at) gmail.com
 
 
