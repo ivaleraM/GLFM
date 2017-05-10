@@ -53,7 +53,7 @@ function X_map = GLFM_computeMAP(C, Zp, hidden, params, varargin)
         end
         if isfield(params,'t')
             if ~isempty(params.t{d})
-                X_map(:,d) = params.t{d}( X_map(:,d) );
+                X_map(:,dd) = params.t{d}( X_map(:,dd) );
             end
         end
     end

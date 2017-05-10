@@ -44,7 +44,7 @@ plt.pause(0.0001)
 
 print '\tSetting model parameters (ground truth) and generate database...'
 N = 1000           # number of images to be generated
-s2x = 1            # noise variance for the observations
+s2x = 0.5          # noise variance for the observations
 
 print '\tGenerating data with N=%d and noise variance s2x=%.2f' % (N,s2x)
 # generate matrix Z
@@ -73,8 +73,9 @@ data['C'] = np.tile('g',(1,X.shape[1]))[0].tostring() # datatype vector
 
 # params is optional
 params = dict()
-params['Niter'] = 10000 # number of algorithm iterations
-params['s2u'] = 0.005 # auxiliary noise variance
+params['alpha'] = 5   # concentration parameter for the IBP
+params['Niter'] = 100 # number of algorithm iterations
+# params['s2u'] = 0.005 # auxiliary noise variance
 params['maxK'] = 10
 
 # In[4]:
