@@ -154,6 +154,7 @@ As an example, the script `demo_data_exploration_toyImages' generates a small se
 Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available both in MATLAB and PYTHON.
 
 -------
+
 Contact
 -------
 
