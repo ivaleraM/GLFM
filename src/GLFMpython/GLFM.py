@@ -23,17 +23,17 @@ def infer(data,hidden=dict(), params=dict()):
             X: input data N*D where:
                 N = number of observations
                 D = number of dimensions
-            C: array indicating types of data ('g': real,'p': positive real-valued,
+            C: string array indicating types of data ('g': real,'p': positive real,
                 'c': categorical; 'o': ordinal; 'n': count data)
         hidden (optional): dictionary containing latent variables
             Z: initial feature activation matrix: N*K
                 K = number of latent dimensions
-        params (optional): dictionary containing all simulation parameters
+        params (optional): dictionary containing eventual simulation parameters
             bias: indicator of whether to include or not a bias
             s2u: internal auxiliary noise
             s2B: noise variance for prior over elements of matrix B
             alpha: concentration parameter of the Indian Buffet Process
-            Nsim: number of simulations
+            Niter: number of simulations
             maxK: maximum number of features for memory allocation
             missing: value for missings (should be an integer, not nan)
             verbose: indicator to print more information
@@ -48,7 +48,7 @@ def infer(data,hidden=dict(), params=dict()):
             w: scale parameter for internal transformation
             s2Y: inferred noise variance for pseudo-observations Y
     """
-    # complete dictionary params
+    # complete dictionary params with default values
     params = init_default_params(data, params) # complete unspecified fields
 
     # check input syntax
@@ -59,19 +59,20 @@ def infer(data,hidden=dict(), params=dict()):
     assert(data.has_key('C')), "dictionary data does not have any datatype array C defined."
     assert(params['bias'] <= 1), "bias parameter misspecified: should be either 0 or 1."
 
-    N = data['X'].shape[0]
-    D = data['X'].shape[1]
+    N = data['X'].shape[0] # number of observations
+    D = data['X'].shape[1] # number of dimensions
 
     # if Z does not exist, initialize
     if not(hidden.has_key('Z')):
         hidden['Z'] = 1.0*(np.random.rand(N,2) > 0.8)
-        if params['bias'] == 1:
+        if params['bias'] == 1: # add bias if requested
             hidden['Z'] = np.concatenate(np.ones((N,1)), hidden['Z'])
 
-    # replace missings
+    # replace nan by missing values
     data['X'][np.isnan(data['X'])] = params['missing']
 
-    # change labels for categorical and ordinal vars such that > 0
+    # change labels for categorical and ordinal vars such that categories
+    # start counting at 1 and all of them are bigger than 0
     V_offset = np.zeros(D)
     for d in xrange(D):
         if (data['C']=='c' or data['C']=='o'):
@@ -79,7 +80,7 @@ def infer(data,hidden=dict(), params=dict()):
             V_offset[d] = np.min( data['X'][mask,d] )
             data['X'][mask,d] = data['X'][mask,d] - V_offset[d] + 1
 
-    # eventually, apply external transform
+    # eventually, apply external transform specified by the user
     for r in xrange(data['X'].shape[1]):
         if not(params['t'][r] == None): # there is an external transform
             data['X'][:,r] = params['t_1'][r](data['X'][:,r])
@@ -89,7 +90,7 @@ def infer(data,hidden=dict(), params=dict()):
     Fin = np.ones(data['X'].shape[1]) # choose internal transform function (for positive)
     Xin = np.ascontiguousarray( data['X'].transpose() ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( hidden['Z'].transpose() ) # compatible with C code
-    tic = timeI.time()
+    tic = timeI.time() # start counting time
 
     # RUN C++ routine
     (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out) = \
@@ -117,30 +118,37 @@ def infer(data,hidden=dict(), params=dict()):
 
 def complete(data, hidden=dict(), params=dict()):
     """
-    Function to complete missing values of a certain numpy 2dim array
+    Inputs:
+        data: dictionary containing all input data structures
+            X: input data N*D where:
+                N = number of observations
+                D = number of dimensions
+            C: string array indicating types of data ('g': real,'p': positive real,
+                'c': categorical; 'o': ordinal; 'n': count data)
+        hidden (optional): dictionary containing latent variables
+            Z: initial feature activation matrix: N*K
+                K = number of latent dimensions
+        params (optional): dictionary containing eventual simulation parameters
+            bias: indicator of whether to include or not a bias
+            s2u: internal auxiliary noise
+            s2B: noise variance for prior over elements of matrix B
+            alpha: concentration parameter of the Indian Buffet Process
+            Niter: number of simulations
+            maxK: maximum number of features for memory allocation
+            missing: value for missings (should be an integer, not nan)
+            verbose: indicator to print more information
 
-    Input parameters:
-         Xmiss : numpy array which should be completed.
-                 Size [NxD] where N is the number of observations and D is the
-                 number of dimensions. Here missing data should be introduced
-                 as the numeric value indicated in "missing".
-         C     : char array [1xD] specifying the input data type of each column
-                 (dimension) of the observation matrix X. Here 'g' indicates
-                 real variable, 'p' positive real variable, 'n' count data,
-                 'o' ordinal data and 'c' categorical data.
-         bias  : Number of columns that should be considered as bias (and
-                 thus, not sampled during inference)
-         s2Y   : variance of the Gaussian prior on the auxiliary variables
-                 (pseudo-observations) Y (TODO: detail how to change it)
-         s2B   : variance of the Gaussian prior on the elements of the
-                 weighting matrices (latent features) B (TODO: Give intuition)
-         alpha : mass parameter for the Indian Buffet Process
-         Niter : number of internal iterations for the Gibbs sampler within
-                 the C code before return
-         missing : integer value that should be understood as missing value
-    Output paramaters:
-        Xcompl : same numpy array as Xmiss but whose missing values have been
+    Output:
+        Xcompl : same numpy array as input X whose missing values have been
                  inferred and completed by the algorithm.
+        hidden:
+            Z: feature activation matrix sampled from posterior
+            B: observation matrix sampled from posterior
+            Theta: auxiliary variables for ordinal data (needed to compute MAP,
+                    or posterior PDFs)
+            mu: mean parameter for internal transformation
+            w: scale parameter for internal transformation
+            s2Y: inferred noise variance for pseudo-observations Y
     """
     # complete dictionary params
     params = init_default_params(data, params) # complete unspecified fields
@@ -153,7 +161,6 @@ def complete(data, hidden=dict(), params=dict()):
     assert(data.has_key('C')), "dictionary data does not have any datatype array C defined."
     assert(params['bias'] <= 1), "bias parameter misspecified: should be either 0 or 1."
 
-    pdb.set_trace()
     if sum( sum( (np.isnan(data['X'])) | (data['X']==params['missing']) )) == 0:
         print "The input matrix X has no missing values to complete."
         Xcompl = []
@@ -165,13 +172,13 @@ def complete(data, hidden=dict(), params=dict()):
     # Just in case there is any nan (also considered as missing)
     data['X'][np.isnan(data['X'])] = params['missing']
 
-    [idxs_d, idxs_n] = (Xmiss == missing).nonzero()
+    [xx_miss, yy_miss] = (data['X'] == missing).nonzero()
 
-    Xcompl=np.copy(Xmiss)
-    for ii in xrange(len(idxs_n)): # for each missing
-        if Xmiss[idxs_d[ii],idxs_n[ii]] == missing: # will always be the case
+    Xcompl=np.copy(data['X'])
+    for ii in xrange(len(xx_miss)): # for each missing
+        if Xmiss[xx_miss[ii],yy_miss[ii]] == missing: # will always be the case
             Xcompl[xx_miss[i],yy_miss[i]] = computeMAP( C, Z[xx_miss[i],:], hidden, params, yy_miss[i] )
-    return Xcompl
+    return (Xcompl,hidden)
 
 def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
     """
@@ -187,6 +194,7 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
                maxR: maximum number of categories across all dimensions
           - mu: 1*D shift parameter
           - w:  1*D scale parameter
+          - s2Y: 1*D inferred noise variance for each dimension of pseudo-observations
           - theta: D*maxR matrix of auxiliary vars (for ordinal variables)
     ----------------(optional) ------------------
           - idxsD: dimensions to infer
@@ -195,7 +203,7 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
       X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
     """
 
-    if (len(idxsD) == 0):
+    if (len(idxsD) == 0): # no dimension specified, infer all dimensions
         idxsD = range(hidden['B'].shape[0])
 
     if len(Zp.shape) == 1: # Zp is just 1 vector
@@ -204,10 +212,10 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
     else:
         P = Zp.shape[0]
         K2 = Zp.shape[1]
-    K = hidden['B'].shape[1]
+    K = hidden['B'].shape[1] # number of latent features
     assert (K2 == K), "Incongruent sizes between Zp and hidden['B']: number of latent variables should not be different"
 
-    X_map = np.zeros((P,len(idxsD))) # output
+    X_map = np.zeros((P,len(idxsD))) # output matrix
     for dd in xrange(len(idxsD)): # for each dimension
         d = idxsD[dd]
         if params.has_key('t'): # if external transformations have been defined
