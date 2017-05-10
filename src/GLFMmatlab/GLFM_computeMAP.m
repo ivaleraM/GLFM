@@ -32,22 +32,23 @@ function X_map = GLFM_computeMAP(C, Zp, hidden, params, varargin)
     end
 
     X_map = zeros(P,length(idxsD)); % output
-    for d=idxsD % for each dimension
+    for dd=1:length(idxsD) % for each dimension
+        d = idxsD(dd);
         if isfield(params,'t') % if external transformations have been defined
             if ~isempty(params.t{d}) % there is an external transform for data type d
                 C(d) = params.ext_dataType{d}; % set new type of data
             end
         end
         switch C(d)
-            case 'g', X_map(:,d) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-            case 'p', X_map(:,d) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-            case 'n', X_map(:,d) = f_n( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-            case 'c', X_map(:,d) = f_c( Zp * squeeze(hidden.B(d,:,1:hidden.R(d))) );
-            case 'o', X_map(:,d) = f_o( Zp * squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)) );
+            case 'g', X_map(:,dd) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
+            case 'p', X_map(:,dd) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
+            case 'n', X_map(:,dd) = f_n( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
+            case 'c', X_map(:,dd) = f_c( Zp * squeeze(hidden.B(d,:,1:hidden.R(d))) );
+            case 'o', X_map(:,dd) = f_o( Zp * squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)) );
             otherwise
                 error('Unknown data type');
         end
-        if (sum(isnan(X_map(:,d))) > 0)
+        if (sum(isnan(X_map(:,dd))) > 0)
             warning('Some values are nan!');
         end
         if isfield(params,'t')

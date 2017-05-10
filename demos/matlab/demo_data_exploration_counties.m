@@ -21,7 +21,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % specify external transforms for certain dimensions
-idx_transform = [2 4 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
+idx_transform = [2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -49,7 +49,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 10000; % Number of iterations for the gibbs sampler
+    params.Niter = 1000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 
@@ -62,8 +62,11 @@ if ~isfield(params,'simId')
     params.simId = 1;
 end
 if ~isfield(params,'save')
-    params.save = 1;
+    params.save = 0;
 end
+
+saveFigs = 0;
+savepath = './';
 
 %% Initialize Hidden Structure
 
@@ -89,7 +92,7 @@ if ~params.save
 end
 
 %% Plot Dimensions
-if params.save
+if ~params.save
 
     sum(hidden.Z)
     feat_toRemove = find(sum(hidden.Z) < N*0.03);
@@ -97,25 +100,36 @@ if params.save
     hidden = sort_hidden(hidden);
     sum(hidden.Z)
 
-    [patterns, C] = get_feature_patterns(hidden.Z);
+    [patterns, C, L] = get_feature_patterns_sorted(hidden.Z);
 
     idxD = 2:size(data.X,2);
 
-    %Zp = patterns;
-    %leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
-
-    Zp = eye(size(hidden.Z,2));
-    leg = num2str(Zp);
-    leg = mat2cell(leg, ones(size(hidden.Z,2),1), size(leg,2))';
+%     %Zp = patterns;
+%     %leg = {'(1 0 0)', '(1 0 1)', '(1 1 0)', '(1 1 1)'};
+%     Zp = eye(size(hidden.Z,2));
+%     leg = num2str(Zp);
+%     leg = mat2cell(leg, ones(size(hidden.Z,2),1), size(leg,2))';
+    
+    Zp = patterns(L > 240,:);
+    leg = num2str(Zp(:,2:end));
+    leg = mat2cell(leg, ones(size(Zp,1),1), size(leg,2))';
+    %Zp = [Zp zeros(size(Zp,1), size(hidden.Z,2) - idxF)];
 
     colors = []; styles = [];
     plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles, idxD);
+    if saveFigs
+        cleanfigure;
+        matlab2tikz([savepath, sprintf('dim%d.tex', d)] );
+        saveas(gca,[savepath, sprintf('dim%d.fig', d)] );
+        figurapdf(7,7)
+        print([savepath, sprintf('dim%d.pdf', d)],['-d','pdf'],'-r150');
+    end
 end
 
 %% PLOT USA map and corresponding features
 if ~params.save
 
-    for k=5:size(patterns,1)
+    for k=1:size(patterns,1)
         pat = patterns(k,:);
         Zn = (C == k);
         %Zn = hidden.Z(:,k);
@@ -125,22 +139,27 @@ if ~params.save
         end
         plot_usa_map(data,Zn);
         title(sprintf('Activation of pattern (%s)',num2str(pat)));
-        cleanfigure;
-        matlab2tikz(sprintf('./figs/counties_new/counties_map%d.tex', k));
-        saveas(gca,sprintf('./figs/counties_new/counties_map%d.fig', k) );
-    end
-
-    Zp = eye(size(hidden.Z,2));
-    Zp(:,1) = 1;
-    for k=1:size(Zp,1)
-        pat = Zp(k,:);
-        %Zn = (C == k);
-        Zn = hidden.Z(:,k);
-
-        if (sum(Zn) < (size(data.X,1)*0.05))
-            continue; % only plot patterns with more than 5% of number of obs.
+        if saveFigs
+            %title(sprintf('Activation of pattern (%s)',num2str(pat)));
+            cleanfigure;
+            matlab2tikz([savepath, sprintf('clusters_map%d.tex', k)]);
+            saveas(gca,[savepath, sprintf('clusters_map%d.fig', k) ] );
+            figurapdf(7,7);
+            print([savepath, sprintf('clusters_map%d.pdf', k) ],['-d','pdf'],'-r150');
         end
-        plot_usa_map(data,Zn);
-        title(sprintf('Activation of pattern (%s)',num2str(pat)));
     end
+
+%     Zp = eye(size(hidden.Z,2));
+%     Zp(:,1) = 1;
+%     for k=1:size(Zp,1)
+%         pat = Zp(k,:);
+%         %Zn = (C == k);
+%         Zn = hidden.Z(:,k);
+% 
+%         if (sum(Zn) < (size(data.X,1)*0.05))
+%             continue; % only plot patterns with more than 5% of number of obs.
+%         end
+%         plot_usa_map(data,Zn);
+%         title(sprintf('Activation of pattern (%s)',num2str(pat)));
+%     end
 end

@@ -44,7 +44,7 @@ if ~isfield(params,'s2B')
 end
 params.alpha = 1;       % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 100; % Number of iterations for the gibbs sampler
+    params.Niter = 1000; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 if ~isfield(params,'bias')

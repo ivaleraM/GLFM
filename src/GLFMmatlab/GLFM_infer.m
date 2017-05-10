@@ -84,7 +84,7 @@ function hidden = GLFM_infer(data,varargin)
     [Z B theta mu w s2Y]= IBPsampler(data.X,data.C, hidden.Z, params.bias, func, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
-    fprintf('Elapsed time %.2f seconds.', num2str(hidden.time) );
+    fprintf('Elapsed time %.2f seconds.', hidden.time );
 
     %% prepare output structure
     hidden.Z = Z'; % it returns a K*N matrix, should be inverted

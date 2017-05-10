@@ -38,14 +38,14 @@ function [Xcompl,hidden] = GLFM_complete(data,varargin)
             error('Incorrect number of input parameters: should be 1, 2 or 3');
     end
 
-    if (sum(isnan(data.X(:)) || data.X(:) == params.missing) == 0)
+    if (sum(isnan(data.X(:)) | (data.X(:) == params.missing) ) == 0)
         prinf('The input matrix X has no missing values to complete.')
-        Xcompl = []
+        Xcompl = [];
         return
     end
 
     % Run inference
-    hidden = IBPsampler_infer(data,hidden,params);
+    hidden = GLFM_infer(data,hidden,params);
 
     % just in case there is any nan (also considered as missing)
     data.X(isnan(data.X)) = params.missing;
@@ -54,6 +54,6 @@ function [Xcompl,hidden] = GLFM_complete(data,varargin)
 
     Xcompl = data.X;
     for i=1:length(xx_miss) % for each missing value, compute MAP estimate
-        Xcompl(xx_miss(i),yy_miss(i)) = IBPsampler_computeMAP( data.C, hidden.Z(xx_miss(i),:), hidden, params, yy_miss(i));
+        Xcompl(xx_miss(i),yy_miss(i)) = GLFM_computeMAP( data.C, hidden.Z(xx_miss(i),:), hidden, params, yy_miss(i));
     end
 end

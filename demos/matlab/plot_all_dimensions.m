@@ -26,7 +26,7 @@ for d=idxD
         hold on;
     end
     %  subplot(2,1,1);
-    [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d);
+    [xd, pdf] = GLFM_computePDF(data, Zp, hidden, params, d);
     if (data.C(d) == 'c') || (data.C(d) == 'o')
         mask = ~isnan(data.X(:,d)) & (data.X(:,d) ~= params.missing);
         tmp = hist(data.X(mask,d), unique(data.X(mask,d)));
