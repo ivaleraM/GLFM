@@ -108,20 +108,20 @@ pixels = Xtrue[:,idx_ran]
 pixels = np.array(pixels, dtype='uint8')
 pixels = pixels.reshape((28, 28))
 # Plot
-V[0].imshow(pixels, cmap='gray',interpolation='none')
+V[0].imshow(pixels, interpolation='none') # cmap='gray',
 
 print 'Visualizing a single example with missing...'
 pixels = data['X'][idx_ran,:]
 pixels = np.array(pixels, dtype='uint8')
 pixels = pixels.reshape((28, 28))
-V[1].imshow(pixels, cmap='gray',interpolation='none')
+V[1].imshow(pixels, interpolation='none')
 
 print 'Visualizing a single example without missing...'
 pixels = Xcompl[idx_ran,:]
 pixels = np.array(pixels, dtype='uint8')
 pixels = pixels.reshape((28, 28))
 # Plot
-V[2].imshow(pixels, cmap='gray',interpolation='none')
+V[2].imshow(pixels, interpolation='none')
 #plt.ion() # interactive mode for plotting (script continues)
 plt.show()
 plt.pause(0.0001)
