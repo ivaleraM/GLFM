@@ -137,7 +137,6 @@ def complete(data, hidden=dict(), params=dict()):
             maxK: maximum number of features for memory allocation
             missing: value for missings (should be an integer, not nan)
             verbose: indicator to print more information
-
     Output:
         Xcompl : same numpy array as input X whose missing values have been
                  inferred and completed by the algorithm.
@@ -172,12 +171,12 @@ def complete(data, hidden=dict(), params=dict()):
     # Just in case there is any nan (also considered as missing)
     data['X'][np.isnan(data['X'])] = params['missing']
 
-    [xx_miss, yy_miss] = (data['X'] == missing).nonzero()
+    [xx_miss, yy_miss] = (data['X'] == params['missing']).nonzero()
 
     Xcompl=np.copy(data['X'])
     for ii in xrange(len(xx_miss)): # for each missing
-        if Xmiss[xx_miss[ii],yy_miss[ii]] == missing: # will always be the case
-            Xcompl[xx_miss[i],yy_miss[i]] = computeMAP( C, Z[xx_miss[i],:], hidden, params, yy_miss[i] )
+        if data['X'][xx_miss[ii],yy_miss[ii]] == params['missing']: # will always be the case
+            Xcompl[xx_miss[ii],yy_miss[ii]] = computeMAP( data['C'], hidden['Z'][xx_miss[ii],:], hidden, params, [ yy_miss[ii] ] )
     return (Xcompl,hidden)
 
 def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
@@ -202,7 +201,6 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
     Outputs:
       X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
     """
-
     if (len(idxsD) == 0): # no dimension specified, infer all dimensions
         idxsD = range(hidden['B'].shape[0])
 
@@ -220,32 +218,31 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
         d = idxsD[dd]
         if params.has_key('t'): # if external transformations have been defined
             if not(params['t'][d] == None): # there is an external transform for data type d
-                data['C'][d] = params['ext_dataType'][d] # set new type of data
+                C[d] = params['ext_dataType'][d] # set new type of data
 
-        if not(data['C'][d] == 'c'):
+        if not(C[d] == 'c'):
             aux = np.inner(Zp, np.squeeze(hidden['B'][d,:]))
 
-        if data['C'][d] == 'g':
-            X_map[:,d] = mf.f_g( aux, hidden['mu'][d], hidden['w'][d] )
-        elif data['C'][d] == 'p':
+        if C[d] == 'g':
+            X_map[:,dd] = mf.f_g( aux, hidden['mu'][d], hidden['w'][d] )
+        elif C[d] == 'p':
             pdb.set_trace()
-            X_map[:,d] = f_p( aux, hidden['mu'][d], hidden['w'][d] )
-        elif data['C'][d] == 'n':
+            X_map[:,dd] = mf.f_p( aux, hidden['mu'][d], hidden['w'][d] )
+        elif C[d] == 'n':
+            X_map[:,dd] = mf.f_n( aux, hidden['mu'][d], hidden['w'][d] )
+        elif C[d] == 'c':
             pdb.set_trace()
-            X_map[:,d] = f_n( aux, hidden['mu'][d], hidden['w'][d] )
-        elif data['C'][d] == 'c':
+            X_map[:,dd] = mf.f_c( np.inner(Zp, np.squeeze(hidden['B'][d,:,range(hidden['R'][d])])) )
+        elif C[d] == 'o':
             pdb.set_trace()
-            X_map[:,d] = f_c( np.inner(Zp, np.squeeze(hidden['B'][d,:,range(hidden['R'][d])])) )
-        elif data['C'][d] == 'o':
-            pdb.set_trace()
-            X_map[:,d] = f_o( aux, hidden['theta'][d,range(hidden['R'][d]-1)] )
+            X_map[:,dd] = mf.f_o( aux, hidden['theta'][d,range(hidden['R'][d]-1)] )
         else:
             raise ValueError('Unknown data type')
-        if (sum(np.isnan(X_map[:,d])) > 0):
+        if (sum(np.isnan(X_map[:,dd])) > 0):
             raise ValueError('Some values are nan!')
         if params.has_key('t'):
             if not(params['t'][d] == None): # there is an external transform for data type d
-                X_map[:,d] = params['t'][d]( X_map[:,d] )
+                X_map[:,dd] = params['t'][d]( X_map[:,dd] )
     return X_map
 
 def computePDF(data, Zp, hidden, params, d):

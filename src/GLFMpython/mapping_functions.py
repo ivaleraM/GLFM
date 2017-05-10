@@ -21,7 +21,7 @@ def f_g(y, mu, w):
 def f_p(y, mu, w):
     # transformation function for positive data
     # Y -> X (from pseudo-obversations to data)
-    assert (w == 0), 'scaling factor should never be 0'
+    assert not(w == 0), 'scaling factor should never be 0'
     x = np.log( np.exp(y) + 1 )*1.0/w + mu
     return x
 
@@ -41,8 +41,8 @@ def f_n(y,mu,w):
     # Y -> X (from pseudo-obversations to data)
     # Inputs:
     #   Pseudo-observations y: [N*D]
-    assert (w == 0), 'scaling factor should never be 0'
-    x = np.floor( fpos(y,mu,w) )
+    assert not(w == 0), 'scaling factor should never be 0'
+    x = np.floor( f_p(y,mu,w) )
     return x
 
 def f_o(y, theta):
@@ -70,7 +70,7 @@ def f_o(y, theta):
 def f_g_1(x, mu, w):
     # transformation function for real-valued data
     # X -> Y (from data to pseudo-obversations)
-    assert (w == 0), 'scaling factor should never be 0'
+    assert not(w == 0), 'scaling factor should never be 0'
     y = w * (x - mu)
     return y
 
@@ -83,14 +83,14 @@ def f_n_1(x, mu, w):
 def f_p_1(x, mu, w):
     # transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
-    assert (w == 0), 'scaling factor should never be 0'
+    assert not(w == 0), 'scaling factor should never be 0'
     y = np.log( np.exp(w*(x-mu) - 1) )
     return y
 
 def df_p_1(x, mu, w):
     # derivative of transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
-    assert (w == 0), 'scaling factor should never be 0'
+    assert not(w == 0), 'scaling factor should never be 0'
     y = ( w * np.exp(w*(x-mu)) ) / ( np.exp(w*(x-mu) - 1) )
     return y
 

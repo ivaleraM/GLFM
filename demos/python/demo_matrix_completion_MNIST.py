@@ -15,6 +15,7 @@ import GLFM
 import csv
 import matplotlib.pyplot as plt
 
+import pdb
 
 # In[2]:
 
@@ -24,7 +25,7 @@ import matplotlib.pyplot as plt
 print 'Loading data...'
 # DB can be downloaded here: http://pjreddie.com/projects/mnist-in-csv/
 file = '../../datasets/raw/MNIST/mnist_train_small_100.csv'
-N = 100
+N = 50
 images = []
 with open(file, 'r') as csv_file:
     count = 0
@@ -58,7 +59,7 @@ C = np.tile('n',(1,Xtrue.shape[0]))[0].tostring()
 # ---------------------------------------------
 print 'Add missing values...'
 
-perc_missing = 0.4 #percentage of missing
+perc_missing = 0.2 #percentage of missing
 missing_val = -100
 mask_missing = np.random.rand(Xtrue.shape[0],Xtrue.shape[1]) < perc_missing
 Xmiss = np.copy(Xtrue)
@@ -78,8 +79,8 @@ params = dict()
 data['X'] = Xmiss.transpose()
 data['C'] = C
 
-Kinit = 20
-hidden['Z'] = np.random.randint(0,2,size=(N,Kinit)).astype('float64')
+#Kinit = 2
+#hidden['Z'] = np.random.randint(0,2,size=(N,Kinit)).astype('float64')
 
 params['missing'] = -100
 params['Niter'] = 10
@@ -90,7 +91,7 @@ params['Niter'] = 10
 # 4. RUN ALGORITHM
 # ---------------------------------------------
 print 'Complete matrix...'
-Xcompl = GLFM.complete(data, hidden, params)
+(Xcompl,hidden) = GLFM.complete(data, params = params)
 
 # In[ ]:
 
