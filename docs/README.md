@@ -9,9 +9,11 @@ To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
------------------
+
+----------------
+
 GLFM Description
------------------
+----------------
 
 GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables. The GLFM assumes that an observation matrix can be explained by a low-rank matrix factorization, such that:
 
@@ -43,6 +45,7 @@ Moreover, since the GLFM builds on the Indian Buffet Process (Griffiths and Ghah
 For more details on the GLMF, please refer to the paper. 
 
 ------------
+
 GLFM Toolbox
 ------------
 
@@ -141,6 +144,7 @@ In order to run GLFM on your data, you need to:
             python setup.py build_ext --inplace
 
 ------------
+
 GLFM Demos
 ------------
 The folder `demos' contain scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
