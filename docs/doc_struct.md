@@ -1,6 +1,7 @@
 [**Introduction**](https://ivaleram.github.io/GLFM/) | [**Functions**](doc_functions.html) | [**Data Structures**](doc_struct.html) | [**Demos**](demos.html) | [**FAQ**](FAQ_errors.html)
 
-Description of the data structures defined in GLFM package. 
+## Description of the data structures defined in GLFM package 
+
 N: number of observations
 D: number of dimensions
 K: number of inferred latent features
