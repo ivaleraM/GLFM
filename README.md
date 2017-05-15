@@ -31,7 +31,7 @@ where every attribute of in the observation matrix might correspond to a continu
 	1. Categorical data, i.e., the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
 	2. Ordinal data, i.e., the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
 	3. Count data, i.e., the attribute takes values in the set {0,...,∞}.
-More in detail, the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), and therefore, it assumes that each observation $x_n^d$ can be explained by  a potentially infinite-length binary vector $\mathbf{z}_n$ whose elements indicate whether a latent feature is active or not for the $n$-th object; and a (real-valued) weighting vector **B**^d$, whose elements weight the influence of each latent feature in the $d$-th attribute. 
+More in detail, the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), and therefore, it assumes that each observation x_n^d can be explained by  a potentially infinite-length binary vector **z**_n whose elements indicate whether a latent feature is active or not for the n-th object; and a (real-valued) weighting vector **B**^d, whose elements weight the influence of each latent feature in the d-th attribute. 
 
 
 <p align="center">
