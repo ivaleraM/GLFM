@@ -60,7 +60,7 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension
+    C: 1xD string array indicating type of data for each dimension, where 'g' stands for real-valued data, 'p'  stands for positive real-valued data, 'n' stands for count data, 'c'stands for categorical data, and 'o' stands for ordinal data. 
 
 --- Alternative calls ---
 
@@ -85,7 +85,7 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension
+    C: 1xD string array indicating type of data for each dimension, where 'g' stands for real-valued data, 'p'  stands for positive real-valued data, 'n' stands for count data, 'c'stands for categorical data, and 'o' stands for ordinal data. 
 
 
 --- Alternative calls ---
