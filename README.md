@@ -50,7 +50,7 @@ GLFM Toolbox
 
 You can use GLFM from within Matlab or Python.
 Below we show an example of how to call GLFM for matrix completion and data
-exploration of a given dataset. For mode details on the functions and data structures, please refer to the GLFM [documentation](https://ivaleram.github.io/GLFM/).
+exploration of a given dataset. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
 
 Calling from Matlab
 -------------------
