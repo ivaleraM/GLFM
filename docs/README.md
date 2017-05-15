@@ -1,5 +1,5 @@
 GLFM: General Latent Feature Modeling toolbox for matlab and python
----------------------------------------------------------
+-------------------------------------------------------------------
 
 This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
 observations. The core code is in C++. User interfaces in both Matlab and
@@ -9,9 +9,11 @@ To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
 
------------------
+
+----------------
+
 GLFM Description
------------------
+----------------
 
 GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables. The GLFM assumes that an observation matrix can be explained by a low-rank matrix factorization, such that:
 
@@ -31,6 +33,8 @@ where every attribute of in the observation matrix might correspond to a continu
 	1. Categorical data, i.e., the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
 	2. Ordinal data, i.e., the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
 	3. Count data, i.e., the attribute takes values in the set {0,...,∞}.
+
+
 Moreover, since the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), it accounts for an infinite number of binary latent variables. As an example, a real-valued attribute can be represented using the GLFM as
 
 <p align="center">
@@ -41,6 +45,7 @@ Moreover, since the GLFM builds on the Indian Buffet Process (Griffiths and Ghah
 For more details on the GLMF, please refer to the paper. 
 
 ------------
+
 GLFM Toolbox
 ------------
 
@@ -139,6 +144,7 @@ In order to run GLFM on your data, you need to:
             python setup.py build_ext --inplace
 
 ------------
+
 GLFM Demos
 ------------
 The folder `demos' contain scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
@@ -148,6 +154,7 @@ As an example, the script `demo_data_exploration_toyImages' generates a small se
 Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available both in MATLAB and PYTHON.
 
 -------
+
 Contact
 -------
 
