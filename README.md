@@ -18,12 +18,12 @@ GLFM is a general Bayesian nonparametric latent feature model suitable for heter
 • Continuous variables:
 
 * Real-valued (encoded as 'g'): the attribute takes values in the real line. 	
-*Positive real-valued ('p'): the attribute takes values in the real line.
+* Positive real-valued ('p'): the attribute takes values in the real line.
 
 • Discrete variables:
-	1. Categorical data ('c'), i.e., the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
-	2. Ordinal data ('o'), i.e., the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
-	3. Count data ('n'), i.e., the attribute takes values in the set {0,...,∞}.
+* Categorical data ('c'): the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
+* Ordinal data ('o'): the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
+* Count data ('n'): the attribute takes values in the set {0,...,∞}.
 
 The GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), and therefore, it assumes that each observation x_n^d can be explained by  a potentially infinite-length binary vector **z**_n whose elements indicate whether a latent feature is active or not for the n-th object; and a (real-valued) weighting vector **B**^d, whose elements weight the influence of each latent feature in the d-th attribute. 
 Since the product of the latent feature vector and the weighting vector leads to a real-valued variable, it is necessary to map this variable to the desirable output (continuous or discrete) space, for example, the positive real line. Thus, the GLFM assumes the existence of intermediate Gaussian variables y_n^d, with mean **z**_n**B**^d and called pseudo-observation, and a transformation function f_d() that maps this variable into the actual observation x_n^d.
