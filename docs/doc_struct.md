@@ -27,15 +27,15 @@ Structures
 
 3. **params**: structure with all simulation parameters (if not defined, the default values listed below will be used):
 
-        missing = -1; end % value for missings
-        alpha = 1; end % Concentration parameter for the IBP
-        bias = 0; end % number of latent features that should not be sampled
-        s2Y = 0.5; end % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
-        s2u = 0.01; end % variance of auxiliary noise
-        s2B = 1; end % Variance of the Gaussian prior of the weigting matrices B
-        Niter = 1000; end % number of iterations to run
-        maxK = size(data.X,2); end % max number of latent features for memory allocation inside C++ routine
-        verbose = 1; end % plot info in command line
+        missing = -1; % value for missings
+        alpha = 1; % Concentration parameter for the IBP
+        bias = 0; % number of bias terms, i.e., number of latent features not to be sampled
+        s2Y = 0.5; % Variance of the Gaussian prior on the auxiliary variables (pseudo-observations) Y
+        s2u = 0.01; % variance of auxiliary noise
+        s2B = 1; % Variance of the Gaussian prior of the weighing vectors B^d
+        Niter = 1000; % number of Gibbs sampling iterations to run
+        maxK = size(data.X,2); % maximum number of latent features for memory allocation inside C++ routine
+        verbose = 1; % show info in command line
 
         * parameters for optional data-preprocessing
         t = cell(1,size(data.X,2) ); end % eventual external transform of obs. X = params.t{d}(Xraw)
