@@ -26,10 +26,12 @@ function [xd, pdf] = GLFM_computePDF(data, Zp, hidden, params, d)
     mm = min(data.X(data.X(:,d) ~= params.missing, d)); % min value
     MM = max(data.X(data.X(:,d) ~= params.missing, d)); % max value
 
-    if ~isempty(params.t{d}) % if there is an external transformation
-        data.C(d) = params.ext_dataType{d};
-        mm = params.t_1{d}(mm);
-        MM = params.t_1{d}(MM);
+    if isfield(params,'t')
+        if ~isempty(params.t{d}) % if there is an external transformation
+            data.C(d) = params.ext_dataType{d};
+            mm = params.t_1{d}(mm);
+            MM = params.t_1{d}(MM);
+        end
     end
 
     P = size(Zp,1);
