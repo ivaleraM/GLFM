@@ -2,11 +2,15 @@
 
 ## Description of the data structures defined in GLFM package 
 
+Basic definitions
+--------------------------
 * N: number of observations
 * D: number of dimensions
 * K: number of inferred latent features
 * maxR: maximum number of categories among all categorical variables
 
+Structures
+--------------------------
 1. **data**: structure with data to analyze/complete
     * X:  N x D observation matrix of N samples and D dimensions
     * C:  1 x D string array indicating type of data for each dimension
