@@ -16,8 +16,9 @@ GLFM Description
 GLFM is a general Bayesian nonparametric latent feature model suitable for heterogeneous datasets, where the attributes describing each object can be either discrete, continuous or mixed variables. Specifically, it accounts for the following types of data:
 
 • Continuous variables:
-	1. Real-valued (encoded as 'g'), i.e., the attribute takes values in the real line. 
-	2. Positive real-valued ('p'), i.e., the attribute takes values in the real line.
+
+* Real-valued (encoded as 'g'): the attribute takes values in the real line. 	
+*Positive real-valued ('p'): the attribute takes values in the real line.
 
 • Discrete variables:
 	1. Categorical data ('c'), i.e., the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
