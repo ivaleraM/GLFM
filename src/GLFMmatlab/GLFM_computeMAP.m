@@ -1,9 +1,9 @@
 function X_map = GLFM_computeMAP(C, Zp, hidden, params, varargin)
     % Function to generate the MAP solution corresponding to patterns in Zp
     % Inputs:
-    %   C: 1*D string with data types, D = number of dimensions
-    %   Zp: P * K matrix of feature activation for which to compute the MAP estimate
-    %       (P is the number of obs.)
+    %   C: 1xD string with data types, D = number of dimensions
+    %   Zp: PxK matrix of feature patterns for which it computes the MAP estimate
+    %       (P is the number of feature patterns)
     %   hidden: structure with latent variables learned by the model
     %       - B: latent feature matrix (D * K * maxR)  where
     %               D: number of dimensions

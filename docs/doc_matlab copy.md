@@ -47,7 +47,7 @@ See complete description of [data structures](doc_struct.html).
     %   Output:
     %       Xcomplete: NxD input matrix with imputed missing values
     %       hidden: structure with latent parameters (same output as
-    %       IBPsampler_infer function).
+    %       GLFM.infer function).
 
 **function X_map = GLFM.computeMAP(C, Zp, hidden, params)**
 
@@ -69,7 +69,7 @@ See complete description of [data structures](doc_struct.html).
     %   X_map: P*D matrix with MAP estimate
 
 
-**function [xd, pdf] = IBPsampler_computePDF(data, Zp, hidden, params, d)**
+**function [xd, pdf] = GLFM.computePDF(data, Zp, hidden, params, d)**
 
     % Function to generate the PDF solutions corresponding to patterns in
     % Zp, and dimension d

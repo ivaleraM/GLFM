@@ -1,9 +1,9 @@
 function hidden = GLFM_infer(data,varargin)
     % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     % Three possible calls:
-    %           hidden = IBPsampler_infer(data)
-    %           hidden = IBPsampler_infer(data,hidden)
-    %           hidden = IBPsampler_infer(data,hidden,params)
+    %           hidden = GLFM_infer(data)
+    %           hidden = GLFM_infer(data,hidden)
+    %           hidden = GLFM_infer(data,hidden,params)
     %
     %   Inputs:
     %       data: structure with all input data information
@@ -15,7 +15,7 @@ function hidden = GLFM_infer(data,varargin)
     %
     %       hidden: hidden structure to initialize inference algorithm
     %             hidden.Z: feature assignment N*K matrix
-    %       params: structure with sim. parameters and hyperparameters
+    %       params: structure with simulation parameters and hyperparameters
     %   Outputs:
     %       hidden: hidden structure with samples from posterior, as well as
     %               inner transformation parameters

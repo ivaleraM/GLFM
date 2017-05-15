@@ -1,10 +1,10 @@
 function [Xcompl,hidden] = GLFM_complete(data,varargin)
     % Function to complete a matrix that has missing values
     % Possible calls:
-    %           hidden = IBPsampler_infer(data)
-    %           hidden = IBPsampler_infer(data,hidden) % init hidden.Z externaly
-    %           hidden = IBPsampler_infer(data,[],params) % struc. with parameters
-    %           hidden = IBPsampler_infer(data,hidden,params)
+    %           hidden = GLFM_complete(data)
+    %           hidden = GLFM_complete(data,hidden) % init hidden.Z externaly
+    %           hidden = GLFM_complete(data,[],params) % struc. with parameters
+    %           hidden = GLFM_complete(data,hidden,params)
     %
     %   Inputs:
     %       data: structure with all input data information
@@ -20,7 +20,7 @@ function [Xcompl,hidden] = GLFM_complete(data,varargin)
     %   Output:
     %       Xcompl: N*D input matrix with imputed missing values
     %       hidden: structure with latent parameters (same output as
-    %       IBPsampler_infer function).
+    %       GLFM_complete function).
 
     switch length(varargin)
         case 0
