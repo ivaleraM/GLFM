@@ -42,9 +42,7 @@ For more details on the GLMF, please refer to the paper.
 GLFM Toolbox
 ------------
 
-You can use GLFM from within Matlab or Python.
-Below we show an example of how to call GLFM for matrix completion and data
-exploration of a given dataset. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
+You can use GLFM from within Matlab or Python. Below we show an example of how to run the GLFM inference. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
 
 Calling from Matlab
 -------------------
@@ -120,12 +118,6 @@ For Python:
 Installation Instructions
 --------------------------
 
-To use GLFM for the first time, follow the installation instructions on our
-project wiki.
-Once installed, please visit the Configuration wiki page to learn how to
-configure where data is saved and loaded from on disk.
-
---------------------------
 In order to run GLFM on your data, you need to:
 
 1) Download the latest git repository
@@ -154,7 +146,7 @@ The folder `demos' contain scripts, as well as Jupiter notebooks, with applicati
 
 As an example, the script `demo_data_exploration_toyImages' generates a small set of images composed by different combinations of four original images plus noise. Using the GLFM, we are able to recover the original images seamlessly.
 
-Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available both in MATLAB and PYTHON.
+Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for both in MATLAB and PYTHON. For more detail, please visit our [demo website](demos.html). 
 
 -------
 Contact
