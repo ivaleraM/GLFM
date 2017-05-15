@@ -32,7 +32,9 @@ where every attribute of in the observation matrix might correspond to a continu
 	2. Ordinal data, i.e., the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
 	3. Count data, i.e., the attribute takes values in the set {0,...,∞}.
 More in detail, the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), and therefore, it assumes that each observation x_n^d can be explained by  a potentially infinite-length binary vector **z**_n whose elements indicate whether a latent feature is active or not for the n-th object; and a (real-valued) weighting vector **B**^d, whose elements weight the influence of each latent feature in the d-th attribute. 
-Since the product of the latent feature vector and the weighting vector leads to a real-valued variable, it is necessary to map this variable to the desirable output (continuous or discrete) space, for example, the positive real line or the finite ordered set {*low*, *medium*, *high*}. Thus, the GLFM assumes the existence of intermediate Gaussian variables y_n^d, with mean **z**_n**B**^d and called pseudo-observation, and a transformation function f_d() that maps this variable into the actual observation x_n^d.
+Since the product of the latent feature vector and the weighting vector leads to a real-valued variable, it is necessary to map this variable to the desirable output (continuous or discrete) space, for example, the positive real line. Thus, the GLFM assumes the existence of intermediate Gaussian variables y_n^d, with mean **z**_n**B**^d and called pseudo-observation, and a transformation function f_d() that maps this variable into the actual observation x_n^d.
+
+As an example, an ordinal attribute taking values in the ordered set {*low*, *medium*, *high*} can be represented using the GLFM as:
 
 
 <p align="center">
