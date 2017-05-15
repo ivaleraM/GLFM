@@ -121,7 +121,7 @@ Installation Instructions
 In order to run GLFM on your data, you need to:
 
 1) Download the latest git repository
-2) Install Anaconda, Cython, and a few additional libraries:
+2) Install necessary libraries:
     - Anaconda: https://www.continuum.io/downloads
     - Library gsl: conda install gsl
     - Cython: conda install -c anaconda cython=0.25.2
