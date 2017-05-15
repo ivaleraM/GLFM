@@ -56,9 +56,11 @@ Calling from Matlab
 -------------------
     hidden = GLFM_infer(data);
 
-where data is a structure containing:
-    X: N*D observation matrix of N samples and D dimensions
-    C: 1*D string array indicating type of data for each dimension
+where **data** is a structure containing:
+
+    X: NxD observation matrix of N samples and D dimensions
+
+    C: 1xD string array indicating type of data for each dimension
 
 --- Alternative calls ---
 
@@ -71,7 +73,7 @@ where hidden is a structure of latent variables:
 
     Z: NxK binary matrix of feature assignments (initialization for the IBP)
 
-and params is a structure containing all simulation parameters and model
+and **params** is a structure containing all simulation parameters and model
     hyperparameters (see documentation for further details).
 
 Calling from Python
@@ -79,9 +81,12 @@ Calling from Python
     import GLFM
     (hidden) = GLFM.infer(data)
 
-where data is a structure containing:
+where **data** is a structure containing:
+
     X: NxD observation matrix of N samples and D dimensions
+
     C: 1xD string array indicating type of data for each dimension
+
 
 --- Alternative calls ---
     
@@ -92,11 +97,11 @@ OR
     import GLFM
     hidden = GLFM.infer(data, hidden, params);
 
-where hidden is a structure of latent variables:
+where **hidden** is a structure of latent variables:
 
     Z: NxK binary matrix of feature assignments (initialization for the IBP)
 
-and params is a structure containing all simulation parameters and model hyperparameters (see documentation for further details).
+and **params** is a structure containing all simulation parameters and model hyperparameters (see documentation for further details).
 
 
 
