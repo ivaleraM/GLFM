@@ -69,7 +69,7 @@ OR
 
     hidden = GLFM_infer(data, hidden, params);
 
-where hidden is a structure of latent variables:
+where **hidden** is a structure of latent variables:
 
     Z: NxK binary matrix of feature assignments (initialization for the IBP)
 
