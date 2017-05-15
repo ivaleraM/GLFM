@@ -7,7 +7,7 @@ Python are provided. Moreover, several demos are provided to illustrate differen
 
 To cite this work, please use
 
-     I. Valera, M. F. Pradier and Z. Ghahramani, "Bayesian Nonparametric Latent Feature Model", ArXive, 2016.
+     I. Valera, M. F. Pradier and Z. Ghahramani, "General Latent Feature Model for Heterogeneous Datasets", Submitted to JMLR, 2017.
 
 -----------------
 GLFM Description
@@ -31,11 +31,12 @@ where every attribute of in the observation matrix might correspond to a continu
 	1. Categorical data, i.e., the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
 	2. Ordinal data, i.e., the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
 	3. Count data, i.e., the attribute takes values in the set {0,...,∞}.
-Moreover, since the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), it accounts for an infinite number of binary latent variables. As an example, a real-valued attribute can be represented using the GLFM as
+More in detail, the GLFM builds on the Indian Buffet Process (Griffiths and Ghahramani, 2011), and therefore, it assumes that each observation $x_n^d$ can be explained by  a potentially infinite-length binary vector $\mathbf{z}_n$ whose elements indicate whether a latent feature is active or not for the $n$-th object; and a (real-valued) weighting vector $\mathbf{B}^d$, whose elements weight the influence of each latent feature in the $d$-th attribute. 
+
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ivaleraM/GLFM/master/figures/GaussianIBP.png" width="400"/>
-  <!-- <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/GaussianIBP.png" width="400"/> -->
+  <img src="https://raw.githubusercontent.com/ivaleraM/GLFM/master/figures/Model_example.png" width="400"/>
+  <!-- <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/Model_example.png" width="400"/> -->
 </p>
 
 For more details on the GLMF, please refer to the paper. 
