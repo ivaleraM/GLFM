@@ -38,6 +38,6 @@ Structures
         verbose = 1; % show info in command line
 
         * parameters for optional data-preprocessing
-        t = cell(1,size(data.X,2) ); % eventual external transform of obs. X = params.t{d}(Xraw)
-        t_1 = cell(1,size(data.X,2) ); % inverse transform
-        dt_1 = cell(1,size(data.X,2) ); % derivative of the inverse transform
+        t = cell(1,size(data.X,2) ); % optional external transformation of obs. X(d) = params.t{d}(Xraw(d)). For example, params.t_1{d} = @(x) log(x + 1);
+        t_1 = cell(1,size(data.X,2) ); % inverse transform. For example, params.t{d} = @(y) exp(y) - 1;
+        dt_1 = cell(1,size(data.X,2) ); % derivative of the inverse transform. For example, params.dt_1{d} = @(x) 1./(x+1);
