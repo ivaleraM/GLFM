@@ -26,7 +26,7 @@ See complete description of [data structures](doc_struct.html).
 
 **function [Xcomplete,hidden] = GLFM.complete(data,varargin)**
 
-    % Function to complete a matrix that has missing values
+    % Function to complete a matrix that has missing values with their MAP solution
     % Possible calls:
     %           [Xcomplete,hidden]  = GLFM.complete(data)
     %           [Xcomplete,hidden]  = GLFM.complete(data,hidden) % init hidden.Z externaly
@@ -45,7 +45,7 @@ See complete description of [data structures](doc_struct.html).
     %             hidden.Z: feature assignment N*K matrix
     %       params: structure with sim. parameters and hyperparameters
     %   Output:
-    %       Xmap: NxD input matrix with imputed missing values
+    %       Xcomplete: NxD input matrix with imputed missing values
     %       hidden: structure with latent parameters (same output as
     %       IBPsampler_infer function).
 
