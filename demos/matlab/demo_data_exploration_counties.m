@@ -21,7 +21,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % specify external transforms for certain dimensions
-idx_transform = [2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
+idx_transform = []; %[2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -33,12 +33,12 @@ for r=idx_transform
     params.dt_1{r} = @(x) 1 ./ (x + 1);
     params.ext_dataType{r} = 'p';
 end
-% dimension 13 = 'White' need an inversion too
-r = 10; %9; %14;
-params.t_1{r} = @(x) log((100-x) + 1);
-params.t{r} = @(y) - exp(y) + 101;
-params.dt_1{r} = @(x) - 1./ (101 - x);
-params.ext_dataType{r} = 'p';
+% % dimension 13 = 'White' need an inversion too
+% r = 10; %9; %14;
+% params.t_1{r} = @(x) log((100-x) + 1);
+% params.t{r} = @(y) - exp(y) + 101;
+% params.dt_1{r} = @(x) - 1./ (101 - x);
+% params.ext_dataType{r} = 'p';
 
 %% DEFINE PARAMS
 [N, D] = size(data.X);
@@ -88,7 +88,7 @@ end
 
 %% Predict MAP estimate for each latent feature
 if ~params.save
-    X_map = GLFM_computeMAP(data.C, hidden.Z, hidden);
+    X_map = GLFM_computeMAP(data.C, hidden.Z, hidden, params);
 end
 
 %% Plot Dimensions
