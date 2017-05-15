@@ -114,7 +114,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                if (isinf(p1_n) || isnan(p1_n)){
                     //printf("nest[%d]=%d \n", k,nest[k]);
                     //printf("lik0=%f , lik1=%f \n", lik0, lik1);
-                    printf("Error: numerical error at sampling Z. Please restart the sampler and if error persists check hyperparameters. \n",n);
+                    printf("EXECUTION STOPPED: numerical error at the sampler. \n                   Please restart the sampler and if error persists check hyperparameters. \n",n);
                     return 0;
                     }
                //sampling znk
@@ -312,10 +312,10 @@ void SampleY (double missing, int N, int d, int K, char Cd,  int Rd, double fd, 
                 }else{
                     gsl_matrix_set (Yd, 0, n, truncnormrnd(gsl_matrix_get(muy,0,0), sYd, f_1(xnd, fd, mud, wd),f_1(xnd+1, fd, mud, wd)));
                 }
-//                 if (isinf(gsl_matrix_get(Yd, 0, n)) || isnan(gsl_matrix_get(Yd, 0, n)) ){
-//                     printf("error: numerical error at sampling Y for observation %d in dimension %d \n",n,d);
-//                     break;
-//                 }
+                if (isinf(gsl_matrix_get(Yd, 0, n)) || isnan(gsl_matrix_get(Yd, 0, n)) ){
+                     printf("EXECUTION STOPPED: the distribution of attribute %d (%d in Matlab) leads to numerical errors at the sampler. \n                   Have you considered applying a pre-processing transformation to this attribute? \n",d, d+1);
+                     break;
+                }
             }
             gsl_matrix_free(muy); 
             break;
@@ -612,7 +612,9 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
          if (C[d]!='c' && C[d]!='o'){
              double aux=Samples2Y (missing, N, d, Kest, C[d],  R[d], f[d], mu[d], w[d], s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
              if (aux!=0 && !isinf(aux) && !isnan(aux) ){
-                s2Y[d]=aux;
+                //printf("ERROR: numerical error at the sampler. \nPlease consider applying a pre-processing transformation for attribute/dimension %d. \n",d);
+                return Kest;
+                //s2Y[d]=aux;
              }
          }
 
