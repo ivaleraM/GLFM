@@ -1,8 +1,6 @@
 [**Introduction**](https://ivaleram.github.io/GLFM/) | [**Functions**](doc_functions.html) | [**Data Structures**](doc_struct.html) | [**Demos**](demos.html) | [**FAQ**](FAQ_errors.html)
 
-## Documentation for MATLAB functions
-
-See complete description of [data structures](doc_struct.html).
+## Description of the functions available in the GLFM package
 
 **function hidden = GLFM.infer(data,varargin)**
 
