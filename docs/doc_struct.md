@@ -8,12 +8,14 @@ K: number of inferred latent features
 maxR: maximum number of categories among all categorical variables
 
 1. **data**: structure with data to analyze/complete
+
     	X:  N x D observation matrix of N samples and D dimensions
     	C:  1 x D string array indicating type of data for each dimension
     	ylabel: 1 x D string cell with variable names
     	cat_labels: 1 x D cell with categorical labels (cell is empty for other data types)
 
 2. **hidden**: structure with all latent variables and data-driven parameters
+
     	Z:  N x K binary matrix of feature assignments (initialization for the IBP)
     	B:  D x K x maxR  weighting tuple
     	theta: D x marR matrix of thresholds for ordinal observations
