@@ -1,6 +1,6 @@
-[**Introduction**](https://ivaleram.github.io/GLFM/)  [**Function**](doc_functions.html)  [**Data Structures**](doc_struct.html)  [**Demos**](demos.html)  [**FAQ**](FAQ_errors.html)
+[**Introduction**](https://ivaleram.github.io/GLFM/) | [**Function**](doc_functions.html) | [**Data Structures**](doc_struct.html) | [**Demos**](demos.html) | [**FAQ**](FAQ_errors.html)
 
-Description of all used structures. See full description of [available functions](doc_matlab.html) in MATLAB.
+Description of the data structures. See full description of [available functions](doc_functions.html).
 
 N: number of observations
 D: number of dimensions

@@ -1,4 +1,4 @@
-[**Introduction**](https://ivaleram.github.io/GLFM/) [**Function**](doc_functions.html)  [**Data Structures**](doc_struct.html)  [**Demos**](demos.html)  [**FAQ**](FAQ_errors.html)
+[**Introduction**](https://ivaleram.github.io/GLFM/) | [**Function**](doc_functions.html) | [**Data Structures**](doc_struct.html) | [**Demos**](demos.html) | [**FAQ**](FAQ_errors.html)
 
 Frequently Asked Questions
 ---------------------------
