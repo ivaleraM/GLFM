@@ -60,7 +60,7 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension, 
+    C: 1xD string array indicating type of data for each dimension 
 
 
 
@@ -87,7 +87,7 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension, 
+    C: 1xD string array indicating type of data for each dimension 
 
 
 --- Alternative calls ---
