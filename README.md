@@ -50,7 +50,7 @@ GLFM Toolbox
 
 You can use GLFM from within Matlab or Python.
 Below we show an example of how to call GLFM for matrix completion and data
-exploration of a given dataset.
+exploration of a given dataset. For mode details on the functions and data structures, please refer respectively to the documentation
 
 Calling from Matlab
 -------------------
@@ -68,7 +68,9 @@ OR
     hidden = GLFM_infer(data, hidden, params);
 
 where hidden is a structure of latent variables:
-    Z: N*K binary matrix of feature assignments (initialization for the IBP)
+
+    Z: NxK binary matrix of feature assignments (initialization for the IBP)
+
 and params is a structure containing all simulation parameters and model
     hyperparameters (see documentation for further details).
 
@@ -95,6 +97,7 @@ where hidden is a structure of latent variables:
     Z: NxK binary matrix of feature assignments (initialization for the IBP)
 
 and params is a structure containing all simulation parameters and model hyperparameters (see documentation for further details).
+
 
 
 Requirements
