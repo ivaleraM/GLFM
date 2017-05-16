@@ -7,7 +7,9 @@ Python are provided. Moreover, several demos are provided to illustrate differen
 
 To cite this work, please use
 
-     I. Valera, M. F. Pradier and Z. Ghahramani, "General Latent Feature Model for Heterogeneous Datasets", Submitted to JMLR, 2017.
+     I. Valera, M. F. Pradier and Z. Ghahramani, 
+     "General Latent Feature Model for Heterogeneous Datasets", 
+     Submitted to JMLR, 2017.
 
 -----------------
 GLFM Description
