@@ -2,10 +2,11 @@
 
 * Demo_toy_images: Simple illustration of GLFM pipeline, replicating the example of the IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011). [[matlab](https://github.com/ivaleraM/GLFM/blob/master/demos/matlab/demo_toyImages.m)] [[python](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.py)] [[notebook](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb)]
 
-* Demo for estimation of missing data in the MNIST images database [matlab][python]
 
-* Demo for data exploration of the toy images database [matlab][python]
+Coming soon...
+
+* Demo for estimation of missing data in the MNIST images database [matlab][python]
 
 * Demo for data exploration of a real prostate cancer dataset [matlab][python]
 
-Coming soon...
+

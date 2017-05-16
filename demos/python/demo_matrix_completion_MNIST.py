@@ -57,9 +57,9 @@ C = np.tile('n',(1,Xtrue.shape[0]))[0].tostring()
 # ---------------------------------------------
 # 2. ADDING MISSING VALUES
 # ---------------------------------------------
-print 'Add missing values...'
+print 'Add missing values to the observation matrix...'
 
-perc_missing = 0.2 #percentage of missing
+perc_missing = 0.3 #percentage of missing
 missing_val = -100
 mask_missing = np.random.rand(Xtrue.shape[0],Xtrue.shape[1]) < perc_missing
 Xmiss = np.copy(Xtrue)
