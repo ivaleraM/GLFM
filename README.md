@@ -146,7 +146,7 @@ GLFM Demos
 ------------
 The folder `demos' contain scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
 
-As an example, the script `demo_data_exploration_toyImages' generates a small set of images composed by different combinations of four original images plus noise. Using the GLFM, we are able to recover the original images seamlessly.
+As an example, the script [`demo_data_exploration_toyImages'](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb) generates a small set of images composed by different combinations of four original images plus noise. Using the GLFM, we are able to recover the original images seamlessly.
 
 Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for both in MATLAB and PYTHON. For more detail, please visit our [demo website](demos.html). 
 
