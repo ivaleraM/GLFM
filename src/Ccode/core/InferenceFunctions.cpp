@@ -612,9 +612,10 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
          if (C[d]!='c' && C[d]!='o'){
              double aux=Samples2Y (missing, N, d, Kest, C[d],  R[d], f[d], mu[d], w[d], s2u, s2theta, X, Z, Y[d],  B[d], theta[d], seed);
              if (aux!=0 && !isinf(aux) && !isnan(aux) ){
+                s2Y[d]=aux;
+             }else{ 
+                return Kest; 
                 //printf("ERROR: numerical error at the sampler. \nPlease consider applying a pre-processing transformation for attribute/dimension %d. \n",d);
-                return Kest;
-                //s2Y[d]=aux;
              }
          }
 

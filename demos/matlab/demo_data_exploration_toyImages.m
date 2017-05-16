@@ -15,8 +15,7 @@ s2x = 0.5;      % observation noise
 hidden.Z = double(rand(N,1)>0.8); % initialize N*K feature assignment matrix
 
 % define params
-params.missing = -10;%
-params.alpha = 5;    % Concentration parameter of the IBP
+params.alpha = 2;    % Concentration parameter of the IBP
 params.Niter = 100;  % Number of iterations for the Gibbs sampler
 params.maxK = 10;    % Maximum number of latent features (for memory allocation)
 

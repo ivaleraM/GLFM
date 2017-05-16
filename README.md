@@ -137,7 +137,7 @@ In order to run GLFM on your data, you need to:
             mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
     - For PYTHON:
-        - Go to src/GLFMpython folder
+        - Go to src/Ccode/wrapper_python/ folder
         - run command from terminal:
             python setup.py build_ext --inplace
 

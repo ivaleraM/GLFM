@@ -40,7 +40,7 @@ for i in xrange(len(Btrue)):
     V[i].set_title('Image %d' % (i+1)) # set subplot title
 #plt.ion()  # turn on interactive mode for plotting (so that the script continues)
 plt.show() # display images component
-plt.pause(0.0001)
+#plt.pause(0.0001)
 
 print '\tSetting model parameters (ground truth) and generate database...'
 N = 1000           # number of images to be generated
@@ -48,7 +48,7 @@ s2x = 0.5          # noise variance for the observations
 
 print '\tGenerating data with N=%d and noise variance s2x=%.2f' % (N,s2x)
 # generate matrix Z
-Ztrue = np.random.randint(0,2,size=(N,K)).astype('float64')
+Ztrue = 1.0*(np.random.rand(N,K) < 0.2) #np.random.randint(0,2,size=(N,K)).astype('float64')
 # Next line generates the toy database
 X = np.sqrt(s2x) * np.random.randn(N,D) + np.inner(Ztrue, Btrue.transpose())
 
@@ -73,7 +73,7 @@ data['C'] = np.tile('g',(1,X.shape[1]))[0].tostring() # datatype vector
 
 # params is optional
 params = dict()
-params['alpha'] = 5   # concentration parameter for the IBP
+params['alpha'] = 2   # concentration parameter for the IBP
 params['Niter'] = 100 # number of algorithm iterations
 # params['s2u'] = 0.005 # auxiliary noise variance
 params['maxK'] = 10
@@ -116,7 +116,7 @@ for k in xrange(hidden['B'].shape[1]):
     V[k].set_title('Feature %d' % (k+1))
 #plt.ion()  # interactive mode for plotting (script continues)
 plt.show() # display figure
-plt.pause(0.0001)
+#plt.pause(0.0001)
 
 print('\n\n# -------------------')
 print "# SUCCESSFUL"
