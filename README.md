@@ -148,7 +148,7 @@ The folder `demos' contain scripts, as well as Jupiter notebooks, with applicati
 
 As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb) replicates the example of the IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011). by generating a small set of images composed by different combinations of four original images plus additive Gaussian noise. Using the GLFM, we are able to recover the original images seamlessly.
 
-Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for both in MATLAB and PYTHON. For more detail, please visit our [demo website](demos.html). 
+Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for both in MATLAB and PYTHON. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
 
 -------
 Contact
