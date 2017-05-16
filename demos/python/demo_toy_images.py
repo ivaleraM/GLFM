@@ -1,10 +1,8 @@
-# # Introduction to the General Latent Feature Model (GLFM)
 # # DEMO_TOY_IMAGES
+## Simple illustration of GLFM pipeline, replicating the example of the
+## IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011).
 
 # Let us first import all the necessary libraries.
-
-# In[1]:
-
 import numpy as np # import numpy matrix for calculus with matrices
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
@@ -53,7 +51,6 @@ Ztrue = 1.0*(np.random.rand(N,K) < 0.2) #np.random.randint(0,2,size=(N,K)).astyp
 X = np.sqrt(s2x) * np.random.randn(N,D) + np.inner(Ztrue, Btrue.transpose())
 
 
-# In[3]:
 
 # ---------------------------------------------
 # 2. INITIALIZATION FOR GLFM ALGORITHM
@@ -75,10 +72,8 @@ data['C'] = np.tile('g',(1,X.shape[1]))[0].tostring() # datatype vector
 params = dict()
 params['alpha'] = 2   # concentration parameter for the IBP
 params['Niter'] = 100 # number of algorithm iterations
-# params['s2u'] = 0.005 # auxiliary noise variance
 params['maxK'] = 10
 
-# In[4]:
 
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
@@ -119,6 +114,6 @@ plt.show() # display figure
 #plt.pause(0.0001)
 
 print('\n\n# -------------------')
-print "# SUCCESSFUL"
+print "# SUCCESSFUL -- The GLFM is able to recover the original images seamlessly."
 print('# -------------------')
 
