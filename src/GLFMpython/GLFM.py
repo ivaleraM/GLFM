@@ -13,8 +13,6 @@ sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
 import GLFMlib # python wrapper library in order to run C++ inference routine
 import mapping_functions as mf
 
-import pdb
-
 def infer(data,hidden=dict(), params=dict()):
     """
     Python wrapper to launch inference routine for the GLFM model.
