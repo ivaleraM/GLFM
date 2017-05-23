@@ -6,8 +6,6 @@ from cymem.cymem cimport Pool
 import numpy as np
 cimport numpy as np
 
-import pdb
-
 # declare the interface to the C code
 #cdef extern void c_multiply (double* array, double value, int m, int n)
 cdef extern from "stdio.h":

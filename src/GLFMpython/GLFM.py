@@ -66,17 +66,21 @@ def infer(data,hidden=dict(), params=dict()):
     if not(hidden.has_key('Z')):
         hidden['Z'] = 1.0*(np.random.rand(N,2) > 0.8)
         if params['bias'] == 1: # add bias if requested
-            hidden['Z'] = np.concatenate(np.ones((N,1)), hidden['Z'])
+            hidden['Z'] = np.concatenate((np.ones((N,1)), hidden['Z']),axis=1)
 
     # replace nan by missing values
     data['X'][np.isnan(data['X'])] = params['missing']
+    # # dealing with missing data: replace np.nan by -1
+    # (xx,yy) = np.where(np.isnan(X)) # find positions where X is nan (i.e. missing data)
+    # for r in xrange(len(xx)):
+    #     X[xx[r],yy[r]] = -1
 
     # change labels for categorical and ordinal vars such that categories
     # start counting at 1 and all of them are bigger than 0
     V_offset = np.zeros(D)
     for d in xrange(D):
-        if (data['C']=='c' or data['C']=='o'):
-            mask = not(data['X'][:,d] == params['missing'])
+        if (data['C'][d]=='c' or data['C'][d]=='o'):
+            mask = data['X'][:,d] != params['missing']
             V_offset[d] = np.min( data['X'][mask,d] )
             data['X'][mask,d] = data['X'][mask,d] - V_offset[d] + 1
 
@@ -84,7 +88,7 @@ def infer(data,hidden=dict(), params=dict()):
     for r in xrange(data['X'].shape[1]):
         if not(params['t'][r] == None): # there is an external transform
             data['X'][:,r] = params['t_1'][r](data['X'][:,r])
-            data['C'][r] = params['ext_dataType'][r]
+            data['C'] = data['C'][:r] + params['ext_dataType'][r] + data['C'][(r+1):]
 
     # prepare input data for C++ inference routine
     Fin = np.ones(data['X'].shape[1]) # choose internal transform function (for positive)
@@ -111,9 +115,9 @@ def infer(data,hidden=dict(), params=dict()):
 
     hidden['R'] = np.ones(D)
     for d in xrange(D):
-        if (data['C']== 'c' or data['C'] == 'o'):
+        if (data['C'][d] == 'c' or data['C'][d] == 'o'):
             hidden['R'][d] = np.unique( data['X']\
-                    [not(data['X'][:,d] == params['missing']),d] ).shape[0]
+                    [data['X'][:,d] != params['missing'],d] ).shape[0]
     return hidden
 
 def complete(data, hidden=dict(), params=dict()):
@@ -218,24 +222,22 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
         d = idxsD[dd]
         if params.has_key('t'): # if external transformations have been defined
             if not(params['t'][d] == None): # there is an external transform for data type d
-                C[d] = params['ext_dataType'][d] # set new type of data
+                C = C[:d] + params['ext_dataType'][d] + C[(d+1):]
 
         if not(C[d] == 'c'):
-            aux = np.inner(Zp, np.squeeze(hidden['B'][d,:]))
+            aux = np.inner(Zp, hidden['B'][d,:,0])
 
         if C[d] == 'g':
             X_map[:,dd] = mf.f_g( aux, hidden['mu'][d], hidden['w'][d] )
         elif C[d] == 'p':
-            pdb.set_trace()
             X_map[:,dd] = mf.f_p( aux, hidden['mu'][d], hidden['w'][d] )
         elif C[d] == 'n':
             X_map[:,dd] = mf.f_n( aux, hidden['mu'][d], hidden['w'][d] )
         elif C[d] == 'c':
-            pdb.set_trace()
-            X_map[:,dd] = mf.f_c( np.inner(Zp, np.squeeze(hidden['B'][d,:,range(hidden['R'][d])])) )
+            X_map[:,dd] = mf.f_c( np.inner(Zp, hidden['B'][d,:,\
+                    range(int(hidden['R'][d])) ]) )
         elif C[d] == 'o':
-            pdb.set_trace()
-            X_map[:,dd] = mf.f_o( aux, hidden['theta'][d,range(hidden['R'][d]-1)] )
+            X_map[:,dd] = mf.f_o( aux, hidden['theta'][d,range(int(hidden['R'][d]-1))] )
         else:
             raise ValueError('Unknown data type')
         if (sum(np.isnan(X_map[:,dd])) > 0):
@@ -301,6 +303,42 @@ def computePDF(data, Zp, hidden, params, d):
             xd = params['t'][d](xd) # if there was an external transformation, transform pdf
             pdf = pdf * np.abs( params['dt_1'][d](xd) )
     return (xd,pdf)
+
+def get_feature_patterns(Z):
+    """
+    Function to compute list of activation patterns. Returns sorted list
+    Input:
+        Z: N*K binary matrix
+    Outputs:
+        patterns: numP*K: list of patterns
+        C: assignment vector of length N*1 with pattern id for each observation
+        L: numP*1 vector with num. of observations per pattern
+    """
+    N = Z.shape[0]
+    C = np.zeros(N)
+
+    patterns = np.vstack({tuple(row) for row in Z})
+    numP = patterns.shape[0]
+    L = np.zeros(numP)
+    for r in xrange(numP): # for each pattern
+        pat = patterns[r,:]
+        mask = np.sum(np.tile(pat,(N,1)) == Z, axis=1) == Z.shape[1]
+        C[mask] = r
+        L[r] = sum(mask)
+        #print '%d. %s: %d' % (r, str(patterns[r,:]), L[r])
+
+    # sort arrays
+    idxs = L.argsort()
+    idxs = np.flipud(idxs)
+    L = L[idxs]
+    C = C[idxs]
+    patterns = patterns[idxs,:]
+
+    print '\n'
+    for r in xrange(numP): # for each pattern
+        print '%d. %s: %d' % (r, str(patterns[r,:]), L[r])
+
+    return (patterns,C,L)
 
 def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
     """

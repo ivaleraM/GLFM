@@ -29,10 +29,11 @@ def f_c(y):
     # transformation function for categorical data
     # input argument y: [N*R]
     # output: x [N*1]
-    x = np.zeros((y.shape[0],1))
-    for n in xrange(y.shape[0]):
-        val = max(y[n,:])
-        x[i] = np.where(y[n,:] == val)[0][0]
+    assert (len(y.shape) > 1), 'there is only one category, this dimension does not make sense'
+    x = np.zeros(y.shape[0])
+    for i in xrange(y.shape[0]):
+        val = max(y[i,:])
+        x[i] = np.where(y[i,:] == val)[0][0] + 1
     # [a,x] = max(y,[],2);
     return x
 
@@ -50,13 +51,13 @@ def f_o(y, theta):
     # Inputs:
     #       y: [1*R] Pseudo-observations
     #   theta: [1*(R-1)] Thresholds that divide the real line into R regions
-    x = np.zeros((y.shape[0],y.shape[1])) # column vector
+    x = np.zeros(y.shape[0]) # column vector
     for j in xrange(len(theta)):
         if (j == 0):
             mask = (y <= theta[0])
         else:
-            mask = (y > theta[j-1]) and (y <= theta[j])
-        x[mask] = j
+            mask = (y > theta[j-1]) * (y <= theta[j])
+        x[mask] = j + 1
     x[x == 0] = len(theta) # last ordinal category
     #for r in xrange(len(theta)): #= 1:length(theta)
     #    val = theta[r]
