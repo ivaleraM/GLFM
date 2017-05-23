@@ -50,7 +50,6 @@ params.maxK = 10;
 if ~isfield(params,'bias')
     params.bias = 1;    % 1 = fix first feature to be active for all patients 
 end
-params.func = ones(1,D);
 
 if ~isfield(params,'simId')
     params.simId = 1;  % simulation identifier (to be able to run the sample sim. multiple times 
@@ -89,15 +88,15 @@ if ~params.save
     hidden = remove_dims(hidden, feat_toRemove); % remove latent dimensions
 
     sum(hidden.Z)
-    [patterns, C] = get_feature_patterns(hidden.Z);
+    [patterns, C] = get_feature_patterns_sorted(hidden.Z);
 
     % choose patterns corresponding to activation of each feature
     Kest = size(hidden.B,2);
     Zp = eye(Kest);
     Zp(:,1) = 1; % bias active
     Zp = Zp(1:min(5,Kest),:);
-    leg = {'F0','F1', 'F2', 'F3', 'F4', 'F5'};
+    leg = {'F0','F1', 'F2', 'F3', 'F4'};
 
-    colors = []; styles = [];
-    plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles);
+    colors = [];
+    GLFM_plotPatterns(data, hidden, params, Zp, 'leg', leg, 'colors', colors);
 end

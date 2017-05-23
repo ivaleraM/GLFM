@@ -1,6 +1,7 @@
 %% --------------------------------------------------
 % DEMO: Data exploration on counties database
 %% --------------------------------------------------
+close all;
 addpath(genpath('../../src/'));
 rng(round(sum(1e5*clock)));
 
@@ -21,7 +22,7 @@ data.ylabel(idx_to_remove) = [];
 
 Xtrue = data.X;
 % specify external transforms for certain dimensions
-idx_transform = []; %[2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
+idx_transform = [2 5 6 11] ; %[4 5 10]; %[2 3 7 9 10 15];
 params.t = cell(1,size(data.X,2));
 params.t_1 = cell(1,size(data.X,2));
 params.dt_1 = cell(1,size(data.X,2));
@@ -49,7 +50,7 @@ params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
 if ~isfield(params,'Niter')
-    params.Niter = 1000; % Number of iterations for the gibbs sampler
+    params.Niter = 100; % Number of iterations for the gibbs sampler
 end
 params.maxK = 10;
 
@@ -100,7 +101,7 @@ if ~params.save
     hidden = sort_hidden(hidden);
     sum(hidden.Z)
 
-    [patterns, C, L] = get_feature_patterns_sorted(hidden.Z);
+    [patterns, CC, L] = get_feature_patterns_sorted(hidden.Z);
 
     idxD = 2:size(data.X,2);
 
@@ -114,9 +115,23 @@ if ~params.save
     leg = num2str(Zp(:,2:end));
     leg = mat2cell(leg, ones(size(Zp,1),1), size(leg,2))';
     %Zp = [Zp zeros(size(Zp,1), size(hidden.Z,2) - idxF)];
-
-    colors = []; styles = [];
-    plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles, idxD);
+    
+    colors = [ 0 102 255; ...
+        153 51  255; ...
+        204 204 0; ...
+        255 102  102; ...
+        0   204 102;
+        255 51 255];
+    colors = colors ./ 255; %repmat(sum(colors,2),1,3);
+    colors(3,:) = [0.9290    0.6940    0.1250];
+    colors(5,:) = [0.4660    0.6740    0.1880];
+    
+    % change order of colors
+    colors = colors([3 5 4 2 1],:);
+    colors(4,:) = [0 255 255] ./255;
+    
+    GLFM_plotPatterns(data, hidden, params, Zp, ...
+        'leg', leg, 'colors', colors(1:size(Zp,1),:), 'idxD', idxD);
     if saveFigs
         cleanfigure;
         matlab2tikz([savepath, sprintf('dim%d.tex', d)] );
@@ -131,7 +146,7 @@ if ~params.save
 
     for k=1:size(patterns,1)
         pat = patterns(k,:);
-        Zn = (C == k);
+        Zn = (CC == k);
         %Zn = hidden.Z(:,k);
 
         if (sum(Zn) < (size(data.X,1)*0.01))
@@ -149,17 +164,4 @@ if ~params.save
         end
     end
 
-%     Zp = eye(size(hidden.Z,2));
-%     Zp(:,1) = 1;
-%     for k=1:size(Zp,1)
-%         pat = Zp(k,:);
-%         %Zn = (C == k);
-%         Zn = hidden.Z(:,k);
-% 
-%         if (sum(Zn) < (size(data.X,1)*0.05))
-%             continue; % only plot patterns with more than 5% of number of obs.
-%         end
-%         plot_usa_map(data,Zn);
-%         title(sprintf('Activation of pattern (%s)',num2str(pat)));
-%     end
 end

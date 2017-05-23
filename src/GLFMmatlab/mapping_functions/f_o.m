@@ -9,5 +9,5 @@ function x = f_o(y, Theta)
         end
         x( mask ) = j;
     end
-    x ( x == 0 ) = length(Theta); % last ordinal category
+    x ( x == 0 ) = length(Theta)+1; % last ordinal category
 end

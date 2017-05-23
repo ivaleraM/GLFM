@@ -43,5 +43,5 @@ for r=1:size(patterns,1) % for each pattern
     mask = sum( ~xor(repmat(patterns(r,:),size(Z,1),1), Z),2) == size(Z,2); % which patients have that pattern
     C(mask) = r;
     L(r) = sum(mask);
-    fprintf(fid, '%d. %s: %d\n', r, num2str(patterns(r,:)), L(r));    
+    fprintf(fid, '%d. %s: %d\n', r, num2str(patterns(r,:)), L(r));
 end

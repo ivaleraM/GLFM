@@ -4,11 +4,11 @@ function [patterns, C, L] = get_feature_patterns(Z,varargin)
 %   - Z: N*K matrix
 % Outputs:
 %   - patterns: (numPatterns*numFeatures) matrix
-%   - C is an assignment vector, with the pattern id for each patient (numPatients*1)
+%   - C is an assignment vector, with the pattern id for each observation
+%   - L is a numPatterns*1 vector with the number of samples per pattern
 
 % average
 N = size(Z,1);
-D = size(Z,2); % number of features
 C = zeros(N,1);
 
 if isempty(varargin)
