@@ -30,7 +30,7 @@ print '\n 2. INITIALIZATION\n'
 print '\tSetting optional parameters for the GLFM model...'
 
 params = dict()
-params['Niter'] = 100  # number of algorithm iterations (for Gibbs sampler)
+params['Niter'] = 10  # number of algorithm iterations (for Gibbs sampler)
 params['s2B'] = 1      # noise variance for feature values
 params['s2u'] = 0.005  # auxiliary noise
 params['alpha'] = 1    # mass parameter for the Indian Buffet Process
@@ -106,7 +106,7 @@ hidden['Z']= hidden['Z'][:,feat_select]
 hidden['B']= hidden['B'][:,feat_select,:]
 
 sum(hidden['Z'])
-[patterns, C, L] = GLFM.get_feature_patterns(hidden['Z']) # returns sorted patterns
+[patterns, C, L] = GLFM.get_feature_patterns_sorted(hidden['Z']) # returns sorted patterns
 
 # choose patterns corresponding to activation of each feature
 Zp = np.eye(Kest)
@@ -118,7 +118,6 @@ Zp = patterns[L > 240,:]
 colors = np.array([[ 0, 102, 255], [153, 51, 255], \
     [204, 204, 0], [255, 102, 102], \
     [0, 204, 102], [255, 51, 255]])
-pdb.set_trace()
 colors = colors / 255.0
 colors[3,:] = [0.9290, 0.6940, 0.1250]
 colors[5,:] = [0.4660, 0.6740, 0.1880]
@@ -128,9 +127,9 @@ colors[5,:] = [0.4660, 0.6740, 0.1880]
 # colors(4,:) = [0 255 255] ./255
 
 idxD = range(1,D) # idxD = 2:size(data.X,2)
-colors = None
 styles = None
-#GLFM.plotPatterns(data, hidden, params, Zp, colors=colors[:Zp.shape[0],:],idxD=idxD)
+#GLFM.plotPatterns(data, hidden, params, Zp)
+GLFM.plotPatterns(data, hidden, params, Zp, colors=colors[:Zp.shape[0],:],idxD=idxD)
 # plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles)
 
 print "SUCCESSFUL"

@@ -127,7 +127,7 @@ function leg = computeLeg(Zp, params)
         leg = num2str(Zp(:,2:end));
     else
         leg = num2str(Zp);
-    end        
+    end
     leg = mat2cell(leg, ones(size(Zp,1),1), size(leg,2))';
 end
 

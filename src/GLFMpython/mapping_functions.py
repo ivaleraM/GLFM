@@ -121,6 +121,7 @@ def pdf_g(X,Zp, B,mu , w, s2y, s2u):
     #   B: K*D array
     #  s2y: noise variance for pseudo-observations (scalar)
     #  s2u: auxiliary noise variance (scalar)
+    pdb.set_trace()
     df_1 = lambda x: w*(x-mu)
     pdf = norm.pdf( df_1(X) , np.dot(Zp,Bd) , np.sqrt(s2y + s2u)*w )
     return pdf
@@ -129,11 +130,11 @@ def pdf_c(Zn,B,s2y,numMC_samples=100):
     # Function to compute pdf of an ordinal variable. It returns the whole
     # pdf, a probability vector of length R (number of categories)
     # Input parameters:
-    #    Zn: [1*K], feature activation vector
-    #    B: [K*R], feature weights (dictionary)
+    #    Zn: [K], feature activation vector
+    #    B: [R*K], feature weights (dictionary)
     #   s2u: scalar, variance of auxiliary noise
 
-    R = B.shape[1]
+    R = B.shape[0]
     pdf = np.zeros(R)
     uV = np.sqrt(s2y) * np.random.randn(numMC_samples) # mean = 0
     for r in xrange(R):
@@ -144,7 +145,7 @@ def pdf_c(Zn,B,s2y,numMC_samples=100):
             if (j==r):
                 continue
             tmp = tmp * norm.cdf(uV + np.kron( np.ones(numMC_samples), \
-                    np.inner(Zn,Bd[:,r]-Bd[:,j]) ) )
+                    np.inner(Zn,B[r,:]-B[j,:]) ) )
             #aux = aux .* normcdf( u + Zp*(B(:,r) - B(:,j)) );
         pdf[r] = np.mean(tmp,1)
     pdf = pdf / sum(pdf)
@@ -155,7 +156,6 @@ def pdf_n(X,Zn,B,mu,w,s2y):
     # Inputs:
     #   B: K*R
     #   Zp: 1*K, where K: number of latent features
-    # TODO: Replace inner
     pdf = norm.cdf(f_n_1(X+1,mu,w), np.inner(Zn,B), np.sqrt(s2y)) \
         - norm.cdf(f_n_1(X,mu,w), np.inner(Zn,B), np.sqrt(s2y))
     return pdf
@@ -165,7 +165,7 @@ def pdf_o(Zn,B,theta,s2y):
     # pdf, a probability vector of length R (number of categories)
     # Input parameters:
     #    Zn: [1*K], feature activation vector
-    #    Bd: [K*D], feature weights (dictionary) # TODO: Review dimensions
+    #     B: [R*K], feature weights (dictionary) # TODO: Review dimensions
     # theta: [1*(R-1)]
     #   s2y: scalar, variance of pseudo-observations
     R = len(theta)+1 # number of categories
@@ -176,10 +176,10 @@ def pdf_o(Zn,B,theta,s2y):
             b = 0
         elif (r==(R-1)):
             a = 1
-            b = norm.cdf(theta[r-2],np.inner(Zn,B),np.sqrt(s2y))
+            b = norm.cdf(theta[r-1],np.inner(Zn,B),np.sqrt(s2y))
         else:
-            a = norm.cdf(theta[r-1],np.inner(Zn,B),np.sqrt(s2y))
-            b = norm.cdf(theta[r-2],np.inner(Zn,B),np.sqrt(s2y))
+            a = norm.cdf(theta[r],np.inner(Zn,B),np.sqrt(s2y))
+            b = norm.cdf(theta[r-1],np.inner(Zn,B),np.sqrt(s2y))
         pdf[r] = a - b
     return pdf
 
@@ -193,7 +193,7 @@ def pdf_p(X,Zn,B,mu, w, s2y,s2u):
     # s2y: scalar, variance of pseudo-observations
     # s2u: scalar, variance of auxiliary noise
 
-    pdf = 1.0/np.sqrt(2*np.pi*(s2u+s2y)) * np.exp( \
+    pdf = 1.0/(2*np.pi*np.sqrt(s2u+s2y)) * np.exp( \
             -1.0/(2.0*(s2y+s2u)) * (f_p_1(X,mu,w) - np.inner(Zn,B))**2)\
             * np.abs( df_p_1(X,mu, w) )
     return pdf

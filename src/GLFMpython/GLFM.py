@@ -13,6 +13,10 @@ sys.path.append(os.path.join(root, 'Ccode/wrapper_python/'))
 import GLFMlib # python wrapper library in order to run C++ inference routine
 import mapping_functions as mf
 
+import copy
+
+import pdb
+
 def infer(data,hidden=dict(), params=dict()):
     """
     Python wrapper to launch inference routine for the GLFM model.
@@ -66,8 +70,10 @@ def infer(data,hidden=dict(), params=dict()):
         if params['bias'] == 1: # add bias if requested
             hidden['Z'] = np.concatenate((np.ones((N,1)), hidden['Z']),axis=1)
 
+    tmp_data = copy.deepcopy(data) #np.copy(data).tolist()
+
     # replace nan by missing values
-    data['X'][np.isnan(data['X'])] = params['missing']
+    tmp_data['X'][np.isnan(tmp_data['X'])] = params['missing']
     # # dealing with missing data: replace np.nan by -1
     # (xx,yy) = np.where(np.isnan(X)) # find positions where X is nan (i.e. missing data)
     # for r in xrange(len(xx)):
@@ -77,26 +83,26 @@ def infer(data,hidden=dict(), params=dict()):
     # start counting at 1 and all of them are bigger than 0
     V_offset = np.zeros(D)
     for d in xrange(D):
-        if (data['C'][d]=='c' or data['C'][d]=='o'):
-            mask = data['X'][:,d] != params['missing']
-            V_offset[d] = np.min( data['X'][mask,d] )
-            data['X'][mask,d] = data['X'][mask,d] - V_offset[d] + 1
+        if (tmp_data['C'][d]=='c' or tmp_data['C'][d]=='o'):
+            mask = tmp_data['X'][:,d] != params['missing']
+            V_offset[d] = np.min( tmp_data['X'][mask,d] )
+            tmp_data['X'][mask,d] = tmp_data['X'][mask,d] - V_offset[d] + 1
 
     # eventually, apply external transform specified by the user
-    for r in xrange(data['X'].shape[1]):
+    for r in xrange(tmp_data['X'].shape[1]):
         if not(params['t'][r] == None): # there is an external transform
-            data['X'][:,r] = params['t_1'][r](data['X'][:,r])
-            data['C'] = data['C'][:r] + params['ext_dataType'][r] + data['C'][(r+1):]
+            tmp_data['X'][:,r] = params['t_1'][r](tmp_data['X'][:,r])
+            tmp_data['C'] = tmp_data['C'][:r] + params['ext_dataType'][r] + tmp_data['C'][(r+1):]
 
     # prepare input data for C++ inference routine
-    Fin = np.ones(data['X'].shape[1]) # choose internal transform function (for positive)
-    Xin = np.ascontiguousarray( data['X'].transpose() ) # specify way to store matrices to be
+    Fin = np.ones(tmp_data['X'].shape[1]) # choose internal transform function (for positive)
+    Xin = np.ascontiguousarray( tmp_data['X'].transpose() ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( hidden['Z'].transpose() ) # compatible with C code
     tic = timeI.time() # start counting time
 
     # RUN C++ routine
     (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out) = \
-            GLFMlib.infer(Xin, data['C'], Zin, Fin, params['bias'], params['s2u'],\
+            GLFMlib.infer(Xin, tmp_data['C'], Zin, Fin, params['bias'], params['s2u'],\
             params['s2B'], params['alpha'], params['Niter'],\
             params['maxK'], params['missing'], params['verbose'])
     hidden['time'] = timeI.time() - tic
@@ -111,11 +117,11 @@ def infer(data,hidden=dict(), params=dict()):
     hidden['w'] = w_out
     hidden['s2Y'] = s2Y_out
 
-    hidden['R'] = np.ones(D)
+    hidden['R'] = [None] * D
     for d in xrange(D):
         if (data['C'][d] == 'c' or data['C'][d] == 'o'):
             hidden['R'][d] = np.unique( data['X']\
-                    [data['X'][:,d] != params['missing'],d] ).shape[0]
+                    [data['X'][:,d] != params['missing'],d] )
     return hidden
 
 def complete(data, hidden=dict(), params=dict()):
@@ -170,15 +176,16 @@ def complete(data, hidden=dict(), params=dict()):
     # Run Inference
     hidden = infer(data,hidden,params)
 
+    tmp_data = copy.deepcopy(data) # np.copy(data).tolist()
     # Just in case there is any nan (also considered as missing)
-    data['X'][np.isnan(data['X'])] = params['missing']
+    tmp_data['X'][np.isnan(tmp_data['X'])] = params['missing']
 
-    [xx_miss, yy_miss] = (data['X'] == params['missing']).nonzero()
+    [xx_miss, yy_miss] = (tmp_data['X'] == params['missing']).nonzero()
 
-    Xcompl=np.copy(data['X'])
+    Xcompl=np.copy(tmp_data['X'])
     for ii in xrange(len(xx_miss)): # for each missing
-        if data['X'][xx_miss[ii],yy_miss[ii]] == params['missing']: # will always be the case
-            Xcompl[xx_miss[ii],yy_miss[ii]] = computeMAP( data['C'], hidden['Z'][xx_miss[ii],:], hidden, params, [ yy_miss[ii] ] )
+        if tmp_data['X'][xx_miss[ii],yy_miss[ii]] == params['missing']: # will always be the case
+            Xcompl[xx_miss[ii],yy_miss[ii]] = computeMAP( tmp_data['C'], hidden['Z'][xx_miss[ii],:], hidden, params, [ yy_miss[ii] ] )
     return (Xcompl,hidden)
 
 def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
@@ -233,9 +240,9 @@ def computeMAP(C, Zp, hidden, params=dict(), idxsD=[]):
             X_map[:,dd] = mf.f_n( aux, hidden['mu'][d], hidden['w'][d] )
         elif C[d] == 'c':
             X_map[:,dd] = mf.f_c( np.inner(Zp, hidden['B'][d,:,\
-                    range(int(hidden['R'][d])) ]) )
+                    range(int(hidden['R'][d].shape[0])) ]) )
         elif C[d] == 'o':
-            X_map[:,dd] = mf.f_o( aux, hidden['theta'][d,range(int(hidden['R'][d]-1))] )
+            X_map[:,dd] = mf.f_o( aux, hidden['theta'][d,range(int(hidden['R'][d].shape[0]-1))] )
         else:
             raise ValueError('Unknown data type')
         if (sum(np.isnan(X_map[:,dd])) > 0):
@@ -249,14 +256,16 @@ def computePDF(data, Zp, hidden, params, d):
     """
     Function to compute probability density function for dimension d
     """
-    data['X'][np.isnan(data['X'][:,d]),d] = params['missing_val']
+    print "dim=%d\n" % d
+    tmp_data = copy.deepcopy(data) #np.copy(data).tolist()
+    tmp_data['X'][np.isnan(tmp_data['X'][:,d]),d] = params['missing']
 
     # compute x-domain [mm MM] to compute pdf
-    mm = np.min(data['X'][not(data['X'][:,d] == params['missing']), d]) # min value
-    MM = np.max(data['X'][not(data['X'][:,d] == params['missing']), d]) # max value
+    mm = np.min(tmp_data['X'][tmp_data['X'][:,d] != params['missing'], d]) # min value
+    MM = np.max(tmp_data['X'][tmp_data['X'][:,d] != params['missing'], d]) # max value
 
-    if (not(params['t'][d]) == None): # if there is an external transformation
-        data['C'][d] = params['ext_dataType'][d]
+    if (params['t'][d] != None): # if there is an external transformation
+        tmp_data['C'] = tmp_data['C'][:d] + params['ext_dataType'][d] + tmp_data['C'][d+1:]
         mm = params['t_1'][d](mm)
         MM = params['t_1'][d](MM)
 
@@ -269,40 +278,40 @@ def computePDF(data, Zp, hidden, params, d):
     K = hidden['B'].shape[1]
     assert (K2 == K), "Incongruent sizes between Zp and hidden['B']: number of latent variables should not be different"
 
-    if (data['C'][d] == 'g') or (data['C'][d] == 'p'):
-        if not(params.has_key('numS')):
-            params['numS'] = 100
-        xd = np.linspace(mm, MM, num=params['numS'])
-    elif (data['C'][d] == 'n'):
-        xd = range(mm,MM+1)
-        params['numS'] = len(xd)
+    if (tmp_data['C'][d] == 'g') or (tmp_data['C'][d] == 'p'):
+        numS = 100
+        xd = np.linspace(mm, MM, num=numS)
+    elif (tmp_data['C'][d] == 'n'):
+        xd = np.array( range(int(mm),int(MM)+1) )
+        numS = len(xd)
     else:
-        xd = np.unique(data['X'][not(data['X'][:,d] == params['missing']), d])
-        params['numS'] = len(xd) # number of labels for categories or ordinal data
-    pdf = np.zeros((P,params['numS']))
+        xd = np.unique(tmp_data['X'][tmp_data['X'][:,d] != params['missing'], d])
+        numS = len(xd) # number of labels for categories or ordinal data
+    pdf = np.zeros((P,numS))
 
     for p in xrange(P):
-        if data['C'][d] == 'g':
-            pdf[p,:] = mf.pdf_g(xd,Zp[p,:], np.squeeze(hidden['B'][d,:]), hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params)
-        elif data['C'][d] == 'p':
-            pdf[p,:] = mf.pdf_p(xd,Zp[p,:], np.squeeze(hidden['B'][d,:]), hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params)
-        elif data['C'][d] == 'n':
-            pdf[p,:] = mf.pdf_n(xd,Zp[p,:], np.squeeze(hidden['B'][d,:]), hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params)
-        elif data['C'][d] == 'c':
-            pdf[p,:] = mf.pdf_c(Zp[p,:], np.squeeze(hidden['B'][d,:,range(hidden['R'][d])]), hidden['s2Y'][d])
-        elif data['C'][d] == 'o':
-            pdf[p,:] = mf.pdf_o(Zp[p,:], squeeze(hidden['B'][d,:]), hidden['theta'][d,range(hidden['R'][d]-1)], hidden['s2Y'][d])
+        if tmp_data['C'][d] == 'g':
+            pdb.set_trace()
+            pdf[p,:] = mf.pdf_g(xd,Zp[p,:], hidden['B'][d,:,0], hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params['s2u'])
+        elif tmp_data['C'][d] == 'p':
+            pdf[p,:] = mf.pdf_p(xd,Zp[p,:], hidden['B'][d,:,0], hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params['s2u'])
+        elif tmp_data['C'][d] == 'n':
+            pdf[p,:] = mf.pdf_n(xd,Zp[p,:], hidden['B'][d,:,0], hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d])
+        elif tmp_data['C'][d] == 'c':
+            pdf[p,:] = mf.pdf_c(Zp[p,:], hidden['B'][d,:,range(int(hidden['R'][d].shape[0]))], hidden['s2Y'][d])
+        elif tmp_data['C'][d] == 'o':
+            pdf[p,:] = mf.pdf_o(Zp[p,:], hidden['B'][d,:,0], hidden['theta'][d,range(int(hidden['R'][d].shape[0]-1))], hidden['s2Y'][d])
         else:
             raise ValueError('Unknown data type')
         assert (np.sum(np.isnan(pdf)) == 0), "Some values are nan!"
 
     if params.has_key('t'):
-        if not(params['t'] == None): # we have used a special transform beforehand
+        if (params['t'][d] != None): # we have used a special transform beforehand
             xd = params['t'][d](xd) # if there was an external transformation, transform pdf
             pdf = pdf * np.abs( params['dt_1'][d](xd) )
     return (xd,pdf)
 
-def get_feature_patterns(Z):
+def get_feature_patterns_sorted(Z):
     """
     Function to compute list of activation patterns. Returns sorted list
     Input:
@@ -338,163 +347,124 @@ def get_feature_patterns(Z):
 
     return (patterns,C,L)
 
-def plot_dim_1feat(X,B,Theta,C,d,k,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
+def plotPatterns(data, hidden, params, patterns, colors=[], styles=[],\
+        leg=[], idxD=[]):
     """
-    Function to plot an individual dimension of feature matrix B
+    Function to plot the inferred distribution and empirical histogram for
+    each dimension of the observations.
     Inputs:
-        X: observation matrix of dimensions (D,N)
-        B: (D,Kest,maxR) ndarray
-        C: datatype vector - str of length D
-        d: dimension to plot
-        k: feature to consider
-    Output:
+        data: data structure
+        hidden: structure of latent variables
+        params: structure of simulation parameters and hyperparameters
+        patterns: numP*K list of patterns to plot
+        ------ (optional) ------
+        colors: list of colors to plot
+        styles: list of styles for each line (for plot, not bar)
+        leg: legend to use (by default, use patterns as legend)
+        idxD: array of dimensions to plot
+    Outputs:
         void
     """
-    plt.figure()
-    plt.xlabel(xlabel)
 
-    (D,Kest,maxR) = B.shape
-    Xd = data['X'][d,:]
-    data['C'] = data['C'][d]
-    if k<0 or k>Kest:
-        print('Error: k index should be bigger than o and smaller than Kest')
-    if np.isnan(missing):
-        mask = np.where(not(np.isnan(Xd)))[0]
-    else:
-        mask = np.where(Xd != missing)[0]
-    if data['C'] == 'g':
-        numP = 100 # number of points to plot
-        xx = np.linspace( min(Xd[mask]), max(Xd[mask]), numP )
-        Zn = np.zeros(Kest)
-        Zn[k] = 1
-        Bdv = B[d,:,0]
-        pdf = mf.pdf_real(xx, Zn,Bdv,s2Y,s2u)
-        plt.plot(xx,pdf)
+    # initialize optional parameters
+    if len(leg) == 0: # use patterns as legend
+        leg = [str(x) for x in patterns ]
+    if len(idxD) == 0:
+        idxD = range(data['X'].shape[1])
 
-    elif data['C'] == 'p':
-        numP = 100 # number of points to plot
-        xx = np.linspace( min(Xd[mask]), max(Xd[mask]), numP )
-        Zn = np.zeros(Kest)
-        Zn[k] = 1
-        Bdv = B[d,:,0]
-        w = 2.0 / max(Xd[mask]) # TODO: put function handler
-        pdf = mf.pdf_pos(xx,Zn,Bdv,w,s2Y,s2u,lambda x,w: mf.fpos_1(x,w), \
-                lambda x,w: mf.dfpos_1(x, w));
-        plt.plot(xx,pdf)
+    if (patterns.shape[1] != hidden['B'].shape[1]):
+        raise ValueError('Error: Sizes of patterns and B are inconsistent')
+    if (len(leg) != patterns.shape[0]):
+        raise ValueError('Error: Sizes of leg and patterns are inconsistent')
 
-    elif data['C'] == 'n':
-        xx = np.arange( min(Xd[mask]), max(Xd[mask])+1)
-        Zn = np.zeros(Kest)
-        Zn[k] = 1
-        Bdv = B[d,:,0]
-        w = 2.0 / max(Xd[mask]) # TODO: put function handler
-        pdf = mf.pdf_count(xx,Zn,Bdv,w,s2Y, lambda x,w: mf.fpos_1(x,w))
-        plt.stem(xx,pdf)
+    (D,Kest,maxR) = hidden['B'].shape
+    (numPatterns,Kest) = patterns.shape
 
-    elif data['C'] == 'c':
-        R = len( np.unique(Xd[mask]) )
-        Zn = np.zeros(Kest)
-        Zn[k] = 1
-        Bdv = np.squeeze(B[d,:,:]) # TODO: Review that size = [K*R]
-        pdf = mf.pdf_cat(Zn,Bdv,s2u,R)
-        bar_width = 0.35
-        index = np.arange(len(pdf))
-        plt.bar(index,pdf,bar_width)
-        plt.xticks(index + bar_width / 2, catlabel, rotation='vertical')
+    # replace nan by missing values
+    tmp_data = copy.deepcopy(data) #np.copy(data).tolist()
+    tmp_data['X'][np.isnan(tmp_data['X'])] = params['missing']
 
-    elif data['C'] == 'o':
-        a = 1
-        # TODO
-    else:
-        print 'Unknown datatype'
-    plt.ion()
-    plt.show()
-    plt.pause(0.0001)
-    return
+    colors = [[0.8784, 0.8784, 0.8784], 'r','b','g','m','k', \
+            [0.9290, 0.6940, 0.1250], [0.4660, 0.6740, 0.1880]] # default colors
 
-def plot_dim(X,B,Theta,C,d,Zp,s2Y,s2u,missing=-1,catlabel=[],xlabel=[]):
-    """
-    Function to plot an individual dimension of feature matrix B
-    Inputs:
-        X: observation matrix of dimensions (D,N)
-        B: (D,Kest,maxR) ndarray
-        C: datatype vector - str of length D
-        d: dimension to plot
-    Output:
-        void
-    """
-    if (Zp.shape[1] != B.shape[1]):
-        print 'Error: Sizes of Zp and B are inconsistent'
+    # legend for empirical histogram
+    leg = ['Empirical'] + leg
 
-    colors = ['r','b','g','m','g']
-    plt.figure()       # create new figure
-    plt.xlabel(xlabel) # add x legend
-    #print xlabel
+    for dd in xrange(len(idxD)): # for each required dimension
+        d = idxD[dd]
+        plt.figure(d)                 # create new figure
+        #hold off # TODO
+        #plt.xlabel(data['ylabel'][d]) # add x legend
+        # plot empirical if 'g' | 'p' | 'n'
+        if (data['C'][d] == 'g' or data['C'][d] == 'p' or data['C'][d] == 'n'):
+            mask = tmp_data['X'][:,d]!=params['missing']
+            #plt.hist(data['X'][ mask ,d], bins='auto')
+            results, edges = np.histogram(tmp_data['X'][ mask ,d], normed=True, bins=100)
+            binWidth = edges[1] - edges[0]
+            plt.bar(edges[:-1], results, binWidth, color=[0.7529, 0.7529, 0.7529])
+            plt.show()
 
-    (D,Kest,maxR) = B.shape
-    Xd = data['X'][d,:]
-    data['C'] = data['C'][d]
-    # only consider values in dimension d which are not missing
-    if np.isnan(missing):
-        mask = np.where(not(np.isnan(Xd)))[0]
-    else:
-        mask = np.where(Xd != missing)[0]
-    (numPatterns,Kest) = Zp.shape
-    if data['C'] == 'g':
-        numP = 100 # number of points to plot
-        xx = np.linspace( min(Xd[mask]), max(Xd[mask]), numP )
-        Bdv = B[d,:,0]
-        for p in xrange(numPatterns):
-            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
-            pdf = mf.pdf_real(xx, Zn,Bdv,s2Y,s2u)
-            plt.plot(xx,pdf,label=str(Zn))
+          #  ax = plt.subplot(111)
+          #  w = 0.9 / float(Kest)
+          #  ax.bar(x-w, y,width=w,color='b',align='center')
+          #  ax.bar(x, z,width=w,color='g',align='center')
+          #  ax.bar(x+w, k,width=w,color='r',align='center')
+          #  ax.xaxis_date()
+          #  ax.autoscale(tight=True)
 
-    elif data['C'] == 'p':
-        numP = 100 # number of points to plot
-        xx = np.linspace( min(Xd[mask]), max(Xd[mask]), numP )
-        Bdv = B[d,:,0]
-        w = 2.0 / max(Xd[mask]) # TODO: put function handler
-        for p in xrange(numPatterns):
-            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
-            pdf = mf.pdf_pos(xx,Zn,Bdv,w,s2Y,s2u,lambda x,w: mf.fpos_1(x,w), \
-                lambda x,w: mf.dfpos_1(x, w))
-            plt.plot(xx,pdf,colors[p],label=str(Zn))
+            #[h xx] = hist(data.X(:,d),100);
+            #h = h ./ sum(h * (xx(2) - xx(1)));
+            #bar(xx, h);
+            #set(get(gca,'child'),'FaceColor',[0.8784 0.8784 0.8784], ...
+            #    'EdgeColor',[0.7529 0.7529 0.7529]);
+            # #hold on;
 
-    elif data['C'] == 'n':
-        xx = np.arange( min(Xd[mask]), max(Xd[mask])+1)
-        Bdv = B[d,:,0]
-        w = 2.0 / max(Xd[mask]) # TODO: put function handler
-        for p in xrange(numPatterns):
-            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
-            pdf = mf.pdf_count(xx,Zn,Bdv,w,s2Y, lambda x,w: mf.fpos_1(x,w))
-            plt.stem(xx,pdf,colors[p], label=str(Zn))
+        (xd,pdf) = computePDF(tmp_data, patterns, hidden, params, d)
+        if (tmp_data['C'][d] == 'c') or (tmp_data['C'][d] == 'o'):
+            mask = tmp_data['X'][:,d] != params['missing']
+            (tmp,bla) =  np.histogram(tmp_data['X'][:,d], \
+                   np.unique(tmp_data['X'][:,d]).tolist() + \
+                   [np.unique(tmp_data['X'][:,d])[-1] + 1],\
+                   density=True)
+            # tmp = hist(data.X(mask,d), unique(data.X(mask,d)));
+            bar_width = 0.8/(numPatterns+1)
+            plt.bar(xd,tmp,width=bar_width, color=colors[0], label=leg[0]) # plot empirical
+            for p in xrange(numPatterns):
+                plt.bar(xd+(p+1)*bar_width,pdf[p,:],width=bar_width,\
+                        color=colors[np.mod(p+1,len(colors))], label=leg[p+1])
+            plt.xticks(xd + 0.4, data['cat_labels'][d]) #, rotation='vertical')
 
-    elif data['C'] == 'c':
-        R = len( np.unique(Xd[mask]) )
-        Bdv = np.squeeze(B[d,:,:]) # TODO: Review that size = [K*R]
-        bar_width = 0.6/numPatterns
-        for p in xrange(numPatterns):
-            Zn = np.squeeze(Zp[p,:]) # TODO: Verify dimensions
-            pdf = mf.pdf_cat(Zn,Bdv,s2u,R)
-            index = np.arange(len(pdf))
-            plt.bar(index+p*bar_width,pdf,width=bar_width,color=colors[p]) #, label=str(Zn))
-        plt.xticks(index + bar_width / 2, catlabel, rotation='vertical')
-#ax.bar(x-0.2, y,width=0.2,color='b',align='center')
-#ax.bar(x, z,width=0.2,color='g',align='center')
+            #tmp = tmp / sum(tmp);
+            #h = bar([tmp' pdf']);
+            #h(1).FaceColor = [0.8784 0.8784 0.8784];
 
-    elif data['C'] == 'o':
-        print 'This category is currently under development'
-        a = 1
-        # TODO
-    else:
-        print 'Unknown datatype'
-    plt.legend()
-    #plt.ion()
-    plt.show()
-    plt.pause(0.0001)
+        elif (tmp_data['C'][d] == 'n'):
+            for p in xrange(numPatterns):
+                markerline, stemlines, baseline = plt.stem(xd,pdf[p,:], label=leg[p+1])
+                plt.setp(stemlines, 'color', colors[np.mod(p+1,len(colors))]) # plt.getp(markerline,'color'))
+                plt.setp(markerline, 'markerfacecolor', colors[np.mod(p+1,len(colors))]) # plt.getp(markerline,'color'))
+
+        else:
+            #inte = np.zeros(pdf.shape[0])
+            #for p in xrange(numPatterns):
+            #    for r in xrange(len(xd)):
+            #        inte[p] = inte[p] + (xd[p+1] - xd[p])*pdf[p,r]
+            for p in xrange(numPatterns):
+            #    print "int = %f\n" % sum((xd[1]-xd[0])*pdf[p,:])
+                plt.plot(xd,pdf[p,:], color=colors[np.mod(p+1,len(colors))], label=leg[p+1])
+
+        #if len(colors) > 0:
+        #   # set colors in plot
+        #
+        #if len(styles) > 0:
+        #   # set styles in plot
+
+        plt.legend()
+        plt.ion()
+        plt.show()
+        plt.pause(0.0001)
 
     return
-
 
 def init_default_params(data, params):
     """
@@ -523,8 +493,6 @@ def init_default_params(data, params):
         params['maxK'] = D
     if not(params.has_key('verbose')):
         params['verbose'] = 1
-    if not(params.has_key('numS')):
-        params['numS'] = 1
 
     # parameters for optional external transformation
     if not(params.has_key('t')):

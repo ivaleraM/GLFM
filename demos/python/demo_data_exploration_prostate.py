@@ -44,7 +44,7 @@ for rr in xrange(len(idx_transform)):
     params['dt_1'][r] = lambda x: 1/(x+1)      # derivative of inverse transform
     params['ext_dataType'][r] = 'p'    # change type of data due to transformation
 
-params['Niter'] = 100  # number of algorithm iterations (for Gibbs sampler)
+params['Niter'] = 1000  # number of algorithm iterations (for Gibbs sampler)
 params['s2u'] = .005    # Auxiliary variance
 params['s2B'] = 1       # Variance of the Gaussian prior of the weigting matrices B
 params['alpha'] = 1     # Concentration parameter of the IBP
@@ -80,9 +80,6 @@ print '\tElapsed: #.2f seconds.' # (toc-tic)
 # ---------------------------------------------
 print '\n 4. PROCESSING RESULTS\n'
 
-Kest = hidden['B'].shape[1] # number of inferred latent features
-D = hidden['B'].shape[0]    # number of dimensions
-
 #for d in xrange(D):
 #    ylab = str(data['ylabel_long'][0][d].tolist()[0]) # label for dimension d
 #    V = np.squeeze(data['cat_labels'][0][d]) # labels for categories (empty if not categorical)
@@ -114,14 +111,17 @@ hidden['Z']= hidden['Z'][:,feat_select]
 hidden['B']= hidden['B'][:,feat_select,:]
 
 sum(hidden['Z'])
-[patterns, C, L] = GLFM.get_feature_patterns(hidden['Z'])
+[patterns, C, L] = GLFM.get_feature_patterns_sorted(hidden['Z'])
+
+Kest = hidden['B'].shape[1] # number of inferred latent features
+D = hidden['B'].shape[0]    # number of dimensions
 
 # choose patterns corresponding to activation of each feature
 Zp = np.eye(Kest)
 Zp[:,1] = 1 # bias active
-Zp = Zp[:, 1:min(5,Kest)]
+#Zp = Zp[:, 1:min(5,Kest)]
 
-#GLFM.plotPatterns(data, hidden, params, Zp, leg=leg)
+GLFM.plotPatterns(data, hidden, params, Zp)
 
 print "SUCCESSFUL"
 
