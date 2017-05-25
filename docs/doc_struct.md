@@ -30,7 +30,6 @@ Structures
         missing = -1; % value for missings
         alpha = 1; % Concentration parameter for the IBP
         bias = 0; % number of bias terms, i.e., number of latent features not to be sampled
-        s2Y = 0.5; % Variance of the Gaussian prior on the auxiliary variables (pseudo-observations) Y
         s2u = 0.01; % variance of auxiliary noise
         s2B = 1; % Variance of the Gaussian prior of the weighing vectors B^d
         Niter = 1000; % number of Gibbs sampling iterations to run
