@@ -3,7 +3,7 @@ function GLFM_plotPatterns(data, hidden, params, patterns, varargin)
 ...each dimension of the observations.
 %     Inputs:
 %         data: data structure
-%         hidden: structure of latent variables
+%         hidden: sstructure with latent variables learned by the model
 %         params: structure of simulation parameters and hyperparameters
 %         patterns: numP*K list of patterns to plot
 %         ------ (optional) ------
