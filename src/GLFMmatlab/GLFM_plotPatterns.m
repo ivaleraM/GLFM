@@ -1,5 +1,19 @@
 function GLFM_plotPatterns(data, hidden, params, patterns, varargin)
-
+%% Function to plot the inferred distribution and empirical histogram for ...
+...each dimension of the observations.
+%     Inputs:
+%         data: data structure
+%         hidden: sstructure with latent variables learned by the model
+%         params: structure of simulation parameters and hyperparameters
+%         patterns: numP*K list of patterns to plot
+%         ------ (optional) ------
+%         colors: list of colors to plot
+%         styles: list of styles for each line (for plot, not bar)
+%         leg: legend to use (by default, use patterns as legend)
+%         idxD: array of dimensions to plot
+%     Outputs:
+%         void
+        
 if ~isfield(data,'ylabel_long')
     data.ylabel_long = data.ylabel;
 end
