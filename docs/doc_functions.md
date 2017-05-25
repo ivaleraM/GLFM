@@ -86,7 +86,8 @@
     %   xd: 1*numS where numS is the number of points to compute
     %   pdf: P*numS where P is the number of patterns to consider
  
-**function [] = GLFM.plotPatterns(data, hidden, params, patterns, varargin)
+**function [] = GLFM.plotPatterns(data, hidden, params, patterns, varargin)**
+
     % Function to plot the inferred distribution and empirical histogram for each dimension of the observations.
     % Inputs:
     %   data: data structure
