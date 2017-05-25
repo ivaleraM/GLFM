@@ -84,19 +84,19 @@
     %
     % Outputs:
     %   xd: 1*numS where numS is the number of points to compute
-    %  pdf: P*numS where P is the number of patterns to consider
+    %   pdf: P*numS where P is the number of patterns to consider
  
 **function [] = GLFM.plotPatterns(data, hidden, params, patterns, varargin)
- % Function to plot the inferred distribution and empirical histogram for each dimension of the observations.
- %     Inputs:
- %         data: data structure
- %         hidden: structure of latent variables
- %         params: structure of simulation parameters and hyperparameters
- %         patterns: numP*K list of patterns to plot
- %         ------ (optional) ------
- %         colors: list of colors to plot
- %         styles: list of styles for each line (for plot, not bar)
- %         leg: legend to use (by default, use patterns as legend)
- %         idxD: array of dimensions to plot
- %     Outputs:
- %         void
+    % Function to plot the inferred distribution and empirical histogram for each dimension of the observations.
+    % Inputs:
+    %   data: data structure
+    %   hidden: structure of latent variables
+    %   params: structure of simulation parameters and hyperparameters
+    %   patterns: numP*K list of patterns to plot
+    %   ------ (optional) ------
+    %   colors: list of colors to plot
+    %   styles: list of styles for each line (for plot, not bar)
+    %   leg: legend to use (by default, use patterns as legend)
+    %   idxD: array of dimensions to plot
+    % Outputs:
+    %   void
