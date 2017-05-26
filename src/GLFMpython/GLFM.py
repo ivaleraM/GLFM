@@ -374,8 +374,8 @@ def plotPatterns(data, hidden, params, patterns, colors=[], styles=[],\
 
     if (patterns.shape[1] != hidden['B'].shape[1]):
         raise ValueError('Error: Sizes of patterns and B are inconsistent')
-    if (len(leg) != patterns.shape[0]):
-        raise ValueError('Error: Sizes of leg and patterns are inconsistent')
+    # if (len(leg) != patterns.shape[0]):
+    #     raise ValueError('Error: Sizes of leg and patterns are inconsistent')
 
     (D,Kest,maxR) = hidden['B'].shape
     (numPatterns,Kest) = patterns.shape

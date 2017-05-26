@@ -37,33 +37,19 @@ for r=idx_transform
 end
 
 params.missing = -1;
-params.s2Y = 0;         % Variance of the Gaussian prior on the auxiliary variables (pseudoo-observations) Y
 params.s2u = .005;      % Auxiliary variance
-if ~isfield(params,'s2B')
-    params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
-end
+params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;       % Concentration parameter of the IBP
-if ~isfield(params,'Niter')
-    params.Niter = 1000; % Number of iterations for the gibbs sampler
-end
+params.Niter = 1000; % Number of iterations for the gibbs sampler
 params.maxK = 10;
-if ~isfield(params,'bias')
-    params.bias = 1;    % 1 = fix first feature to be active for all patients 
-end
-
-if ~isfield(params,'simId')
-    params.simId = 1;  % simulation identifier (to be able to run the sample sim. multiple times 
-end
-if ~isfield(params,'save')
-    params.save = 0;   % save .mat if active
-end
+params.bias = 1;    % 1 = fix first feature to be active for all patients 
+params.save = 0;   % save .mat if active
 
 %% Initialize Hidden Structure
-
 if params.bias
-    Zini = [ones(N,1), double(rand(N,1)>0.8)];
+    Zini = [ones(N,1), double(rand(N,1)<0.2)];
 else
-    Zini = double(rand(N,1)>0.8);
+    Zini = double(rand(N,1)<0.2);
 end
 hidden.Z = Zini; % N*K matrix of feature assignments
 

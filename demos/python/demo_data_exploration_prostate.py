@@ -44,7 +44,7 @@ for rr in xrange(len(idx_transform)):
     params['dt_1'][r] = lambda x: 1/(x+1)      # derivative of inverse transform
     params['ext_dataType'][r] = 'p'    # change type of data due to transformation
 
-params['Niter'] = 1000  # number of algorithm iterations (for Gibbs sampler)
+params['Niter'] = 100  # number of algorithm iterations (for Gibbs sampler)
 params['s2u'] = .005    # Auxiliary variance
 params['s2B'] = 1       # Variance of the Gaussian prior of the weigting matrices B
 params['alpha'] = 1     # Concentration parameter of the IBP
@@ -118,10 +118,9 @@ D = hidden['B'].shape[0]    # number of dimensions
 
 # choose patterns corresponding to activation of each feature
 Zp = np.eye(Kest)
-Zp[:,1] = 1 # bias active
-#Zp = Zp[:, 1:min(5,Kest)]
-
-GLFM.plotPatterns(data, hidden, params, Zp)
+Zp[:,0] = 1 # bias active
+leg = ['F0','F1', 'F2', 'F3', 'F4'];
+GLFM.plotPatterns(data, hidden, params, Zp, [], [], leg)
 
 print "SUCCESSFUL"
 
