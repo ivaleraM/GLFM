@@ -30,7 +30,7 @@ print '\n 2. INITIALIZATION\n'
 print '\tSetting optional parameters for the GLFM model...'
 
 params = dict()
-params['Niter'] = 10  # number of algorithm iterations (for Gibbs sampler)
+params['Niter'] = 100  # number of algorithm iterations (for Gibbs sampler)
 params['s2B'] = 1      # noise variance for feature values
 params['s2u'] = 0.005  # auxiliary noise
 params['alpha'] = 1    # mass parameter for the Indian Buffet Process
