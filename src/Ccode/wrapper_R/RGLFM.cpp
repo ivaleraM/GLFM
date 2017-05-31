@@ -11,31 +11,26 @@
 //#include <gsl/gsl_randist.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-#include "../core/GeneralFunctions.cpp"
+//#include "../core/GeneralFunctions.cpp"
 #include "../core/InferenceFunctions.cpp"
-#include <InferenceFunctions.h> 
-RcppExport SEXP initialize_wrapper(SEXP N_, SEXP D_, SEXP maxK_, SEXP missing_, SEXP X_, SEXP C_, SEXP B_, SEXP theta_, SEXP R_, SEXP f_, SEXP mu_,  SEXP w_, SEXP s2Y_){
+#include "../core/InferenceFunctions.h"
+// #include <InferenceFunctions.h> 
+RcppExport SEXP initialize_wrapper(SEXP N_, SEXP D_, SEXP maxK_, SEXP missing_, const RcppGSL::Matrix & X, SEXP C_, const RcppGSL::Matrix & B, const RcppGSL::Vector & theta, SEXP R_, SEXP f_, SEXP mu_,  SEXP w_, SEXP s2y_){
  
  // Convert the input to C++ types
  int N = as<int>(N_), D = as<int>(D_), maxK = as<int>(maxK_), R = as<int>(R_);
 double missing = as<double>(missing_), f = as<double>(f_), mu = as<double>(mu_), w = as<double>(w_),  s2y = as<double>(s2y_);
 char C = as<char>(C_);
-RcppGSL::matrix<double> X = gsl_matrix(X_), B =  gsl_matrix(B_); 
-RcppGSL::vector<double> theta = gsl_vector(theta_);
+//RcppGSL::matrix<double> X = gsl_matrix(X_), B =  gsl_matrix(B_); 
+//RcppGSL::vector<double> theta = gsl_vector(theta_);
 //RcppGSL::vector_view<double> colview = gsl_matrix_const_column(G, j);
 
 // call the underlying C++ function
-int maxR = initialize_func (N, D, maxK, missing,X, C, B, theta, R, f, mu, w, s2Y)
-  
+int initialize_func (N, D, maxK, missing,X, C, B, theta, R, f, mu, w, s2y);
+  //{
 // return the result as SEXP
-return wrap(maxR);
-}
-
-RCPP_MODULE(mod){
-  function("maxR", &maxR, "Provides some number");
-}  
-
-
-
-
-
+//return wrap(maxR);
+//}
+//RCPP_MODULE(mod){
+//  function("maxR", &maxR, "Provides some number");
+//}  
