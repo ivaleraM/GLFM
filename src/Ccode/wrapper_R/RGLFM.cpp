@@ -8,12 +8,13 @@
 //#include <gsl/gsl_linalg.h>
 //#include <gsl/gsl_math.h>
 //#include <gsl/gsl_cdf.h>
-//#include <gsl/gsl_randist.h>
+#include <gsl/gsl_randist.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
 //#include "../core/GeneralFunctions.cpp"
 #include "../core/InferenceFunctions.cpp"
 #include "../core/InferenceFunctions.h"
+#include "../core/GeneralFunctions.h"
 // #include <InferenceFunctions.h> 
 RcppExport SEXP initialize_wrapper(SEXP N_, SEXP D_, SEXP maxK_, SEXP missing_, const RcppGSL::Matrix & X, SEXP C_, const RcppGSL::Matrix & B, const RcppGSL::Vector & theta, SEXP R_, SEXP f_, SEXP mu_,  SEXP w_, SEXP s2y_){
  
@@ -26,11 +27,11 @@ char C = as<char>(C_);
 //RcppGSL::vector_view<double> colview = gsl_matrix_const_column(G, j);
 
 // call the underlying C++ function
-int initialize_func (N, D, maxK, missing,X, C, B, theta, R, f, mu, w, s2y);
+int maxR[] = initialize_func (N, D, maxK, missing,X, C, B, theta, R, f, mu, w, s2y);
   //{
 // return the result as SEXP
-//return wrap(maxR);
-//}
+return wrap(maxR);
+}
 //RCPP_MODULE(mod){
 //  function("maxR", &maxR, "Provides some number");
 //}  
