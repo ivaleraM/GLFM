@@ -20,8 +20,23 @@ GLFM_infer<-function(data,varargin){
   }
   D <- dim(data$X)[2]
   N <- dim(data$X)[1]
+  if(length(hidden)==0)
+  {
+    m0<-matrix(0,N,2)
+    Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
+  }
+  if(params$bias == 1){
+    Z <-cbind(rep(1,N),Z)
+  }
+  else if(params$bias>1){
+    stop("There is more than 1 bias specified, but the structure Z has not been initialized") 
+  }
+  # replace missing values
+  data$X[which(is.nan(data$X))] <- params$missing
+  
   # From the posterior
-  return(list("Z"=hidden))
+ R<-rep(1,D)
+  return(list("Z"=Z,"B"=B,"theta"=theta,"mu"= mu,"w"=w,"s2Y"=s2y,"R"=R))
 }
  
   
