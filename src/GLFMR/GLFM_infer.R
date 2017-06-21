@@ -33,6 +33,10 @@ GLFM_infer<-function(data,varargin){
   }
   # replace missing values
   data$X[which(is.nan(data$X))] <- params$missing
+  # Change labels of categorical or ordinal data
+  # Cambiamos las etiquetas de los datos categoricos o ordinales que no son datos
+  # faltantes para que su respectiva categoria empiece en uno. y por eso se toma
+  # el minimo, etc.
   # ---To be completed ---
   # From the posterior
  R<-rep(1,D)
