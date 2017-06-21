@@ -39,7 +39,7 @@ function hidden = GLFM_infer(data,varargin)
             params = init_default_params(data, params); % eventually complete params structure
 
         otherwise
-            error('Incorrect number of input parameters: should be 1, 2 or 3');
+            error('Incorrect number of input parameters: should be 0, 1 or 2');
     end
 
     D = size(data.X,2);
