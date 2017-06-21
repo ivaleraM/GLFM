@@ -33,7 +33,7 @@ GLFM_infer<-function(data,varargin){
   }
   # replace missing values
   data$X[which(is.nan(data$X))] <- params$missing
-  
+  # ---To be completed ---
   # From the posterior
  R<-rep(1,D)
   return(list("Z"=Z,"B"=B,"theta"=theta,"mu"= mu,"w"=w,"s2Y"=s2y,"R"=R))
