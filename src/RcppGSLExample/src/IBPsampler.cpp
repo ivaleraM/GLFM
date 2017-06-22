@@ -64,15 +64,18 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
       throw std::range_error("Invalid number of dimensions for initial matrix Z\n");
     }
     
-    char C[D];
+    char C[D];// = Rcpp::as<string>(input_C);
     double  f[D];
+    printf("Cvec=  ");
     for (int dd = 0; dd < D; dd++) {
-      C[dd]='g';//Rcpp::as<char>(input_C(dd));
+      C[dd]=*(char*)input_C[dd];
       f[dd]=(input_F(dd));
-      //C[dd] = std::tolower(C[dd]);
-      printf("%c",C[dd]);
+      C[dd] = std::tolower(C[dd]);
+      //printf("%c ", *(char*)input_C[dd]);
+      printf("%c ", C[dd]);
     }
 //    printf("\n N=%d, D=%d, Kini=%d, Cdim=%d \n", N, D, K, Cdim);
+    printf("\n ");
     //...............BODY C CODE.......................//
     //Initialization
     gsl_matrix *X = gsl_matrix_alloc(D,N);
@@ -100,10 +103,10 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
     //...............SET OUTPUT.......................//
     printf("\n N=%d, D=%d, Kest=%d \n", N, D, Kest);
     
-    Rcpp::NumericMatrix out_Z(Kest,N);           // to output results
+    Rcpp::NumericMatrix out_Z(Kest,N);
     for (int j = 0; j < N; j++) {
         for (int k=0; k<Kest; k++){
-          out_Z[Kest*j+k]=gsl_matrix_get (input_Z, k, j);//(&Zview.matrix)->data[k*N+j];
+          out_Z[Kest*j+k]=gsl_matrix_get (input_Z, k, j);
         }
     }
     
@@ -153,6 +156,7 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
     gsl_matrix_free(Z);
     free(B);
     free(theta);
+    // We return a list with all the outputs
     return Rcpp::List::create(Rcpp::Named("Z") = out_Z, 
                               Rcpp::Named("B")       = out_B,
                               Rcpp::Named("theta")  = out_theta,
