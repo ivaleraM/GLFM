@@ -55,9 +55,12 @@ GLFM_infer<-function(data,varargin){
   #}
  
   func_bit<-rep(1,dim(data$X)[2])
+  print(params)
   readline("Press return to continue")
   # call .Rcpp wrapper function
- hidden<-IBPsampler(data$X,data$C,Z,params$bias,func_bit,params$s2u,params$s2B,params$alpha,params$Nsim,params$maxK, params$missing)
+  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
+  library(RcppGSLExample)
+ hidden<-IBPsampler(data$X,data$C,Z,unlist(params$bias),func_bit,unlist(params$s2u),unlist(params$s2B),unlist(params$alpha),unlist(params$Nsim),unlist(params$maxK), unlist(params$missing))
                     
   # From the posterior
  R<-rep(1,D)
