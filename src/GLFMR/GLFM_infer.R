@@ -32,12 +32,31 @@ GLFM_infer<-function(data,varargin){
     stop("There is more than 1 bias specified, but the structure Z has not been initialized") 
   }
   # replace missing values
-  data$X[which(is.nan(data$X))] <- params$missing
+  idx_missing<-which(is.nan(data$X))
+  data$X[idx_missing] <- params$missing
   # Change labels of categorical or ordinal data
   # Cambiamos las etiquetas de los datos categoricos o ordinales que no son datos
   # faltantes para que su respectiva categoria empiece en uno. y por eso se toma
   # el minimo, etc.
-  # ---To be completed ---
+  idx_catdata<-which(data$C=='c')
+  idx_orddata<-which(data$C=='o')
+  set_of_both<-union(idx_catdata,idx_orddata)
+  idx_not_missing<-setdiff(set_of_both,which(set_of_both%in%idx_missing))
+  V_offsets <- min( data$X[idx_not_missing] )
+  data$X[idx_not_missing]<-data$X[idx_not_missing]-V_offsets+1
+  # eventually, apply external transform
+  #if(t%in%params){
+    #work in logarithm space
+    #data.X(:,r) = params.t_1{r}(data.X(:,r)); # work in logarithm space better
+    #data.C(r) = params.ext_dataType{r};
+    # ---To be completed ---
+  #}
+ 
+  func_bit<-rep(1,dim(data$X)[2])
+  
+  # call .Rcpp wrapper function
+ hidden<-IBPsampler(data$X,data$C,hidden,params$bias,func_bit,params$s2u,params$s2B,params$alpha,params$Nsim,params$maxK, params$missing)I
+                    
   # From the posterior
  R<-rep(1,D)
   return(list("Z"=Z,"B"=B,"theta"=theta,"mu"= mu,"w"=w,"s2Y"=s2y,"R"=R))
