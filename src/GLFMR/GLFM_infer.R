@@ -4,14 +4,16 @@
 #' @return A list with posterior draws
 
 GLFM_infer<-function(data,varargin){
+  source("init_default_params.R")
   varargin_size<-length(varargin)
   if(varargin_size==0){
-    hidden<-c()
+    Z<-c()
     params <- init_default_params(data, c())
+    print("Case 0")
   }
   else if(varargin_size<3)
   {
-    hidden<-varargin[1]
+    Z<-varargin[1]
     switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, unlist(varargin[2])))
   }
   else
@@ -20,7 +22,7 @@ GLFM_infer<-function(data,varargin){
   }
   D <- dim(data$X)[2]
   N <- dim(data$X)[1]
-  if(length(hidden)==0)
+  if(length(Z)==0)
   {
     m0<-matrix(0,N,2)
     Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
@@ -53,13 +55,13 @@ GLFM_infer<-function(data,varargin){
   #}
  
   func_bit<-rep(1,dim(data$X)[2])
-  
+  readline("Press return to continue")
   # call .Rcpp wrapper function
- hidden<-IBPsampler(data$X,data$C,hidden,params$bias,func_bit,params$s2u,params$s2B,params$alpha,params$Nsim,params$maxK, params$missing)I
+ hidden<-IBPsampler(data$X,data$C,Z,params$bias,func_bit,params$s2u,params$s2B,params$alpha,params$Nsim,params$maxK, params$missing)
                     
   # From the posterior
  R<-rep(1,D)
-  return(list("Z"=Z,"B"=B,"theta"=theta,"mu"= mu,"w"=w,"s2Y"=s2y,"R"=R))
+  return(hidden)
 }
  
   

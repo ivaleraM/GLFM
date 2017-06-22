@@ -7,16 +7,21 @@
 #' @param dt_1:derivative of the inverse transform
 
 init_default_params<-function(data,params){
-
-if (length(params)>0){
-params_names<-c("missing","alpha","bias","s2u","s2B","Niter","maxK","verbose","numS","t","t_1","dt_1")
-idx_to_fill<-which(params_names %in% params)
-filled_param_names<-paste("params",params_names[idx_to_fill],sep=".")
+ 
+param_names<-c("missing","alpha","bias","s2u","s2B","Niter","maxK","verbose","numS","t","t_1","dt_1")
 param_values<-list(-1,1,0,0.01,1,1000,dim(data)[2],1,100,list(1,dim(data$X)[2]),list(1,dim(data$X)[2]),list(1,dim(data$X)[2]))
+ names(param_values)<-param_names 
+if (length(params)>0){
+idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% params))
+filled_param_names<-paste("params",param_names[idx_to_fill],sep=".")
 #names(param_values)<-param_names
-params_to_return<-param_values[idx_to_fill]
-names(params_to_return)<-filled_param_names
+params_to_return_aux<-param_values[idx_to_fill]
+names(params_to_return_aux)<-filled_param_names
+params_to_return<-append(params,params_to_return_aux)
 return(params_to_return)
 }
+  else{
+    return(param_values)
+  }
 
 }
