@@ -1,0 +1,8 @@
+
+# set by configure
+GSL_CFLAGS = -I/usr/local/include
+GSL_LIBS   = -L/usr/local/lib -lgsl -lgslcblas
+
+# combine with standard arguments for R
+PKG_CPPFLAGS = $(GSL_CFLAGS)
+PKG_LIBS = $(GSL_LIBS) 
