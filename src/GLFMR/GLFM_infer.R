@@ -44,8 +44,10 @@ GLFM_infer<-function(data,varargin){
   idx_orddata<-which(data$C=='o')
   set_of_both<-union(idx_catdata,idx_orddata)
   idx_not_missing<-setdiff(set_of_both,which(set_of_both%in%idx_missing))
+  if(length(idx_not_missing)>0){
   V_offsets <- min( data$X[idx_not_missing] )
   data$X[idx_not_missing]<-data$X[idx_not_missing]-V_offsets+1
+  }
   # eventually, apply external transform
   #if(t%in%params){
     #work in logarithm space
@@ -60,7 +62,7 @@ GLFM_infer<-function(data,varargin){
   # call .Rcpp wrapper function
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
- hidden<-IBPsampler(data$X,data$C,Z,unlist(params$bias),func_bit,unlist(params$s2u),unlist(params$s2B),unlist(params$alpha),unlist(params$Nsim),unlist(params$maxK), unlist(params$missing))
+ hidden<-IBPsampler(X,C,Z,unlist(params$bias),func_bit,unlist(params$s2u),unlist(params$s2B),unlist(params$alpha),unlist(params$Nsim),unlist(params$maxK), unlist(params$missing))
                     
   # From the posterior
  R<-rep(1,D)
