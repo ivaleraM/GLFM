@@ -66,6 +66,7 @@ GLFM_infer<-function(data,varargin){
                     
   # From the posterior
  R<-rep(1,D)
+ hidden<-append(hidden,list("R"=R))
   return(hidden)
 }
  
