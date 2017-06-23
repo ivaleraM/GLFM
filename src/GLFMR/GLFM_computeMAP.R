@@ -27,14 +27,16 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   }
   P <- dim(Zp)[1]
   K <- dim(hidden$B)[2]
-  if(ne(dim(Zp[2], K)){
+  if(dim(Zp)[2]!= K){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
-  X_map<-matrix(0,P,length(idxsD))
-  
+  X_map<-matrix(0,nrow=P,ncol=length(idxsD))
   # For each dimension
-  for(dd in 1:length(idxsD)) # for each dimension
-  d = idxsD(dd)
+  for(dd in 1:length(idxsD)){ # for each dimension
+  d <- idxsD(dd)
+  #('g','p','n','c','o')
+  switch(C(d),'g'={'Complicated thing here'},'p'={'goodbye'},'n'={'no'})
+  }
 }
 
 
