@@ -42,34 +42,16 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   for(dd in 1:length(idxsD)){ # for each dimension
   d <- idxsD(dd)
   #('g','p','n','c','o')
-  X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])
-  X_map[,dd]<-f_p(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])
-  X_map[,dd]<-f_n(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])
-  switch(C(d),'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},'p'={'goodbye'},'n'={'no'})
+  
+  switch(C(d),'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+         'p'={X_map[,dd]<-f_p(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+         'n'={X_map[,dd]<-f_n(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+         'o'={X_map[,dd]<-f_o(Zp*unlist(hidden$B[d]),hidden$theta[d,1:(hidden$R[d]-1)])},
+         'c'={X_map[,dd]<-f_c(Zp*unlist(hidden$B[d]))},
+         'Unknown data type')
   }
 }
 
 
   
-    # d = idxsD(dd);
-    # if isfield(params,'t') % if external transformations have been defined
-    # if ~isempty(params.t{d}) % there is an external transform for data type d
-    # C(d) = params.ext_dataType{d}; % set new type of data
-    # end
-    # end
-    # switch C(d)
-    # case 'g', X_map(:,dd) = f_g( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-    #                              case 'p', X_map(:,dd) = f_p( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-    # case 'n', X_map(:,dd) = f_n( Zp * squeeze(hidden.B(d,:,1))', hidden.mu(d), hidden.w(d) );
-    #                              case 'c', X_map(:,dd) = f_c( Zp * squeeze(hidden.B(d,:,1:hidden.R(d))) );
-    #                              case 'o', X_map(:,dd) = f_o( Zp * squeeze(hidden.B(d,:,1))', hidden.theta(d,1:(hidden.R(d)-1)) );
-    # otherwise
-    # error('Unknown data type');
-    # end
-    # if (sum(isnan(X_map(:,dd))) > 0)
-    #   warning('Some values are nan!');
-    # end
-    # if isfield(params,'t')
-    # if ~isempty(params.t{d})
-    # X_map(:,dd) = params.t{d}( X_map(:,dd) );
-    # 
+   

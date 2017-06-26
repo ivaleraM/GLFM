@@ -1,7 +1,7 @@
 
 #' @description  Transformation function for real-valued data
 #' Y -> X (from pseudo-obversations to data)
-#' @param y: N-sized vector where N is the number of observations 
+#' @param y: N*K-sized matrix, where N is the number of observations, K categories
 #' @param mu: mean to standarise data
 #' @param w: weights
 #' @Return x standarised data

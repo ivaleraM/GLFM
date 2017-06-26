@@ -1,5 +1,5 @@
 #' @description Transformation function for positive data
-#' @param y: N-sized vector, where N is the number of observations 
+#' @param y: N*K-sized matrix, where N is the number of observations, K categories
 #' @param mu: mean to shift data
 #' @param w: weights
 #' @Return x transformed data

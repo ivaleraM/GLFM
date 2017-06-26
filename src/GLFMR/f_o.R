@@ -1,4 +1,4 @@
-#' @param y: is a column vector
+#' @param y: N*K-sized matrix, where N is the number of observations, K categories
 #' @param Thet: is a column vector too that is used for binning
 #' 
 f_o<-function(y,Thet){
