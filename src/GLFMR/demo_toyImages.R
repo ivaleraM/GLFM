@@ -5,7 +5,7 @@ source("GLFM_computeMAP.R")
 source("generate_toy_images.R")
 
 # Generative model
-N<-1000
+N<-100
 s2x<-0.5
 
 #Initialisation
@@ -22,6 +22,6 @@ params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK)
 # Inference
 hidden <- GLFM_infer(data, list(Z,params))
 Kest<-dim(hidden$B)[2]
-Z_p <-diag(Kest)
-X_map <- GLFM_computeMAP(data$C, Zp, hidden, params)
+Zp <-diag(Kest)
+X_map <- GLFM_computeMAP(data$C, Zp, hidden, params,c())
 # Plot

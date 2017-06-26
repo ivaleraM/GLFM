@@ -57,21 +57,16 @@ GLFM_infer<-function(data,varargin){
   #}
  
   func_bit<-rep(1,dim(data$X)[2])
-  print(is.character(data$C))
-  readline("press return to continue")
-  
   # call .Rcpp wrapper function
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
-# hidden<-IBPsampler(t(data$X),data$C,t(Z),unlist(params$bias),func_bit,unlist(params$s2u),unlist(params$s2B),unlist(params$alpha),unlist(params$Niter),unlist(params$maxK), unlist(params$missing))
- #print(list(data$X, data$C, Z))
- #print(list(is.list(data$C),is.list(data$X),is.list(Z)))
- #print(list(params$s2u,params$bias,params$s2B,params$alpha,params$Niter,params$maxK,params$missing))
-  print(params)
   hidden<-IBPsampler(t(data$X),data$C,t(Z),params$params.bias,func_bit,params$params.s2u,params$params.s2B,
                     params$params.alpha,params$params.Niter,params$params.maxK,params$params.missing)
- R<-rep(1,D)
- hidden<-append(params,list("R"=R))
+ print(hidden)
+ readline("press return to continue")
+  R<-rep(1,D)
+ 
+ hidden<-append(hidden, list("R"=R))
  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
   return(hidden)
 }
