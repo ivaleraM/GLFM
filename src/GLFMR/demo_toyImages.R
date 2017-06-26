@@ -21,9 +21,16 @@ maxK <- 10
 params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK)
 # Inference
 hidden <- GLFM_infer(data, list(Z,params))
-Kest<-dim(hidden$B)[2]
+Kest<-dim(hidden$B)[1]
 Zp <-diag(Kest)
 X_map <- GLFM_computeMAP(data$C, Zp, hidden, params,c())
-# Plot
+# Plot, ground truths
+for(k in 1:dim(data_gen$gTB)[1])){
+image(matrix(data_gen$gTB[1,],nrow=6,ncol=6))
+}
+# Plot inferred 
+for(k in 1:Kest){
+  image(matrix(X_map[k,],nrow=6,ncol=6))
+}
 
-#Faltan los graficos 
+# image(m) es el analogo a imagesc en matlab

@@ -33,11 +33,10 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   }
   else{
     idxsD <- 1:dim(hidden$B)[1]
-    print(idxsD)
   }
   P <- dim(Zp)[1]
-  K <- dim(hidden$B)[2]
-  if(dim(Zp)[2]!= K){
+  K <- dim(hidden$B)[1]
+  if(dim(Zp)[1]!= K){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
   X_map<-matrix(0,nrow=P,ncol=length(idxsD))
@@ -52,6 +51,7 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
          'o'={X_map[,dd]<-f_o(Zp%*%unlist(hidden$B[d]),hidden$theta[d,1:(hidden$R[d]-1)])},
          'c'={X_map[,dd]<-f_c(Zp%*%unlist(hidden$B[d]))},
          stop('Unknown data type'))
+  print(list(d,X_map[,dd]))
   if(sum(is.nan(X_map[,dd])) > 0){
     warning('Some values are nan!') 
   }
