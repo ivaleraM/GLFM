@@ -20,6 +20,9 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   source("f_o.R")
   source("f_g.R")
   source("f_c.R")
+  source("f_p.R")
+  source("f_o.R")
+  source("f_n.R")
   if (length(varargin) == 1){
     idxsD <- varargin[1]
   }
@@ -39,7 +42,10 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   for(dd in 1:length(idxsD)){ # for each dimension
   d <- idxsD(dd)
   #('g','p','n','c','o')
-  switch(C(d),'g'={'Complicated thing here'},'p'={'goodbye'},'n'={'no'})
+  X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])
+  X_map[,dd]<-f_p(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])
+  X_map[,dd]<-f_n(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])
+  switch(C(d),'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},'p'={'goodbye'},'n'={'no'})
   }
 }
 
