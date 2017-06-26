@@ -25,3 +25,5 @@ Kest<-dim(hidden$B)[2]
 Zp <-diag(Kest)
 X_map <- GLFM_computeMAP(data$C, Zp, hidden, params,c())
 # Plot
+
+#Faltan los graficos 
