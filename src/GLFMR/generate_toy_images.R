@@ -3,7 +3,7 @@
 #' @param N: number of samples
 #' @return data: data structure with X: N*D obs matrix and
 #' @return  C: 1*D datatype string vector
-%
+
 
  generate_toy_images<-function(N,s2x){
 Btrue<-matrix(c(c(0,1.0,0,0,0,0,1,1,1,0,0,0, 0,1,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0),
@@ -19,7 +19,7 @@ norm_mat<-matrix(rnorm(N*D),nrow=N,ncol=D,byrow=TRUE)
 X <- sqrt(s2x) * norm_mat +  Ztrue %*% Btrue 
 C <- rep('g',D)
 data<-list("X"=X,"C"=C)
-gT<-list("B"=Btrue,"Z"=Ztrue)
-return(list(data,gT))
+gT<-list("gTB"=Btrue,"gTZ"=Ztrue)
+return(append(data,gT))
 }
 
