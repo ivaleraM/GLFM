@@ -14,7 +14,9 @@
   # ----------------(optional) ------------------
   #' @param     - idxsD: dimensions to infer
 #' @return X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
-    
+ 
+#It does not allow external transformations yet!
+
 GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   # We need to call the transformation functions! 
   source("f_o.R")
