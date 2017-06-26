@@ -3,7 +3,7 @@
 #' @param y: N*R where N is the number of observations and R is the num of categories
 #' @param mu: mean to shift data
 #' @param w: weights
-#' @return shifted data
+#' @Return x shifted data
 
 f_g<-function(y,mu,w){
   if(w==0){

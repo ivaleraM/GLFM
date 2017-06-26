@@ -16,6 +16,10 @@
 #' @return X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
     
 GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
+  # We need to call the transformation functions! 
+  source("f_o.R")
+  source("f_g.R")
+  source("f_c.R")
   if (length(varargin) == 1){
     idxsD <- varargin[1]
   }

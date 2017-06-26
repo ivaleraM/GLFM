@@ -2,8 +2,8 @@
 #' @param input : is the label
 #' @param y: N*R where N is the number of observations and R is the num of categories
 #'@import matrixStats for colMaxs
+#'@return a: the values of the maximum element per row and the index of the first max in x
 f_c<-function(y){
-# Returns a: the values of the maximum element per row and the index of the first max in x
   a<-colMaxs(t(y))
   x<-which(X==a[1])
   if(length(x)>1){
