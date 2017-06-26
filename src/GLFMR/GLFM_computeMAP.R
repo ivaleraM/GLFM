@@ -4,7 +4,7 @@
 #'@param Zp: PxK matrix of feature patterns for which it computes the MAP estimate
 #'    (P is the number of feature patterns)
 #' @param hidden: structure with latent variables learned by the model
-#'@param B: latent feature matrix (D * K * maxR)  where
+#'@param B: latent feature list with D elements of size ( K * maxR)  where
 #'@param D: number of dimensions
 #'@param K: number of latent variables
 #'@param maxR: maximum number of categories across all dimensions
@@ -44,16 +44,15 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   #('g','p','n','c','o')
   
   switch(C(d),'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
-         'p'={X_map[,dd]<-f_p(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
-         'n'={X_map[,dd]<-f_n(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
-         'o'={X_map[,dd]<-f_o(Zp*unlist(hidden$B[d]),hidden$theta[d,1:(hidden$R[d]-1)])},
-         'c'={X_map[,dd]<-f_c(Zp*unlist(hidden$B[d]))},
+         'p'={X_map[,dd]<-f_p(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+         'n'={X_map[,dd]<-f_n(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+         'o'={X_map[,dd]<-f_o(Zp%*%unlist(hidden$B[d]),hidden$theta[d,1:(hidden$R[d]-1)])},
+         'c'={X_map[,dd]<-f_c(Zp%*%unlist(hidden$B[d]))},
          stop('Unknown data type'))
   if(sum(is.nan(X_map[,dd])) > 0){
     warning('Some values are nan!') 
   }
     
-  end
   }
 }
 
