@@ -33,6 +33,7 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   }
   else{
     idxsD <- 1:dim(hidden$B)[1]
+    print(idxsD)
   }
   P <- dim(Zp)[1]
   K <- dim(hidden$B)[2]
@@ -42,10 +43,10 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   X_map<-matrix(0,nrow=P,ncol=length(idxsD))
   # For each dimension
   for(dd in 1:length(idxsD)){ # for each dimension
-  d <- idxsD(dd)
+  d <- idxsD[dd]
   #('g','p','n','c','o')
   
-  switch(C(d),'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+  switch(C[d],'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
          'p'={X_map[,dd]<-f_p(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
          'n'={X_map[,dd]<-f_n(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
          'o'={X_map[,dd]<-f_o(Zp%*%unlist(hidden$B[d]),hidden$theta[d,1:(hidden$R[d]-1)])},
@@ -54,6 +55,7 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   if(sum(is.nan(X_map[,dd])) > 0){
     warning('Some values are nan!') 
   }
+  return(X_map)
     
   }
 }
