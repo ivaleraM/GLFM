@@ -1,6 +1,5 @@
-#var1<-c("HOLA")
-# sapply(var1, tolower)
-#varargin is a list
+#' @param data is a list with X and C
+#' @param varargin is a list of lists containing hidden variables and parameters 
 #' @return A list with posterior draws
 
 GLFM_infer<-function(data,varargin){
@@ -14,7 +13,9 @@ GLFM_infer<-function(data,varargin){
   else if(varargin_size<3)
   {
     Z<-varargin[1]
-    switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, unlist(varargin[2])))
+    readline("press return to continue")
+    
+    switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, varargin[2]))
   }
   else
   {
@@ -27,10 +28,10 @@ GLFM_infer<-function(data,varargin){
     m0<-matrix(0,N,2)
     Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
   }
-  if(params$bias == 1){
+  if(params$bias == 1 && length(params$bias)>0){
     Z <-cbind(rep(1,N),Z)
   }
-  else if(params$bias>1){
+  else if(params$bias>1  && length(params$bias)>0){
     stop("There is more than 1 bias specified, but the structure Z has not been initialized") 
   }
   # replace missing values
@@ -61,9 +62,12 @@ GLFM_infer<-function(data,varargin){
   # call .Rcpp wrapper function
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
- hidden<-IBPsampler(t(X),C,t(Z),unlist(params$bias),func_bit,unlist(params$s2u),unlist(params$s2B),unlist(params$alpha),unlist(params$Niter),unlist(params$maxK), unlist(params$missing))
-                    
-  # From the posterior
+ hidden<-IBPsampler(t(data$X),unlist(data$C),t(Z),unlist(params$bias),func_bit,unlist(params$s2u),unlist(params$s2B),unlist(params$alpha),unlist(params$Niter),unlist(params$maxK), unlist(params$missing))
+ #print(list(data$X, data$C, Z))
+  print(list(t(data$X),Z))
+# readline("press return to continue")
+  #hidden<-IBPsampler(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
+  #                  params$alpha,params$Niter,params$maxK,params$missing)
  R<-rep(1,D)
  hidden<-append(params,list("R"=R))
  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
