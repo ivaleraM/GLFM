@@ -62,10 +62,9 @@ GLFM_infer<-function(data,varargin){
   library(RcppGSLExample)
   hidden<-IBPsampler(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
                     params$alpha,params$Niter,params$maxK,params$missing)
- #print(hidden)
- #readline("press return to continue")
+ print(hidden)
+ readline("press return to continue")
   R<-rep(1,D)
- 
  hidden<-append(hidden, list("R"=R))
  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
   return(list("hidden"=hidden,"params"=params))
