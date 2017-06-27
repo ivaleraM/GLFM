@@ -5,7 +5,7 @@ source("GLFM_computeMAP.R")
 source("generate_toy_images.R")
 
 # Generative model
-N<-100
+N<-200
 s2x<-0.5
 
 #Initialisation
@@ -20,17 +20,18 @@ Niter <- 100  # Number of iterations for the Gibbs sampler
 maxK <- 10
 params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK)
 # Inference
-hidden <- GLFM_infer(data, list(Z,params))
-Kest<-dim(hidden$B)[1]
+output <- GLFM_infer(data, list(Z,params))
+Kest<-dim(output$hidden$B)[1]
 Zp <-diag(Kest)
-X_map <- GLFM_computeMAP(data$C, Zp, hidden, params,c())
+X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
 # Plot, ground truths
-for(k in 1:dim(data_gen$gTB)[1])){
+for(k in 1:dim(data_gen$gTB)[1]){
 image(matrix(data_gen$gTB[1,],nrow=6,ncol=6))
 }
 # Plot inferred 
 for(k in 1:Kest){
   image(matrix(X_map[k,],nrow=6,ncol=6))
+  readline("Press return to continue")
 }
 
 # image(m) es el analogo a imagesc en matlab
