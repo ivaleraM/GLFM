@@ -13,7 +13,8 @@ param_values<-list(-1,1,0,0.01,1,1000,dim(data$X)[2],1,100,list(1,dim(data$X)[2]
  names(param_values)<-param_names 
 if (length(params)>0){
 idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% params))
-filled_param_names<-paste("params",param_names[idx_to_fill],sep=".")
+filled_param_names<-param_names[idx_to_fill]
+#filled_param_names<-paste("params",param_names[idx_to_fill],sep=".")
 #names(param_values)<-param_names
 params_to_return_aux<-param_values[idx_to_fill]
 names(params_to_return_aux)<-filled_param_names

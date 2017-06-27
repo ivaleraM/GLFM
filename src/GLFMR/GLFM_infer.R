@@ -60,15 +60,15 @@ GLFM_infer<-function(data,varargin){
   # call .Rcpp wrapper function
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
-  hidden<-IBPsampler(t(data$X),data$C,t(Z),params$params.bias,func_bit,params$params.s2u,params$params.s2B,
-                    params$params.alpha,params$params.Niter,params$params.maxK,params$params.missing)
- print(hidden)
- readline("press return to continue")
+  hidden<-IBPsampler(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
+                    params$alpha,params$Niter,params$maxK,params$missing)
+ #print(hidden)
+ #readline("press return to continue")
   R<-rep(1,D)
  
  hidden<-append(hidden, list("R"=R))
  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
-  return(hidden)
+  return(list("hidden"=hidden,"params"=params))
 }
  
   

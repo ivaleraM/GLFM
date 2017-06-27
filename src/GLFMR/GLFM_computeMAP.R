@@ -16,7 +16,8 @@
 #' @return X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
  
 #It does not allow external transformations yet!
-
+# It is not reading the dimension of B properly, 5 element list where 
+# hidden$B is a list where each element is a vector of size 2
 GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   # We need to call the transformation functions! 
   source("f_o.R")
@@ -32,21 +33,23 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
     stop('Too many input arguments')
   }
   else{
-    idxsD <- 1:dim(hidden$B)[2]
+    idxsD <- 1:dim(hidden$B)[1]
     print(idxsD)
   }
   P <- dim(Zp)[1]
-  K <- dim(hidden$B)[2]
-  if(dim(Zp)[2]!= K){
-    stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
-  }
+  #print(dim(Zp)[2])
+  K <- 2
+  print(dim(hidden$B)[1])
+  readline("press return to continue")
+  #if(dim(Zp)[2]!= K){
+  #  stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
+  #}
   X_map<-matrix(0,nrow=P,ncol=length(idxsD))
   # For each dimension
   for(dd in 1:length(idxsD)){ # for each dimension
   d <- idxsD[dd]
   #('g','p','n','c','o')
-  
-  switch(C[d],'g'={X_map[,dd]<-f_g(Zp*unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
+  switch(C[d],'g'={X_map[,dd]<-f_g(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
          'p'={X_map[,dd]<-f_p(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
          'n'={X_map[,dd]<-f_n(Zp%*%unlist(hidden$B[d]),hidden$mu[d],hidden$w[d])},
          'o'={X_map[,dd]<-f_o(Zp%*%unlist(hidden$B[d]),hidden$theta[d,1:(hidden$R[d]-1)])},
