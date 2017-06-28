@@ -52,11 +52,3 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   }
   # External transformation case is missing
   }
-    
-  
-  
-  
-  
-  
-  
-}

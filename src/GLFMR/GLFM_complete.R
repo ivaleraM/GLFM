@@ -5,6 +5,7 @@
 #' @return Xcompl the completed data matrix 
 GLFM_complete<-function(data,varargin){
   varargin_size<-length(varargin)
+  X_compl<-data$X
   if(varargin_size==0){
     Z<-c()
     params <- init_default_params(data, c())
@@ -20,20 +21,23 @@ GLFM_complete<-function(data,varargin){
   {
     stop("Incorrect number of input parameters: should be 0, 1 or 2")
   }
-  if(sum(is.nan(data$X)==0 || sum(data$X == params$missing) == 0)){
-    prin('The input matrix X has no missing values to complete.')
-    Xcompl = c()
+  if(sum(is.nan(data$X))==0 && (sum(data$X == params$missing) == 0 || is.na(sum(data$X == params$missing)))){
+    print('The input matrix X has no missing values to complete.')
+    Xcompl <- c()
   }
   else{
     output <- GLFM_infer(data, list(Z,params))
     # NaN's are considered as missing
     data$X[which(is.nan(data$X))]=params$missing
     idxs_missing<-which(data$X == params$missing)
+    print(idxs_missing)
+    readline("press return to continue")
     # For each missing value, compute a MAP estimate
     for(j in 1:length(idxs_missing)){
-    X_aux<-GLFM_computeMAP(data$C, Z[idxs_missing[j]], output$hidden, output$params,idxs_missing[j])
+    X_compl[idxs_missing[j]]<-GLFM_computeMAP(data$C, Z[idxs_missing[j]], output$hidden, output$params,idxs_missing[j])
     }
   }
+  return(list("X_compl"=X_compl,"hidden"=hidden))
         
 }
 

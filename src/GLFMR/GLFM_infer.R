@@ -12,8 +12,9 @@ GLFM_infer<-function(data,varargin){
   }
   else if(varargin_size<3)
   {
+    if(length(Z)>0){
     Z<-unlist(varargin[1])
-    
+    }
     switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, varargin[2]))
   }
   else
@@ -22,8 +23,7 @@ GLFM_infer<-function(data,varargin){
   }
   D <- dim(data$X)[2]
   N <- dim(data$X)[1]
-  if(length(varargin)<2)
-  {
+  if(length(Z)==0){
     m0<-matrix(0,N,2)
     Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
   }
@@ -60,14 +60,14 @@ GLFM_infer<-function(data,varargin){
   # call .Rcpp wrapper function
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
-  hidden<-IBPsampler(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
+  output<-IBPsampler(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
                     params$alpha,params$Niter,params$maxK,params$missing)
- print(hidden)
- readline("press return to continue")
+ #print(hidden)
+ #readline("press return to continue")
   R<-rep(1,D)
- hidden<-append(hidden, list("R"=R))
+ output$hidden<-append(output$hidden, list("R"=R))
  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
-  return(list("hidden"=hidden,"params"=params))
+  return(list("hidden"=output$hidden,"params"=output$params))
 }
  
   
