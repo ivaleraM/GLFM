@@ -9,15 +9,16 @@ source("GLFM_computePDF.R")
  m0 <- matrix(0,10,2)
  Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
  data<-list("X"=X,"C"=C)
- # GLFM_infer, c() es para un vector vacio:
+ # GLFM_infer, c() es para un vector vacio, 
+ # te devuelve una lista de listas: output$hidden y output$params
  output<-GLFM_infer(data,c())
  # GLFM_computeMAP
+ # Te devuelve la matrix X_map
  Kest<-dim(output$hidden$B)[1]
  Zp <-diag(Kest)
  X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
- #GLFM_computePDF
+ #GLFM_computePDF, te devuelve una lista con pdf y xd
  D<-dim(X)[2]
- 
  for(dd in 1:D){
   pdf_val<-GLFM_computePDF(data,Zp,output$hidden,output$params,dd) 
   print(pdf_val)

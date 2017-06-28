@@ -63,6 +63,6 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   if(sum(is.nan(pdf_val)) > 0){
     stop('Some values are nan!')
   }
-  return(pdf_val)
+  return(list("pdf"=pdf_val,"xd"=xd))
   # External transformation case is missing
   }
