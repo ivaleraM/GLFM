@@ -9,13 +9,20 @@
 #' @return pdf P*numS matrix where P is the number of patterns 
 
 GLFM_computePDF<-function(data,Zp,hidden,params,d){
-  idxs_nans <- which(is.nan(data$X[,d]))
+  source("pdf_g.R")
+  source("pdf_p.R")
+  source("pdf_n.R")
+  source("pdf_c.R")
+  source("pdf_o.R")
+  XXd<-data$X[,d]
+  #print(XXd)
+  idxs_nans <- which(is.nan(XXd))
   if(length(idxs_nans) > 0){
-    data$X[idxs_nans,d] = params$missing
+    XXd[idxs_nans] = params$missing
   }
-  idxs_nonnans<-setdiff(1:(length(data$X[,d])),idxs_nans)
-  mm <- min(data$X[idxs_nonnans,d])
-  M <- max(data$X[idxs_nonnans,d])
+  idxs_nonnans<-setdiff(1:(length(XXd)),idxs_nans)
+  mm <- min(XXd[idxs_nonnans])
+  MM <- max(XXd[idxs_nonnans])
   # Add external transformation case
   B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
   P <- dim(Zp)[1]
@@ -25,9 +32,13 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
   if(data$C[d] == 'g' || data$C[d] == 'p'){
-    if((param$numS %in% params)==FALSE){
+    if((params$numS %in% params)){
+      xd <- seq(mm,MM,length.out=params$numS)
+      print("xd is a linspace")
+    }
+    else{
       params<-append("numS"=100,params)
-      xd <- seq(mm,MM,length=numS)
+      xd <- seq(mm,MM,length.out=params$numS)
     }
   }
   else if(data$C[d] == 'n'){
@@ -35,20 +46,23 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
     params<-append("numS"=length(xd),params)
   }
   else{
-    xd <- unique(data$X[idxs_nonnans,d])
+    xd <- unique(XXd[idxs_nonnans])
+    print("xd is unique values")
     params<-append("numS"=length(xd),params)
   }
-  pdf <-matrix(0,P,params$numS)
+  pdf_val <-matrix(0,P,params$numS)
+  #print(xd)
   for(p in 1:P){
-    switch(data$C[d],'g'={pdf[p,]<-pdf_g(Zp[p,]%*%B_aux[d,],hidden$mu[d],hidden$w[d],params$s2y,params)},
-           'p'={pdf[p,]<-pdf_p(Zp[p,]%*%B_aux[d,],hidden$mu[d],hidden$w[d],params$s2y,params)},
-           'n'={pdf[p,]<-pdf_n(Zp[p,]%*%B_aux[d,],hidden$mu[d],hidden$w[d],params$s2y,params)},
-           'o'={pdf[p,]<-pdf_c(Zp[p,]%*%B_aux[d,1:(hidden$R[d]-1)],params$s2y)},
-           'c'={pdf[p,]<-pdf_o(Zp[p,]%*%B_aux[d,],hidden$theta[d,1:(hidden$R[d]-1)],params$s2y,params)},
+    switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
+           'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
+           'n'={pdf_val[p,]<-pdf_n(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
+           'o'={pdf_val[p,]<-pdf_c(xd,Zp[p,],B_aux[d,1:(hidden$R[d]-1)],hidden$s2y)},
+           'c'={pdf_val[p,]<-pdf_o(xd,Zp[p,],B_aux[d,],hidden$theta[d,1:(hidden$R[d]-1)],hidden$s2y,params)},
            stop('Unknown data type'))
   }
-  if(sum(is.nan(pdf)) > 0){
+  if(sum(is.nan(pdf_val)) > 0){
     stop('Some values are nan!')
   }
+  return(pdf_val)
   # External transformation case is missing
   }
