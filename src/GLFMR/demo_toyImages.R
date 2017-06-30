@@ -1,5 +1,8 @@
 # Demo toyImages
+# image(m) es el analogo a imagesc en matlab
+
 rm(list=ls())
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("generate_toy_images.R")
@@ -34,4 +37,3 @@ for(k in 1:Kest){
   readline("Press return to continue")
 }
 
-# image(m) es el analogo a imagesc en matlab

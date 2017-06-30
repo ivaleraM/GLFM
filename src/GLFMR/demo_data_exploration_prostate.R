@@ -1,1 +1,47 @@
 # demo_data_exploration_prostate
+rm(list=ls())
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+require(R.matlab)
+source("GLFM_infer.R")
+source("GLFM_computeMAP.R")
+datos_prostate<-readMat('prostate_v3.mat')
+Xauxi <- as.matrix(unlist(datos_prostate$data[2,1,1]),ncol=16,nrow= 502, byrow=TRUE)
+Xfull<-aux<-matrix(Xauxi,nrow=502,ncol=16)
+C<-unlist(datos_prostate$data[3,1,1],use.names = FALSE)
+Cfull<-strsplit(as.character(C), "")
+cat_labels_full <-unlist(datos_prostate$data[4,1,1],use.names = FALSE)
+y_labels_full<-unlist(datos_prostate$data[5,1,1],use.names = FALSE)
+y_labels_long_full<-unlist(datos_prostate$data[6,1,1],use.names = FALSE)
+idx_toKeep <- c(1, 2, 4,13, 15)
+X<-Xfull[,idx_toKeep]
+C<-Cfull[[1]][idx_toKeep]
+cat_labels<-cat_labels_full[idx_toKeep]
+y_labels<-y_labels_full[idx_toKeep]
+y_labels_long<-y_labels_long_full[idx_toKeep]
+#params
+param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias")
+missing<--1
+s2u<-0.005
+s2B<-1
+alpha<-1
+Niter<-1000
+maxK<-10
+bias<-1
+params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias)
+names(params)<-param_names
+N<-dim(X)[1]
+m0<-matrix(0,N,2)
+Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.2,0.8)))
+if(params$bias == 1 && length(params$bias)>0){
+  Z <-cbind(rep(1,N),Z)
+}
+# Inference
+data<-list("X"=X,"C"=C)
+Z<-c()
+output <- GLFM_infer(data, list(Z,params))
+#Predict MAP estimate for the whole matrix X
+X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
+# Remove latent dimensions
+th <- 0.03 # threshold to filter out latent features that are not significant
+feat_toRemove = find(sum(hidden.Z) < N*th); % filter features with insufficient number of obs. assigned
+hidden = remove_dims(hidden, feat_toRemove); 

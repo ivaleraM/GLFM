@@ -4,6 +4,7 @@
 
 GLFM_infer<-function(data,varargin){
   source("init_default_params.R")
+  #print(length(varargin[[1]]))
   varargin_size<-length(varargin)
   if(varargin_size==0){
     Z<-c()
@@ -12,8 +13,8 @@ GLFM_infer<-function(data,varargin){
   }
   else if(varargin_size<3)
   {
-    if(length(Z)>0){
-    Z<-unlist(varargin[1])
+    if(length(varargin[[1]])>0){
+    Z<-unlist(varargin[[1]])
     }
     switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, varargin[2]))
   }
@@ -23,6 +24,7 @@ GLFM_infer<-function(data,varargin){
   }
   D <- dim(data$X)[2]
   N <- dim(data$X)[1]
+  
   if(length(Z)==0){
     m0<-matrix(0,N,2)
     Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
