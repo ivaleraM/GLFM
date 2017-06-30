@@ -42,6 +42,10 @@ output <- GLFM_infer(data, list(Z,params))
 #Predict MAP estimate for the whole matrix X
 X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
 # Remove latent dimensions
-th <- 0.03 # threshold to filter out latent features that are not significant
-feat_toRemove = find(sum(hidden.Z) < N*th); % filter features with insufficient number of obs. assigned
-hidden = remove_dims(hidden, feat_toRemove); 
+th <- 0.03 #threshold to filter out latent features that are not significant
+feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
+hidden <- remove_dims(output$hidden, feat_toRemove)
+patterns<- get_feature_patterns_sorted(hidden$Z)
+
+
+
