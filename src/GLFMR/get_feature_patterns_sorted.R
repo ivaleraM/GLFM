@@ -26,9 +26,10 @@ get_feature_patterns_sorted<-function(Z,varargin){
   L <- rep(0,dim(patterns)[1])
   for(r in 1:dim(patterns)[1] ){
     idxs_eq<-which(apply(Z, 1, function(x) all.equal(x , patterns[r,])) == "TRUE")
-    #C[idxs_eq]<-'r'
+    C[idxs_eq]<-'r'
     L[r]<-length(idxs_eq)
   }
   L<-L[order(L,decreasing=TRUE)]
   patterns<-patterns[order(L,decreasing=TRUE),]
+  return(list(patterns, C))
 }

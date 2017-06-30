@@ -45,7 +45,14 @@ X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
 th <- 0.03 #threshold to filter out latent features that are not significant
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
 hidden <- remove_dims(output$hidden, feat_toRemove)
-patterns<- get_feature_patterns_sorted(hidden$Z)
-
+sorted_patterns<- get_feature_patterns_sorted(hidden$Z)
+B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
+Kest <-dim(B_aux)[2]
+Zp <- diag(Kest)
+Zp[,1] <- 1 # bias active
+Zp <- Zp[1:(min(5,Kest)),]
+leg <-c('F0','F1', 'F2', 'F3', 'F4')
+colours<-c()
+GLFM_plotPatterns(data, output$hidden,output$params, Zp, list(leg,colours))
 
 
