@@ -6,19 +6,20 @@
 #' @param  t_1: inverse transform
 #' @param dt_1:derivative of the inverse transform
 
-init_default_params<-function(data,params){
+init_default_params<-function(data,params_init){
  
 param_names<-c("missing","alpha","bias","s2u","s2B","Niter","maxK","verbose","numS","t","t_1","dt_1")
 param_values<-list(-1,1,0,0.01,1,1000,dim(data$X)[2],1,100,c(),c(),c())
  names(param_values)<-param_names 
-if (length(params)>0){
-idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% names(params)))
+if (length(params_init)>0){
+idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% names(params_init)))
 filled_param_names<-param_names[idx_to_fill]
 #filled_param_names<-paste("params",param_names[idx_to_fill],sep=".")
 #names(param_values)<-param_names
 params_to_return_aux<-param_values[idx_to_fill]
 names(params_to_return_aux)<-filled_param_names
 params_to_return<-append(params,params_to_return_aux)
+print(params_to_return$Niter)
 return(params_to_return)
 }
   else{
