@@ -51,7 +51,7 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
     params<-append("numS"=length(xd),params)
   }
   pdf_val <-matrix(0,P,params$numS)
-  #print(xd)
+  print(pdf_g(xd,Zp[1,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params))
   for(p in 1:P){
     switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
            'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},

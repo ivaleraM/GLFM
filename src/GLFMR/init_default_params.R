@@ -9,10 +9,10 @@
 init_default_params<-function(data,params){
  
 param_names<-c("missing","alpha","bias","s2u","s2B","Niter","maxK","verbose","numS","t","t_1","dt_1")
-param_values<-list(-1,1,0,0.01,1,1000,10,dim(data$X)[2],1,100,list(1,dim(data$X)[2]),list(1,dim(data$X)[2]),list(1,dim(data$X)[2]))
+param_values<-list(-1,1,0,0.01,1,1000,dim(data$X)[2],1,100,c(),c(),c())
  names(param_values)<-param_names 
 if (length(params)>0){
-idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% params))
+idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% names(params)))
 filled_param_names<-param_names[idx_to_fill]
 #filled_param_names<-paste("params",param_names[idx_to_fill],sep=".")
 #names(param_values)<-param_names

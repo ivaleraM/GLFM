@@ -3,7 +3,7 @@
 #' @return A list with posterior draws
 
 GLFM_infer<-function(data,varargin){
-  source("init_default_params.R")
+  
   #print(length(varargin[[1]]))
   varargin_size<-length(varargin)
   if(varargin_size==0){
@@ -58,10 +58,14 @@ GLFM_infer<-function(data,varargin){
     # ---To be completed ---
   #}
   func_bit<-rep(1,dim(data$X)[2])
+  print(list(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
+             params$alpha,params$Niter,params$maxK,params$missing))
+  readline("Press return to continue")
+ 
   # call .Rcpp wrapper function
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
-  hidden<-IBPsampler(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
+  hidden<-IBPsampler(t(data$X),unlist(data$C),t(Z),params$bias,func_bit,params$s2u,params$s2B,
                     params$alpha,params$Niter,params$maxK,params$missing)
  #print(hidden)
  #readline("press return to continue")

@@ -1,13 +1,14 @@
 # Tiny example
 rm(list=ls())
+# Aqui pones el path de tu directorio. Lo puedes obtener con getwd()
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("GLFM_complete.R")
 source("GLFM_computePDF.R")
+source("init_default_params.R")
  X <- matrix(rnorm(10,0,1),nrow=10,ncol=5)
  C <- c('g','g','g','g','g')
- m0 <- matrix(0,10,2)
- Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
  data<-list("X"=X,"C"=C)
  # GLFM_infer, c() es para un vector vacio, 
  # te devuelve una lista de listas: output$hidden y output$params
