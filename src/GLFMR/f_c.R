@@ -4,12 +4,11 @@
 #'@import matrixStats for colMaxs
 #'@return a: the values of the maximum element per row and the index of the first max in x
 f_c<-function(y){
-  a<-colMaxs(t(y))
-  x<-which(X==a[1])
-  if(length(x)>1){
-    x<-X[1]
-  }
-  return(x)
+  a<-max.col(t(y))
+  #if(length(x)>1){
+  #  x<-X[1]
+  #}
+  return(list(a))
 # [a,x] = max(y,[],2)
 }
 

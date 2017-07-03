@@ -13,7 +13,7 @@
 #' @param  theta: D*maxR matrix of auxiliary vars (for ordinal variables)
   # ----------------(optional) ------------------
   #' @param     - idxsD: dimensions to infer
-#' @return X_map: P*Di matrix with MAP estimate where Di = length(idxsD)
+#' @return X_map: P*D matrix with MAP estimate where Di = length(idxsD)
  
 #It does not allow external transformations yet!
 # It is not reading the dimension of B properly, 5 element list where 
@@ -26,42 +26,42 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   source("f_p.R")
   source("f_o.R")
   source("f_n.R")
-  B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
+  
   if (length(varargin) == 1){
-    idxsD <- varargin[1]
+    D <- varargin[1]
   }
   else if(length(varargin) > 1){
     stop('Too many input arguments')
   }
   else{
-    idxsD <- 1:dim(B_aux)[1]
-    print(idxsD)
+    D <- length(hidden$B)
   }
   P <- dim(Zp)[1]
   #print(dim(Zp)[2])
-  K <-dim(B_aux)[2]
+  K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
   if(dim(Zp)[2]!= K){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
-  X_map<-matrix(0,nrow=P,ncol=length(idxsD))
+  X_map<-matrix(0,nrow=P,ncol=D)
   # For each dimension
-  for(dd in 1:length(idxsD)){ # for each dimension
-  d <- idxsD[dd]
+  for(d in 1:D){ # for each dimension
   #('g','p','n','c','o')
-  switch(C[d],'g'={X_map[,dd]<-f_g(Zp%*%B_aux[d,],hidden$mu[d],hidden$w[d])},
-         'p'={X_map[,dd]<-f_p(Zp%*%B_aux[d,],hidden$mu[d],hidden$w[d])},
-         'n'={X_map[,dd]<-f_n(Zp%*%B_aux[d,],hidden$mu[d],hidden$w[d])},
-         'o'={X_map[,dd]<-f_o(Zp%*%B_aux[d,],hidden$theta[d,1:(hidden$R[d]-1)])},
-         'c'={X_map[,dd]<-f_c(Zp%*%B_aux[d,])},
+  switch(C[d],'g'={X_map[,d]<-f_g(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
+         'p'={X_map[,d]<-f_p(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
+         'n'={X_map[,d]<-f_n(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
+         'o'={X_map[,d]<-f_o(Zp%*%hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)])},
+         'c'={X_map[,d]<-f_c(Zp%*%hidden$B[[d]])},
          stop('Unknown data type'))
-  if(sum(is.nan(X_map[,dd])) > 0){
+
+  if(sum(is.nan(X_map[,d])) > 0){
     warning('Some values are nan!') 
+  }
   }
   return(X_map)
     
   }
-}
+
 
 
   

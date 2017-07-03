@@ -10,13 +10,13 @@ GLFM_infer<-function(data,varargin){
   if(varargin_size==0){
     Z<-c()
     params2 <- init_default_params(data, c())
-    print("Case 0")
+   # print("Case 0")
   }else if(varargin_size<3){
     if(length(varargin[[1]])>0){
       Z<-unlist(varargin[[1]])
     }
     #switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, varargin[2]))
-    print("Case 1")
+    #print("Case 1")
     params2 <- init_default_params(data, varargin[2])
   }
   else{
@@ -58,8 +58,6 @@ GLFM_infer<-function(data,varargin){
     # ---To be completed ---
   #}
   func_bit<-rep(1,dim(data$X)[2])
-  #print(list(t(data$X),data$C,t(Z),params$bias,func_bit,params$s2u,params$s2B,
-           #  params$alpha,params$Niter,params$maxK,params$missing))
   print(params2$Niter)
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   print(params2$Niter)
