@@ -5,6 +5,7 @@ require(R.matlab)
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 datos_prostate<-readMat('prostate_v3.mat')
+source("init_default_params.R")
 Xauxi <- as.matrix(unlist(datos_prostate$data[2,1,1]),ncol=16,nrow= 502, byrow=TRUE)
 Xfull<-aux<-matrix(Xauxi,nrow=502,ncol=16)
 C<-unlist(datos_prostate$data[3,1,1],use.names = FALSE)
@@ -24,23 +25,23 @@ missing<--1
 s2u<-0.005
 s2B<-1
 alpha<-1
-Niter<-1000
+Niter<-100
 maxK<-10
 bias<-1
 params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias)
 names(params)<-param_names
 N<-dim(X)[1]
-m0<-matrix(0,N,2)
-Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.2,0.8)))
-if(params$bias == 1 && length(params$bias)>0){
-  Z <-cbind(rep(1,N),Z)
-}
+#m0<-matrix(0,N,2)
+#Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
+#if(params$bias == 1 && length(params$bias)>0){
+#  Z <-cbind(rep(1,N),Z)
+#}
 # Inference
-data<-list("X"=X,"C"=C)
 Z<-c()
+data<-list("X"=X,"C"=C)
 output <- GLFM_infer(data, list(Z,params))
 #Predict MAP estimate for the whole matrix X
-X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
+X_map <- GLFM_computeMAP(data$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
 th <- 0.03 #threshold to filter out latent features that are not significant
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned

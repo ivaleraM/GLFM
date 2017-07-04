@@ -5,13 +5,13 @@ f_o<-function(y,Thet){
   x<-rep(0,length(y))
   for(j in 1:length(Thet)){
     if(j == 1){
-      mask<-which(y<=Thet[1])
+      mask<-(y<=Thet[1])
     }
     else{
-      mask<-which(y>Thet[j-1]&& y<=Thet[j] )
+      mask<-(y>Thet[j-1]&& y<=Thet[j] )
     }
     x[mask]<-j
   }
-  x [which( x == 0)] <- length(Thet)+1
+  x [( x == 0)] <- length(Thet)+1
   return(x)
 }
