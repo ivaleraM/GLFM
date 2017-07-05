@@ -44,14 +44,13 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
   X_map<-matrix(0,nrow=P,ncol=D)
-  # For each dimension
   for(d in 1:D){ # for each dimension
   #('g','p','n','c','o')
-  switch(C[d],'g'={X_map[,d]<-f_g(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
-         'p'={X_map[,d]<-f_p(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
-         'n'={X_map[,d]<-f_n(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
-         'o'={X_map[,d]<-f_o(Zp%*%hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)])},
-         'c'={X_map[,d]<-f_c(Zp%*%hidden$B[[d]])},
+  switch(C[d],'g'={X_map[,d] <- f_g(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
+         'p'={X_map[,d] <- f_p(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
+         'n'={X_map[,d] <- f_n(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
+         'o'={X_map[,d] <- f_o(Zp%*%hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)])},
+         'c'={X_map[,d] <- f_c(Zp%*%hidden$B[[d]])},
          stop('Unknown data type'))
 
   if(sum(is.nan(X_map[,d])) > 0){
