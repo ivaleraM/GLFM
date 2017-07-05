@@ -4,6 +4,9 @@ setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
+source("GLFM_plotPatterns.R")
+source("remove_dims.R")
+source("get_feature_patterns_sorted.R")
 datos_prostate<-readMat('prostate_v3.mat')
 source("init_default_params.R")
 Xauxi <- as.matrix(unlist(datos_prostate$data[2,1,1]),ncol=16,nrow= 502, byrow=TRUE)
@@ -45,7 +48,9 @@ X_map <- GLFM_computeMAP(data$C, output$hidden$Z, output$hidden, output$params,c
 # Remove latent dimensions
 th <- 0.03 #threshold to filter out latent features that are not significant
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
-hidden <- remove_dims(output$hidden, feat_toRemove)
+if(length(feat_toRemove)>0){
+  hidden <- remove_dims(output$hidden, feat_toRemove)
+}
 sorted_patterns<- get_feature_patterns_sorted(hidden$Z)
 B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
 Kest <-dim(B_aux)[2]
