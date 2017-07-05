@@ -9,7 +9,7 @@
 get_feature_patterns_sorted<-function(Z,varargin){
   N <- dim(Z)[1]
   D <- dim(Z)[2] # number of features
-  C <- rep(0,N)
+  C_types <- rep(0,N)
   if(length(varargin)==0){
     fid<-1
     patterns<-sapply(Z,unique)
@@ -26,10 +26,10 @@ get_feature_patterns_sorted<-function(Z,varargin){
   L <- rep(0,dim(patterns)[1])
   for(r in 1:dim(patterns)[1] ){
     idxs_eq<-which(apply(Z, 1, function(x) all.equal(x , patterns[r,])) == "TRUE")
-    C[idxs_eq]<-r
+    C_types[idxs_eq]<-r
     L[r]<-length(idxs_eq)
   }
   L<-L[order(L,decreasing=TRUE)]
   patterns<-patterns[order(L,decreasing=TRUE),]
-  return(list(patterns, C))
+  return(list("paterns"=patterns,"types"=C_types))
 }
