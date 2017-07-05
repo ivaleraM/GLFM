@@ -31,5 +31,5 @@ get_feature_patterns_sorted<-function(Z,varargin){
   }
   L<-L[order(L,decreasing=TRUE)]
   patterns<-patterns[order(L,decreasing=TRUE),]
-  return(list("paterns"=patterns,"types"=C_types))
+  return(list("patterns"=patterns,"types"=C_types))
 }

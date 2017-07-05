@@ -4,6 +4,7 @@ setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
+source("GLFM_computePDF.R")
 source("GLFM_plotPatterns.R")
 source("remove_dims.R")
 source("get_feature_patterns_sorted.R")
@@ -52,13 +53,12 @@ if(length(feat_toRemove)>0){
   hidden <- remove_dims(output$hidden, feat_toRemove)
 }
 sorted_patterns<- get_feature_patterns_sorted(output$hidden$Z,c())
-B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
-Kest <-dim(B_aux)[2]
+Kest <-dim(output$hidden$B[[1]])[1]
 Zp <- diag(Kest)
 Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
 leg <-c('F0','F1', 'F2', 'F3', 'F4')
 colours<-c()
-GLFM_plotPatterns(data, output$hidden,output$params, Zp, list(leg,colours))
+GLFM_plotPatterns(data,output$hidden,output$params,Zp, list(leg,colours) )
 
 

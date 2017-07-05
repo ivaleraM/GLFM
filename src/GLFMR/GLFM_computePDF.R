@@ -24,9 +24,8 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   mm <- min(XXd[idxs_nonnans])
   MM <- max(XXd[idxs_nonnans])
   # Add external transformation case
-  B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
   P <- dim(Zp)[1]
-  K <-dim(B_aux)[2]
+  K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
   if(dim(Zp)[2]!= K){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
@@ -48,16 +47,17 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   else{
     xd <- unique(XXd[idxs_nonnans])
     print("xd is unique values")
+    print(length(xd))
     params<-append("numS"=length(xd),params)
   }
   pdf_val <-matrix(0,P,params$numS)
-  print(pdf_g(xd,Zp[1,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params))
+  # 2-8 equations in the paper for pdfs
   for(p in 1:P){
-    switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
-           'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
-           'n'={pdf_val[p,]<-pdf_n(xd,Zp[p,],B_aux[d,],hidden$mu[d],hidden$w[d],hidden$s2y,params)},
-           'o'={pdf_val[p,]<-pdf_c(xd,Zp[p,],B_aux[d,1:(hidden$R[d]-1)],hidden$s2y)},
-           'c'={pdf_val[p,]<-pdf_o(xd,Zp[p,],B_aux[d,],hidden$theta[d,1:(hidden$R[d]-1)],hidden$s2y,params)},
+    switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
+           'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
+           'n'={pdf_val[p,]<-pdf_n(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
+           'c'={pdf_val[p,]<-pdf_c(Zp[p,],hidden$B[[d]],hidden$s2y[d])},
+           'o'={pdf_val[p,]<-pdf_o(Zp[p,],hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)],hidden$s2y[d])},
            stop('Unknown data type'))
   }
   if(sum(is.nan(pdf_val)) > 0){
