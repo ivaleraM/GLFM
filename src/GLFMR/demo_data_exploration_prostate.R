@@ -51,7 +51,7 @@ feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insuf
 if(length(feat_toRemove)>0){
   hidden <- remove_dims(output$hidden, feat_toRemove)
 }
-sorted_patterns<- get_feature_patterns_sorted(hidden$Z)
+sorted_patterns<- get_feature_patterns_sorted(output$hidden$Z,c())
 B_aux<-matrix(unlist(hidden$B),nrow=dim(hidden$B)[1],ncol=dim(Zp)[2],byrow=TRUE)
 Kest <-dim(B_aux)[2]
 Zp <- diag(Kest)
