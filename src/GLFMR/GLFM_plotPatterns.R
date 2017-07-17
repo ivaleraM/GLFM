@@ -37,7 +37,20 @@ D<-dim(hidden$B[[1]])[1]
     }
     else if(data$C[d] == 'n'){
       h <-plot(pdf_val$xd)
-     
+      # As many colours as the number of patterns to plot P
+      plotcols<-c('red','blue','green','pink','yellow')
+      plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="b")
+      par(new=T)
+      for(d in 2:P){
+        plot(pdf_val$xd,pdf_val$pdf[d,],xlab = "",ylab="",col=plotcols[d],type="b",axes=F)
+        par(new=T)
+        #print("Press return to continue")
+      }
+      #par(new=F)
+      #Includes the histogram from above
+      plot(h,freq=FALSE, main = "histogram of x (proportions)",axes=F)
+      par(new=F)
+      
     }
     else{
       h <-plot(pdf_val$xd)
@@ -45,31 +58,6 @@ D<-dim(hidden$B[[1]])[1]
     }
   }
 }
-  #To be completed
 # Table 2 for prostate cancer types of data
-idxs_nans <- which(is.nan(data_prost$X[,5]))
-idxs_nonnans<-setdiff(1:(length(data_prost$X[,5])),idxs_nans)
-   mm <- min(data_prost$X[idxs_nonnans,5])
-   MM <- max(data_prost$X[idxs_nonnans,5])
-   h <- hist(data_prost$X[idxs_nonnans,5], breaks=(mm-1):(MM+0.5))
-   h$density <- h$counts/sum(h$counts)
-   plotcols<-c('red','blue','green','pink','yellow')
-   plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="b")
-   par(new=T)
-   for(d in 2:5){
-plot(pdf_val$xd,pdf_val$pdf[d,],xlab = "",ylab="",col=plotcols[d],type="b",axes=F)
-     par(new=T)
-#print("Press return to continue")
-   }
-   #par(new=F)
-plot(h,freq=FALSE, main = "histogram of x (proportions)",axes=F)
-par(new=F)
 
-# if(length(idxs_nans) > 0){
-#   idxs_nonnans<-setdiff(1:(length(data_prost$X[,4])),idxs_nans)
-#   mm <- min(data_prost$X[idxs_nonnans,d])
-#   MM <- max(data_prost$X[idxs_nonnans,d])
-#   h <- hist(data_prost$X[idxs_nonnans,d], breaks=(mm-1):(MM+0.5))
-#   h$density <- h$counts/sum(h$counts)
-#   plot(h,freq=FALSE, main = "histogram of x (proportions)")
-# }
+   
