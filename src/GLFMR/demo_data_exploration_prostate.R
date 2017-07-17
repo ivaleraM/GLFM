@@ -2,6 +2,7 @@
 rm(list=ls())
 setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
+require(ggplot2)
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("GLFM_computePDF.R")
@@ -42,10 +43,10 @@ N<-dim(X)[1]
 #}
 # Inference
 Z<-c()
-data<-list("X"=X,"C"=C)
-output <- GLFM_infer(data, list(Z,params))
+data_prost<-list("X"=X,"C"=C)
+output <- GLFM_infer(data_prost, list(Z,params))
 #Predict MAP estimate for the whole matrix X
-X_map <- GLFM_computeMAP(data$C, output$hidden$Z, output$hidden, output$params,c())
+X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
 th <- 0.03 #threshold to filter out latent features that are not significant
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
@@ -59,6 +60,6 @@ Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
 leg <-c('F0','F1', 'F2', 'F3', 'F4')
 colours<-c()
-GLFM_plotPatterns(data,output$hidden,output$params,Zp, list(leg,colours) )
+GLFM_plotPatterns(data_prost,output$hidden,output$params,Zp, list(leg,colours) )
 
 

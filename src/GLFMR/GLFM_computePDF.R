@@ -32,25 +32,27 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   }
   if(data$C[d] == 'g' || data$C[d] == 'p'){
     if((params$numS %in% params)){
+      numS<-params$numS
       xd <- seq(mm,MM,length.out=params$numS)
       print("xd is a linspace")
     }
     else{
-      params<-append("numS"=100,params)
-      xd <- seq(mm,MM,length.out=params$numS)
+      numS <-100
+      xd <- seq(mm,MM,length.out=numS)
     }
   }
   else if(data$C[d] == 'n'){
     xd <-mm:MM
-    params<-append("numS"=length(xd),params)
+    numS <-length(xd)
   }
   else{
     xd <- unique(XXd[idxs_nonnans])
     print("xd is unique values")
-    print(length(xd))
-    params<-append("numS"=length(xd),params)
+    numS<-length(xd)
+  #  params<-append("numS"=length(xd),params)
   }
-  pdf_val <-matrix(0,P,params$numS)
+  pdf_val <-matrix(0,P,numS)
+  print(list(numS,pdf_o(Zp[1,],hidden$B[[2]],hidden$theta[2,1:(hidden$R[2]-1)],hidden$s2y[2])))
   # 2-8 equations in the paper for pdfs
   for(p in 1:P){
     switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},

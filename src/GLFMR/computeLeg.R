@@ -1,6 +1,6 @@
 # num2str(x) en Matlab es as.character(x)
 
-legends <- computeLeg(Zp,params){
+computeLeg<-function(Zp,params){
   if(length(params$bias)>0){
     Zp <-Zp[,-1]
     n_leg<-dim(Zp[,-1])[1]
