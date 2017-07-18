@@ -29,14 +29,13 @@ D<-dim(hidden$B[[1]])[1]
     if(data$C[d]=='c'||data$C[d] == 'o' ){
       leges <- computeLeg(Zp,c())
       condition <- rep(as.character(leges) , ncol(pdf_val$pdf))
-      sa <- stack(as.data.frame(t(pdf_val$pdf)))
+      sa <- stack(as.data.frame((pdf_val$pdf)))
       sa$ind<-condition
       sa$x <- rep(seq_len(ncol(pdf_val$pdf)), nrow(pdf_val$pdf))
       ggplot(sa, aes(fill=ind, y=values, x=x)) + geom_bar(position = "dodge", stat="identity") 
       print("Press return to continue")
     }
     else if(data$C[d] == 'n'){
-      h <-plot(pdf_val$xd)
       # As many colours as the number of patterns to plot P
       plotcols<-c('red','blue','green','pink','yellow')
       plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="b")
