@@ -1,5 +1,6 @@
 # demo_data_exploration_prostate
 rm(list=ls())
+graphics.off()
 setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
@@ -59,8 +60,8 @@ Kest <-dim(output$hidden$B[[1]])[1]
 Zp <- diag(Kest)
 Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
-leg <-c('F0','F1', 'F2', 'F3', 'F4')
-colours<-c()
-GLFM_plotPatterns(data_prost,output$hidden,output$params,Zp, list(leg,colours) )
+leges <- computeLeg(Zp,c())
+colours<-c('red','blue','green','pink','yellow')
+GLFM_plotPatterns(data_prost,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 
 
