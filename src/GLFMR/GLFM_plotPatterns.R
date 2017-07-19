@@ -21,7 +21,7 @@ P<-dim(Zp)[1]
       print(sa)
       print("Press return to continue")
     }
-    else if(data$C[d] == 'n'){
+    else if(data$C[d] == 'n'||data$C[d] == 'p'){
       # As many colours as the number of patterns to plot P
       plot.new()
       idxs_nans <- which(is.nan(data$X[,d]))
