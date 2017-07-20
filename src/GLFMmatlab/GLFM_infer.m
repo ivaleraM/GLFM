@@ -64,8 +64,15 @@ function hidden = GLFM_infer(data,varargin)
     for d=1:D
         if (data.C(d) == 'c') || (data.C(d) == 'o')
             mask = data.X(:,d) ~= params.missing;
-            V_offset(d) = min( data.X(mask,d) );
-            data.X(mask,d) = data.X(mask,d) - V_offset(d) + 1;
+            %V_offset(d) = min( data.X(mask,d) );
+            %data.X(mask,d) = data.X(mask,d) - V_offset(d) + 1;
+            uniqueVal= unique(data.X(mask,d));
+            Xaux=[];
+            for i=1:length(uniqueVal)
+                Xaux(data.X(:,d)==uniqueVal(i)) = i;
+            end
+            Xaux(~mask)=params.missing;
+            data.X(:,d)= Xaux;
         end
     end
 
