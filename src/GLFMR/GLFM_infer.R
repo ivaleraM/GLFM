@@ -62,7 +62,7 @@ GLFM_infer<-function(data,varargin){
   library(RcppGSLExample)
   #print(params2)
   #print(Z)
-  #print(data)
+  #print(data$X)
   readline("Press return to continue")
   # call .Rcpp wrapper function
   

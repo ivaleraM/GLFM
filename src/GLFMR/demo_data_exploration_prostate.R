@@ -62,6 +62,8 @@ Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(Zp,c())
 colours<-c('red','blue','green','pink','yellow')
+# Falta calcular la probabilidad empirica (es lo que llaman baseline)
+
 GLFM_plotPatterns(data_prost,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 
 
