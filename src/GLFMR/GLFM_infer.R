@@ -46,8 +46,22 @@ GLFM_infer<-function(data,varargin){
   idx_catord<-which(data$C=='c' | data$C=='o')
   if(length(idx_catord)>0){
     data$X[,idx_catord] <-X_aux[,idx_catord]
+    bu<-apply(X_aux[,idx_catord], 2, function(x)length(unique(x)))
+    #while(any(colMaxs(X_aux[,idx_catord])!=bu)){
+      idx_dat<-which(colMaxs(X_aux[,idx_catord])!=bu)
+      if(length(idx_dat)>0){
+      for(ii in 1:length(idx_dat)){
+      idxs_bad<-which(X_aux[,idx_dat[ii]]>bu[idx_dat[ii]])
+      while(length(idxs_bad)>0){
+        X_aux[idxs_bad,idx_dat[ii]]<-X_aux[idxs_bad,idx_dat[ii]]-1
+        idxs_bad<-which(X_aux[,idx_dat[ii]]>bu[idx_dat[ii]])
+          }
+        }
+      }
+    data$X[,idx_catord]<-X_aux[,idx_catord]
     data$X[idx_missing]<-params2$missing 
-  }
+      }
+  
   
   # eventually, apply external transform
   #if(t%in%params2){
@@ -62,7 +76,7 @@ GLFM_infer<-function(data,varargin){
   library(RcppGSLExample)
   #print(params2)
   #print(Z)
-  #print(data$X)
+  print(data$X)
   readline("Press return to continue")
   # call .Rcpp wrapper function
   

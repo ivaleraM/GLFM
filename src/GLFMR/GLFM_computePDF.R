@@ -52,14 +52,14 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   #  params<-append("numS"=length(xd),params)
   }
   pdf_val <-matrix(0,P,numS)
-  print(list(numS,pdf_o(Zp[1,],hidden$B[[2]],hidden$theta[2,1:(2)],hidden$s2y[2])))
+  #print(list(numS,pdf_o(Zp[1,],hidden$B[[2]],hidden$theta[2,1:(2)],hidden$s2y[2])))
   # 2-8 equations in the paper for pdfs
   for(p in 1:P){
     switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
            'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
            'n'={pdf_val[p,]<-pdf_n(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
            'c'={pdf_val[p,]<-pdf_c(Zp[p,],hidden$B[[d]],hidden$s2y[d])},
-           'o'={pdf_val[p,]<-pdf_o(Zp[p,],hidden$B[[d]],hidden$theta[d,1:(2)],hidden$s2y[d])},
+           'o'={pdf_val[p,]<-pdf_o(Zp[p,],hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)],hidden$s2y[d])},
            stop('Unknown data type'))
   }
   if(sum(is.nan(pdf_val)) > 0){
