@@ -6,7 +6,7 @@ function pdf = pdf_o(Zp, B, theta, s2Y)
     R = length(theta)+1;
     pdf = zeros(1,R);
     for r=1:R
-        if (r==1)
+        if (r==1) 
             a = normcdf(theta(r), Zp*B, sqrt(s2Y) );
             b = 0;
         elseif (r==R)
