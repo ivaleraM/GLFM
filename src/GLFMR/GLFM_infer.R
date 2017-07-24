@@ -64,19 +64,16 @@ GLFM_infer<-function(data,varargin){
   
   
   # eventually, apply external transform
-  #if(t%in%params2){
-    #work in logarithm space
-    #data.X(:,r) = params2.t_1{r}(data.X(:,r)); # work in logarithm space better
-    #data.C(r) = params2.ext_dataType{r};
-    # ---To be completed ---
-  #}
+  if(transf_dummie){
+    data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
+  #  data$C[params2$idx_transform] <-params2$ext_datatype
+  }
   
   func_bit<-rep(1,dim(data$X)[2])
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
   #print(params2)
   #print(Z)
-  print(data$X)
   readline("Press return to continue")
   # call .Rcpp wrapper function
   

@@ -26,6 +26,21 @@ C<-Cfull[[1]][idx_toKeep]
 cat_labels<-cat_labels_full[idx_toKeep]
 y_labels<-y_labels_full[idx_toKeep]
 y_labels_long<-y_labels_long_full[idx_toKeep]
+N<-dim(X)[1]
+D<-dim(X)[2]
+# pre-transform a subset of variables
+transf_dummie <-FALSE
+idx_transform <- D # we transform the last dimension
+# transformation to apply to raw data
+t_1<-function(x){log(x+1)}
+# inverse transform to recover raw data
+t<-function(y){exp(y)-1}
+# derivative of inverse transform
+dt_1<-function(x){1/(x+1)}
+# change type of data due to transformation
+ext_datatype <-'p'
+
+
 #params
 param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias")
 missing<--1
@@ -35,14 +50,14 @@ alpha<-1
 Niter<-100
 maxK<-10
 bias<-1
-params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias)
+  if(transf_dummie){
+  param_names<-c(param_names,'t_1','dt_1','t','transf_dummie','ext_datatype','idx_transform')
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,t_1,dt_1,t,transf_dummie,ext_datatype,idx_transform)
+    } else{ 
+      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias)
+          }
 names(params)<-param_names
-N<-dim(X)[1]
-#m0<-matrix(0,N,2)
-#Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
-#if(params$bias == 1 && length(params$bias)>0){
-#  Z <-cbind(rep(1,N),Z)
-#}
+
 # Inference
 Z<-c()
 data_prost<-list("X"=X,"C"=C)
