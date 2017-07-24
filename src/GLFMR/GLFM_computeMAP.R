@@ -53,12 +53,16 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
          'c'={X_map[,d] <- f_c(Zp%*%hidden$B[[d]])},
          stop('Unknown data type'))
 
-  if(sum(is.nan(X_map[,d])) > 0){
+    if(sum(is.nan(X_map[,d])) > 0){
     warning('Some values are nan!') 
+    }
   }
-  }
+   if("transf_dummie" %in% names(params2)){
+    if(params2$transf_dummie){
+      X_map[,params2$idx_transform] <-params2$t( X_map[,params2$idx_transform])
+    }
+   }
   return(X_map)
-    
   }
 
 
