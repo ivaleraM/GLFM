@@ -64,9 +64,11 @@ GLFM_infer<-function(data,varargin){
   
   
   # eventually, apply external transform
-  if(transf_dummie){
-    data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
+  if( "transf_dummie" %in% names(params2)){
+    if(params2$transf_dummie){
+     data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
   #  data$C[params2$idx_transform] <-params2$ext_datatype
+    }
   }
   
   func_bit<-rep(1,dim(data$X)[2])

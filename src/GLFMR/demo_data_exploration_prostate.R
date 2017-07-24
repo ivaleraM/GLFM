@@ -29,20 +29,8 @@ y_labels_long<-y_labels_long_full[idx_toKeep]
 N<-dim(X)[1]
 D<-dim(X)[2]
 # pre-transform a subset of variables
-transf_dummie <-FALSE
-idx_transform <- D # we transform the last dimension
-# transformation to apply to raw data
-t_1<-function(x){log(x+1)}
-# inverse transform to recover raw data
-t<-function(y){exp(y)-1}
-# derivative of inverse transform
-dt_1<-function(x){1/(x+1)}
-# change type of data due to transformation
-ext_datatype <-'p'
-
-
 #params
-param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias")
+param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie")
 missing<--1
 s2u<-0.005
 s2B<-1
@@ -50,11 +38,21 @@ alpha<-1
 Niter<-100
 maxK<-10
 bias<-1
+transf_dummie <-FALSE
   if(transf_dummie){
-  param_names<-c(param_names,'t_1','dt_1','t','transf_dummie','ext_datatype','idx_transform')
-  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,t_1,dt_1,t,transf_dummie,ext_datatype,idx_transform)
+    idx_transform <- D # we transform the last dimension
+    # transformation to apply to raw data
+    t_1<-function(x){log(x+1)}
+    # inverse transform to recover raw data
+    t<-function(y){exp(y)-1}
+    # derivative of inverse transform
+    dt_1<-function(x){1/(x+1)}
+    # change type of data due to transformation
+    ext_datatype <-'p'
+  param_names<-c(param_names,'t_1','dt_1','t','ext_datatype','idx_transform')
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,t_1,dt_1,t,ext_datatype,idx_transform)
     } else{ 
-      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias)
+      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie)
           }
 names(params)<-param_names
 
