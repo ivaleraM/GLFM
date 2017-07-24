@@ -65,6 +65,11 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   if(sum(is.nan(pdf_val)) > 0){
     stop('Some values are nan!')
   }
+  if("transf_dummie" %in% names(params2)){
+    if(params2$transf_dummie){
+      xd <- params2$t(xd)
+      pdf_val <- pdf_val*abs(params2$dt_1(xd))
+    }
+  }
   return(list("pdf"=pdf_val,"xd"=xd))
-  # External transformation case is missing
   }
