@@ -22,8 +22,14 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   }
   idxs_nonnans<-setdiff(1:(length(XXd)),idxs_nans)
   mm <- min(XXd[idxs_nonnans])
-  MM <- max(XXd[idxs_nonnans])
-  # Add external transformation case
+  MM <- max(XXd[idxs_nonnans]) 
+  # External transformation case
+  if("transf_dummie" %in% names(params)){
+    if(params$transf_dummie){
+      mm <- params$t_1(mm)
+      MM <- params$t_1(MM)
+    }
+  }
   P <- dim(Zp)[1]
   K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
@@ -47,7 +53,7 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   }
   else{
     xd <- unique(XXd[idxs_nonnans])
-    print("xd is unique values")
+    print("xd are unique values")
     numS<-length(xd)
   #  params<-append("numS"=length(xd),params)
   }
@@ -63,7 +69,9 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
            stop('Unknown data type'))
   }
   if(sum(is.nan(pdf_val)) > 0){
+    print(data$C[d])
     stop('Some values are nan!')
+    
   }
   if("transf_dummie" %in% names(params)){
     if(params$transf_dummie){

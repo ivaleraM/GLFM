@@ -67,7 +67,7 @@ GLFM_infer<-function(data,varargin){
   if( "transf_dummie" %in% names(params2)){
     if(params2$transf_dummie){
      data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
-  #  data$C[params2$idx_transform] <-params2$ext_datatype
+    data$C[params2$idx_transform] <-params2$ext_datatype
     }
   }
   
@@ -75,7 +75,7 @@ GLFM_infer<-function(data,varargin){
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
   #print(params2)
-  print(list(length(data$C),dim(data$X)))
+  print(data$X)
   readline("Press return to continue")
   # call .Rcpp wrapper function
   
