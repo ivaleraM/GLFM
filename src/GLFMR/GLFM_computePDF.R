@@ -24,8 +24,8 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   mm <- min(XXd[idxs_nonnans])
   MM <- max(XXd[idxs_nonnans]) 
   # External transformation case
-  if("transf_dummie" %in% names(params)){
-    if(params$transf_dummie){
+  if("transf_dummie" %in% names(params) ){
+    if(params$transf_dummie && d == params$idx_transform){
       mm <- params$t_1(mm)
       MM <- params$t_1(MM)
     }
@@ -74,7 +74,7 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
     
   }
   if("transf_dummie" %in% names(params)){
-    if(params$transf_dummie){
+    if(params$transf_dummie && d == params$idx_transform){
       xd <- params$t_inv(xd)
       pdf_val <- pdf_val*abs(params$dt_1(xd))
     }

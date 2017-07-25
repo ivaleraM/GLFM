@@ -38,7 +38,7 @@ alpha<-1
 Niter<-100
 maxK<-10
 bias<-1
-transf_dummie <-TRUE
+transf_dummie <-FALSE
   if(transf_dummie){
     idx_transform <- D # we transform the last dimension
     # transformation to apply to raw data
