@@ -38,19 +38,19 @@ alpha<-1
 Niter<-100
 maxK<-10
 bias<-1
-transf_dummie <-FALSE
+transf_dummie <-TRUE
   if(transf_dummie){
     idx_transform <- D # we transform the last dimension
     # transformation to apply to raw data
     t_1<-function(x){log(x+1)}
     # inverse transform to recover raw data
-    t<-function(y){exp(y)-1}
+    t_inv<-function(y){exp(y)-1}
     # derivative of inverse transform
     dt_1<-function(x){1/(x+1)}
     # change type of data due to transformation
     ext_datatype <-'p'
-  param_names<-c(param_names,'t_1','dt_1','t','ext_datatype','idx_transform')
-  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,t_1,dt_1,t,ext_datatype,idx_transform)
+  param_names<-c(param_names,'t_1','dt_1','t_inv','ext_datatype','idx_transform')
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,t_1,dt_1,t_inv,ext_datatype,idx_transform)
     } else{ 
       params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie)
           }

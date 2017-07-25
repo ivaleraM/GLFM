@@ -57,9 +57,9 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
     warning('Some values are nan!') 
     }
   }
-   if("transf_dummie" %in% names(params2)){
-    if(params2$transf_dummie){
-      X_map[,params2$idx_transform] <-params2$t( X_map[,params2$idx_transform])
+   if("transf_dummie" %in% names(params)){
+    if(params$transf_dummie){
+      X_map[,params$idx_transform] <-params$t_inv( X_map[,params$idx_transform])
     }
    }
   return(X_map)

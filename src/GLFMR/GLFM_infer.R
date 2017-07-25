@@ -75,7 +75,7 @@ GLFM_infer<-function(data,varargin){
   setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
   library(RcppGSLExample)
   #print(params2)
-  #print(Z)
+  print(list(length(data$C),dim(data$X)))
   readline("Press return to continue")
   # call .Rcpp wrapper function
   
