@@ -6,6 +6,7 @@ f_p_1<-function(x,mu,w){
   else{
     y <- log( exp(w*(x-mu) - 1) )  
   }
+  return(y)
 }
 
 

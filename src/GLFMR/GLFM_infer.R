@@ -94,7 +94,7 @@ GLFM_infer<-function(data,varargin){
   hidden$Z<-t(hidden$Z)
  hidden<-append(hidden, list("R"=R))
  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
-  return(list("hidden"=hidden,"params"=params2))
+  return(list("data"=data,"hidden"=hidden,"params"=params2))
 }
  
   

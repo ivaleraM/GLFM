@@ -40,7 +40,7 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
     if((params$numS %in% params)){
       numS<-params$numS
       xd <- seq(mm,MM,length.out=params$numS)
-      print("xd is a linspace")
+      print(list("xd is a linspace, positive or real data"))
     }
     else{
       numS <-100
@@ -50,10 +50,12 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   else if(data$C[d] == 'n'){
     xd <-mm:MM
     numS <-length(xd)
+    print("xd is a grid, count data")
   }
   else{
     xd <- unique(XXd[idxs_nonnans])
-    print("xd are unique values")
+    print(list("xd are unique values, categorical or ordinal data"))
+    
     numS<-length(xd)
   #  params<-append("numS"=length(xd),params)
   }
@@ -62,16 +64,19 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   # 2-8 equations in the paper for pdfs
   for(p in 1:P){
     switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
-           'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
+           'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d])},
            'n'={pdf_val[p,]<-pdf_n(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
            'c'={pdf_val[p,]<-pdf_c(Zp[p,],hidden$B[[d]],hidden$s2y[d])},
            'o'={pdf_val[p,]<-pdf_o(Zp[p,],hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)],hidden$s2y[d])},
            stop('Unknown data type'))
   }
+  if(data$C[d]=='p'){
+  print(pdf_val)
+  }
+  #print("press return to continue")
   if(sum(is.nan(pdf_val)) > 0){
     print(data$C[d])
     stop('Some values are nan!')
-    
   }
   if("transf_dummie" %in% names(params)){
     if(params$transf_dummie && d == params$idx_transform){

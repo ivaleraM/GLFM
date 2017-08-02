@@ -23,36 +23,42 @@ y_labels_long_full<-unlist(datos_prostate$data[6,1,1],use.names = FALSE)
 idx_toKeep <- c(1, 2, 4,13, 15)
 X<-Xfull[,idx_toKeep]
 C<-Cfull[[1]][idx_toKeep]
-cat_labels<-cat_labels_full[idx_toKeep]
+aux1<-rep(paste("stage",cat_labels_full[1:2]),5)
+cat_labels1<-aux1[order(aux1)]
+aux2<-rep(paste(cat_labels_full[3:5], "mg"),5)
+ord_labels2<-aux2[order(aux2)]
+aux3<-rep(cat_labels_full[6:9],5)
+cat_labels3<-aux3[order(aux3)]
 y_labels<-y_labels_full[idx_toKeep]
 y_labels_long<-y_labels_long_full[idx_toKeep]
 N<-dim(X)[1]
 D<-dim(X)[2]
+plotlabels<-list(cat_labels1,ord_labels2,cat_labels3)
 # pre-transform a subset of variables
 #params
-param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie")
+param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels")
 missing<--1
 s2u<-0.005
 s2B<-1
 alpha<-1
-Niter<-100
+Niter<-1000
 maxK<-10
 bias<-1
-transf_dummie <-FALSE
+transf_dummie <-TRUE
   if(transf_dummie){
     idx_transform <- D # we transform the last dimension
     # transformation to apply to raw data
     t_1<-function(x){log(x+1)}
     # inverse transform to recover raw data
     t_inv<-function(y){exp(y)-1}
-    # derivative of inverse transform
+    # derivative of transform
     dt_1<-function(x){1/(x+1)}
     # change type of data due to transformation
     ext_datatype <-'p'
   param_names<-c(param_names,'t_1','dt_1','t_inv','ext_datatype','idx_transform')
-  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,t_1,dt_1,t_inv,ext_datatype,idx_transform)
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,t_1,dt_1,t_inv,ext_datatype,idx_transform)
     } else{ 
-      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie)
+      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels)
           }
 names(params)<-param_names
 
@@ -60,6 +66,8 @@ names(params)<-param_names
 Z<-c()
 data_prost<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_prost, list(Z,params))
+writeMat("output.mat",Z=output$hidden$Z,B1=output$hidden$B[[1]],B2=output$hidden$B[[2]],B3=output$hidden$B[[3]],B4=output$hidden$B[[4]],B5=output$hidden$B[[5]], theta=output$hidden$theta,mu = output$hidden$mu,w = output$hidden$w,s2y = output$hidden$s2y,R = output$hidden$R )
+# Save in Matlab format
 #Predict MAP estimate for the whole matrix X
 X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
