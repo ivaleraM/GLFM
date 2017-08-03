@@ -52,7 +52,7 @@ transf_dummie <-TRUE
     # inverse transform to recover raw data
     t_inv<-function(y){exp(y)-1}
     # derivative of transform
-    dt_1<-function(x){1/(x+1)}
+    dt_1<-function(x){1/as.vector(x+1)}
     # change type of data due to transformation
     ext_datatype <-'p'
   param_names<-c(param_names,'t_1','dt_1','t_inv','ext_datatype','idx_transform')

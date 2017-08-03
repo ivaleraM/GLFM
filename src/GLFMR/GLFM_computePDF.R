@@ -14,6 +14,7 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   source("pdf_n.R")
   source("pdf_c.R")
   source("pdf_o.R")
+  source("df_p_1.R")
   XXd<-data$X[,d]
   #print(XXd)
   idxs_nans <- which(is.nan(XXd))
@@ -70,19 +71,23 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
            'o'={pdf_val[p,]<-pdf_o(Zp[p,],hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)],hidden$s2y[d])},
            stop('Unknown data type'))
   }
-  if(data$C[d]=='p'){
-  print(pdf_val)
-  }
+  #if(data$C[d]=='p'){
+  
+  #}
   #print("press return to continue")
   if(sum(is.nan(pdf_val)) > 0){
     print(data$C[d])
     stop('Some values are nan!')
   }
   if("transf_dummie" %in% names(params)){
-    if(params$transf_dummie && d == params$idx_transform){
+   if(params$transf_dummie && d == params$idx_transform){
       xd <- params$t_inv(xd)
-      pdf_val <- pdf_val*abs(params$dt_1(xd))
+      pdf_val<-pdf_val%*%diag(abs(params$dt_1(xd)))
+      #print(auxmult)
+      #print(pdf_val%*%diag(auxmult))
+      
     }
   }
+  
   return(list("pdf"=pdf_val,"xd"=xd))
   }

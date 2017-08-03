@@ -38,20 +38,20 @@ P<-dim(Zp)[1]
           h$density <- h$counts/sum(h$counts)
           plot(h,freq=FALSE, main = "histogram of x (proportions)",axes=F)
           par(new=T)
-          plot(pdf_val$xd,pdf_val$pdf[1,],log="x",xlab = "",ylab="",col=plotcols[1],type="b")
+          plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="l")
           par(new=T)
           for(pp in 2:P){
-            plot(pdf_val$xd,pdf_val$pdf[pp,],log="x",xlab = "",ylab="",col=plotcols[pp],type="b",axes=F)
+            plot(pdf_val$xd,pdf_val$pdf[pp,],xlab = "",ylab="",col=plotcols[pp],type="l",axes=F)
             par(new=T)
             #  # print("Press return to continue")
           }
           par(new=F)
         }
       }else{
-       plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="b")
+       plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="l")
        par(new=T)
        for(pp in 2:P){
-         plot(pdf_val$xd,pdf_val$pdf[pp,],xlab = "",ylab="",col=plotcols[pp],type="b",axes=F)
+         plot(pdf_val$xd,pdf_val$pdf[pp,],xlab = "",ylab="",col=plotcols[pp],type="l",axes=F)
          par(new=T)
       #  # print("Press return to continue")
        }
