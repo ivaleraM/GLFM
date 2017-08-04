@@ -61,8 +61,7 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   #  params<-append("numS"=length(xd),params)
   }
   pdf_val <-matrix(0,P,numS)
-  #print(list(numS,pdf_o(Zp[1,],hidden$B[[2]],hidden$theta[2,1:(2)],hidden$s2y[2])))
-  # 2-8 equations in the paper for pdfs
+  
   for(p in 1:P){
     switch(data$C[d],'g'={pdf_val[p,]<-pdf_g(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d],params)},
            'p'={pdf_val[p,]<-pdf_p(xd,Zp[p,],hidden$B[[d]],hidden$mu[d],hidden$w[d],hidden$s2y[d])},
@@ -83,9 +82,6 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
    if(params$transf_dummie && d == params$idx_transform){
       xd <- params$t_inv(xd)
       pdf_val<-pdf_val%*%diag(abs(params$dt_1(xd)))
-      #print(auxmult)
-      #print(pdf_val%*%diag(auxmult))
-      
     }
   }
   

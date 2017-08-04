@@ -7,7 +7,7 @@ Kest <-dim(output$hidden$B[[1]])[1]
 Zp <- diag(Kest)
 Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
-leges<-computeLeg(Zp,c())
+leges<-computeLeg(rbind(rep(0,4),Zp),c())
 idxs_nans<-which(is.nan(data_prost$X[,3]))
 idxs_nonnans<-setdiff(1:(length(data_prost$X[,3])),idxs_nans)
 mm <- min(data_prost$X[idxs_nonnans,3])
@@ -15,12 +15,14 @@ MM <- max(data_prost$X[idxs_nonnans,3])
 h <- hist(data_prost$X[idxs_nonnans,3], breaks=(mm-1):(MM+0.5))
 h$density <- h$counts/sum(h$counts)
 condition<- rep(as.character(leges) , ncol(pdf_val$pdf))
-sa <- stack(as.data.frame((pdf_val$pdf)))
+auxpdf<-rbind(h$counts/sum(h$counts),pdf_val$pdf)
+sa <- stack(as.data.frame((auxpdf)))
+#sa <- stack(as.data.frame((pdf_val$pdf)))
 sa$ind<-condition
-specie<- c(rep("sorgho" , nrow(pdf_val$pdf)) , rep("poacee" , nrow(pdf_val$pdf)) , rep("banana" , nrow(pdf_val$pdf)) , rep("triticum" , nrow(pdf_val$pdf)) )
+specie<- c(rep("sorgho" , nrow(auxpdf)) , rep("poacee" , nrow(auxpdf)) , rep("banana" , nrow(auxpdf)) , rep("triticum" , nrow(auxpdf)) )
 #sa$x <- rep(seq_len(ncol(pdf_val$pdf)), nrow(pdf_val$pdf))
 sa$x<-specie
-ggplot(sa, aes(fill=ind, y=values, x=x)) + geom_bar(position = "dodge", stat="identity") 
+p2<-ggplot(sa, aes(fill=ind, y=values, x=x)) + geom_bar(position = "dodge", stat="identity") 
 #+    facet_wrap(~ind)
 
 # problema con los datos ordinales, revisar
@@ -44,10 +46,10 @@ ggplot(sa, aes(fill=ind, y=values, x=x)) + geom_bar(position = "dodge", stat="id
  h$density <- h$counts/sum(h$counts)
  pdf_val<-GLFM_computePDF(data_prost,Zp,output$hidden,output$params,5)
  plotcols<-c('red','blue','green','pink','yellow')
- plot(pdf_val$xd,pdf_val$pdf[1,], xlab = "",ylab="",col=plotcols[1],type="l")
+ plot(pdf_val$xd,pdf_val$pdf[1,], xlab = expression("x"[d]),ylab="",col=plotcols[1],type="l")
  par(new=T)
  for(d in 2:5){
-   plot(pdf_val$xd,pdf_val$pdf[d,], xlab = "",ylab="",col=plotcols[d],type="l",axes=F)
+   plot(pdf_val$xd,pdf_val$pdf[d,], xlab = expression("x"[d]),ylab="",col=plotcols[d],type="l",axes=F)
    par(new=T)
    #print("Press return to continue")
  }
@@ -60,12 +62,12 @@ ggplot(sa, aes(fill=ind, y=values, x=x)) + geom_bar(position = "dodge", stat="id
  plot(pdf_val$xd,pdf_val$pdf[1,],xlab = "",ylab="",col=plotcols[1],type="b")
  
 
-pdf_val<-GLFM_computePDF(data_prost,Zp,output$hidden,output$params,5)
-idxs_nans <- which(is.nan(data_prost$X[,5]))
- idxs_nonnans<-setdiff(1:(length(data_prost$X[,5])),idxs_nans)
- mm <- min(data_prost$X[idxs_nonnans,5])
- MM <- max(data_prost$X[idxs_nonnans,5])
- h <- hist(data_prost$X[idxs_nonnans,5], breaks=(mm-1):(MM+0.5))
+pdf_val<-GLFM_computePDF(data_prost,Zp,output$hidden,output$params,4)
+idxs_nans <- which(is.nan(data_prost$X[,4]))
+ idxs_nonnans<-setdiff(1:(length(data_prost$X[,4])),idxs_nans)
+ mm <- min(data_prost$X[idxs_nonnans,4])
+ MM <- max(data_prost$X[idxs_nonnans,4])
+ h <- hist(data_prost$X[idxs_nonnans,4], breaks=(mm-1):(MM+0.5))
  h$density <- h$counts/sum(h$counts)
  condition <- rep(as.character(leges) , ncol(pdf_val$pdf))
  sa_den <- stack(as.data.frame(t(pdf_val$pdf)))

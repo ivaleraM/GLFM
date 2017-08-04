@@ -23,20 +23,21 @@ y_labels_long_full<-unlist(datos_prostate$data[6,1,1],use.names = FALSE)
 idx_toKeep <- c(1, 2, 4,13, 15)
 X<-Xfull[,idx_toKeep]
 C<-Cfull[[1]][idx_toKeep]
-aux1<-rep(paste("stage",cat_labels_full[1:2]),5)
+aux1<-rep(paste("stage",cat_labels_full[1:2]),6)
 cat_labels1<-aux1[order(aux1)]
-aux2<-rep(paste(cat_labels_full[3:5], "mg"),5)
+aux2<-rep(paste(cat_labels_full[3:5], "mg"),6)
 ord_labels2<-aux2[order(aux2)]
-aux3<-rep(cat_labels_full[6:9],5)
+aux3<-rep(cat_labels_full[6:9],6)
 cat_labels3<-aux3[order(aux3)]
 y_labels<-y_labels_full[idx_toKeep]
 y_labels_long<-y_labels_long_full[idx_toKeep]
 N<-dim(X)[1]
 D<-dim(X)[2]
 plotlabels<-list(cat_labels1,ord_labels2,cat_labels3)
+plottitles<-list("Type of cancer","Prognosis status", "Drug level", "Size of primary tumor (cm^2)","Serum prostatic acid phosphatase")
 # pre-transform a subset of variables
 #params
-param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels")
+param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels","plottitles")
 missing<--1
 s2u<-0.005
 s2B<-1
@@ -56,9 +57,9 @@ transf_dummie <-TRUE
     # change type of data due to transformation
     ext_datatype <-'p'
   param_names<-c(param_names,'t_1','dt_1','t_inv','ext_datatype','idx_transform')
-  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,t_1,dt_1,t_inv,ext_datatype,idx_transform)
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,plottitles,t_1,dt_1,t_inv,ext_datatype,idx_transform)
     } else{ 
-      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels)
+      params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,plottitles)
           }
 names(params)<-param_names
 
@@ -66,8 +67,8 @@ names(params)<-param_names
 Z<-c()
 data_prost<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_prost, list(Z,params))
-writeMat("output.mat",Z=output$hidden$Z,B1=output$hidden$B[[1]],B2=output$hidden$B[[2]],B3=output$hidden$B[[3]],B4=output$hidden$B[[4]],B5=output$hidden$B[[5]], theta=output$hidden$theta,mu = output$hidden$mu,w = output$hidden$w,s2y = output$hidden$s2y,R = output$hidden$R )
 # Save in Matlab format
+writeMat("output.mat",Z=output$hidden$Z,B1=output$hidden$B[[1]],B2=output$hidden$B[[2]],B3=output$hidden$B[[3]],B4=output$hidden$B[[4]],B5=output$hidden$B[[5]], theta=output$hidden$theta,mu = output$hidden$mu,w = output$hidden$w,s2y = output$hidden$s2y,R = output$hidden$R )
 #Predict MAP estimate for the whole matrix X
 X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
@@ -81,7 +82,7 @@ Kest <-dim(output$hidden$B[[1]])[1]
 Zp <- diag(Kest)
 Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
-leges <- computeLeg(Zp,c())
+leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 colours<-c('red','blue','green','pink','yellow')
 # Falta calcular la probabilidad empirica (es lo que llaman baseline)
 
