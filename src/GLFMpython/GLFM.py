@@ -85,8 +85,14 @@ def infer(data,hidden=dict(), params=dict()):
     for d in xrange(D):
         if (tmp_data['C'][d]=='c' or tmp_data['C'][d]=='o'):
             mask = tmp_data['X'][:,d] != params['missing']
-            V_offset[d] = np.min( tmp_data['X'][mask,d] )
-            tmp_data['X'][mask,d] = tmp_data['X'][mask,d] - V_offset[d] + 1
+            uniqueVal = np.unique(tmp_data['X'][mask,d])
+            Xaux = np.zeros((N,1))
+            for i in xrange(len(uniqueVal)):
+                Xaux[tmp_data['X'][:,d] == uniqueVal[i]] = i
+            Xaux[map(lambda x: not x, mask)] = params['missing']
+            tmp_data['X'][:,d] = Xaux
+            #V_offset[d] = np.min( tmp_data['X'][mask,d] )
+            #tmp_data['X'][mask,d] = tmp_data['X'][mask,d] - V_offset[d] + 1
 
     # eventually, apply external transform specified by the user
     for r in xrange(tmp_data['X'].shape[1]):
