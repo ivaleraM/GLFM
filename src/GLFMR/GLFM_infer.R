@@ -92,8 +92,8 @@ GLFM_infer<-function(data,varargin){
     R[idx_catord]<-V_offset[idx_catord]
   }
   hidden$Z<-t(hidden$Z)
- hidden<-append(hidden, list("R"=R))
- setwd("../src/GLFMR")
+  hidden<-append(hidden, list("R"=R))
+  setwd("../src/GLFMR")
   return(list("data"=data,"hidden"=hidden,"params"=params2))
 }
  

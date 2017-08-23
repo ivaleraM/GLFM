@@ -1,7 +1,6 @@
 # demo_data_exploration_prostate
 rm(list=ls())
 graphics.off()
-setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
 source("GLFM_infer.R")
