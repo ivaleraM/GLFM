@@ -72,7 +72,7 @@ GLFM_infer<-function(data,varargin){
   }
   
   func_bit<-rep(1,dim(data$X)[2])
-  setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/")
+  setwd("../")
   library(RcppGSLExample)
   #print(params2)
   print(data$X)
@@ -93,7 +93,7 @@ GLFM_infer<-function(data,varargin){
   }
   hidden$Z<-t(hidden$Z)
  hidden<-append(hidden, list("R"=R))
- setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+ setwd("../src/GLFMR")
   return(list("data"=data,"hidden"=hidden,"params"=params2))
 }
  

@@ -56,7 +56,6 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
     int Nsim = Rcpp::as<int>(input_Nsim);
     int maxK = Rcpp::as<int>(input_maxK);
     double missing = Rcpp::as<double>(input_missing);
-    
     if (Cdim!=D){
       throw std::range_error("Invalid number of dimensions for vector C\n");
     }
@@ -74,7 +73,7 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
       //printf("%c ", *(char*)input_C[dd]);
       printf("%c ", C[dd]);
     }
-//    printf("\n N=%d, D=%d, Kini=%d, Cdim=%d \n", N, D, K, Cdim);
+    printf("\n N=%d, D=%d, Kini=%d, Niter=%d \n", N, D, K, Nsim);
     printf("\n ");
     //...............BODY C CODE.......................//
     //Initialization
@@ -92,6 +91,7 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
     double w[D],mu[D],s2Y[D];
     int R[D];
     printf("In C++: Transforming input data... ");
+    //int maxR =1;
     int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w, s2Y);
     printf("maxR=%d\n", maxR);
     //...............Inference Function.......................//
@@ -104,34 +104,42 @@ Rcpp::List IBPsampler(const RcppGSL::Matrix input_X, Rcpp::CharacterVector  inpu
     printf("\n N=%d, D=%d, Kest=%d \n", N, D, Kest);
     
     Rcpp::NumericMatrix out_Z(Kest,N);
+    gsl_matrix_view Zview = gsl_matrix_submatrix (Z, 0, 0, Kest, N); 
     for (int j = 0; j < N; j++) {
         for (int k=0; k<Kest; k++){
-          out_Z[Kest*j+k]=gsl_matrix_get (input_Z, k, j);
+          out_Z[Kest*j+k]=(&Zview.matrix)->data[k*N+j];//gsl_matrix_get (input_Z, k, j);
         }
     }
-    
+
     Rcpp::ListMatrix out_B(D,1);
     int idx_tmp;
     for (int d=0; d<D; d++){
-      if (C[d] =='c') {
+      if (C[d] =='o') {
+        idx_tmp = 1;
+      } else {
         idx_tmp = R[d];
-       } else {
-         idx_tmp = 1;
-       }
-       Rcpp::NumericMatrix auxB(Kest,idx_tmp); 
-       for (int j = 0; j < idx_tmp; j++) {
-         for (int k=0; k<Kest; k++){
-           auxB[Kest*j+k]=gsl_matrix_get (B[d], k, j);
-         }
-       }
-       out_B[d]=auxB;
+      }
+      gsl_matrix_view Bd_view =  gsl_matrix_submatrix (B[d], 0, 0, Kest, idx_tmp);
+      gsl_matrix *BT=gsl_matrix_alloc(idx_tmp,Kest);
+      gsl_matrix_transpose_memcpy (BT, &Bd_view.matrix);
+      Rcpp::NumericMatrix auxB(Kest,idx_tmp);
+      for (int i=0;i<Kest*maxR;i++){
+        if (C[d]!='c' & i<Kest){
+          auxB[i]=(BT)->data[i];
+        }else if (C[d]=='c' & i<Kest*idx_tmp){
+          auxB[i]=(BT)->data[i];
+        }
+      }
+      out_B[d]=auxB;
+      gsl_matrix_free(BT);
     }
+
     
     Rcpp::NumericMatrix out_theta(D,maxR);      
-    for (int d = 0; d < D; d++) {
+    for (int d=0; d<D; d++){
       for (int i=0;i<maxR;i++){
         if (C[d]=='o' & i<(R[d]-1)){
-          out_theta[D*i+d]=gsl_vector_get (theta[d], i);
+          out_theta[D*i+d]=(theta[d])->data[i];
         }
       }
     }

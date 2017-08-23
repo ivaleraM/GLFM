@@ -60,7 +60,7 @@ function hidden = GLFM_infer(data,varargin)
     data.X(isnan(data.X)) = params.missing;
 
     % change labels for categorical and ordinal vars such that > 0
-    V_offset = zeros(1,D);
+    %V_offset = zeros(1,D);
     for d=1:D
         if (data.C(d) == 'c') || (data.C(d) == 'o')
             mask = data.X(:,d) ~= params.missing;
