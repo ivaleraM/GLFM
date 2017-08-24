@@ -25,7 +25,7 @@ transf_dummie <-FALSE
 params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK,"transf_dummie"=transf_dummie)
 # Inference
 output <- GLFM_infer(data, list(Z,params))
-Kest<-dim(output$hidden$Z)[1]
+Kest <-dim(output$hidden$B[[1]])[1]
 Zp <-diag(Kest)
 X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
 # Plot, ground truths
