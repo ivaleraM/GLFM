@@ -4,7 +4,7 @@
 
 GLFM_infer<-function(data,varargin){
   require(matrixStats)
- 
+  source("aux/init_default_params.R")
   #print(length(varargin[[1]]))
   varargin_size<-length(varargin)
   if(varargin_size==0){
@@ -72,7 +72,7 @@ GLFM_infer<-function(data,varargin){
   }
   
   func_bit<-rep(1,dim(data$X)[2])
-  setwd("../")
+  setwd("../Ccode/")
   library(RcppGSLExample)
   #print(params2)
   print(data$X)
@@ -93,7 +93,7 @@ GLFM_infer<-function(data,varargin){
   }
   hidden$Z<-t(hidden$Z)
   hidden<-append(hidden, list("R"=R))
-  setwd("../src/GLFMR")
+  setwd("../GLFMR")
   return(list("data"=data,"hidden"=hidden,"params"=params2))
 }
  

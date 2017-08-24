@@ -20,12 +20,12 @@
 # hidden$B is a list where each element is a vector of size 2
 GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   # We need to call the transformation functions! 
-  source("f_o.R")
-  source("f_g.R")
-  source("f_c.R")
-  source("f_p.R")
-  source("f_o.R")
-  source("f_n.R")
+  source("mapping_functions/f_o.R")
+  source("mapping_functions/f_g.R")
+  source("mapping_functions/f_c.R")
+  source("mapping_functions/f_p.R")
+  source("mapping_functions/f_o.R")
+  source("mapping_functions/f_n.R")
   
   if (length(varargin) == 1){
     D <- varargin[1]

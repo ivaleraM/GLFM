@@ -9,11 +9,11 @@
 #' @return pdf P*numS matrix where P is the number of patterns 
 
 GLFM_computePDF<-function(data,Zp,hidden,params,d){
-  source("pdf_g.R")
+  source("pdf_functions/pdf_g.R")
   source("pdf_p.R")
-  source("pdf_n.R")
-  source("pdf_c.R")
-  source("pdf_o.R")
+  source("pdf_functions/pdf_n.R")
+  source("pdf_functions/pdf_c.R")
+  source("pdf_functions/pdf_o.R")
   source("df_p_1.R")
   XXd<-data$X[,d]
   #print(XXd)
