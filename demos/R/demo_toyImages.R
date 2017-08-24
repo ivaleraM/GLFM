@@ -21,7 +21,8 @@ Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.2,0.8)))
 alpha <- 2   # Concentration parameter of the IBP
 Niter <- 100  # Number of iterations for the Gibbs sampler
 maxK <- 10
-params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK)
+transf_dummie <-FALSE
+params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK,"transf_dummie"=transf_dummie)
 # Inference
 output <- GLFM_infer(data, list(Z,params))
 Kest<-dim(output$hidden$Z)[1]
