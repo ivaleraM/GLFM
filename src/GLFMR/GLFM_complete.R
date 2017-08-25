@@ -4,22 +4,29 @@
 #' @param params a list with the simulation parameters and hyperparameters
 #' @return Xcompl the completed data matrix 
 GLFM_complete<-function(data,varargin){
-  varargin_size<-length(varargin)
+  source("aux/init_default_params.R")
   X_compl<-data$X
+  varargin_size<-length(varargin)
   if(varargin_size==0){
     Z<-c()
-    params <- init_default_params(data, c())
-    print("Case 0")
-  }
-  else if(varargin_size<3)
-  {
-    Z<-unlist(varargin[1])
-    
-    switch(varargin_size,params <- init_default_params(data, c()) ,params <- init_default_params(data, varargin[2]))
-  }
-  else
-  {
+    params2 <- init_default_params(data, c())
+  }else if(varargin_size==1){
+    Z<-unlist(varargin[[1]])
+    params2 <- init_default_params(data, c())
+  }else if(varargin_size==2){
+    Z<-unlist(varargin[[1]])
+    params2 <- init_default_params(data, varargin[[2]])
+  }else{
     stop("Incorrect number of input parameters: should be 0, 1 or 2")
+  }
+  D <- dim(data$X)[2]
+  N <- dim(data$X)[1]
+  if(length(Z)==0){
+    m0<-matrix(0,N,2)
+    Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.8,0.2)))
+  }
+  if(params2$bias == 1 && length(params2$bias)>0){
+    Z <-cbind(rep(1,N),Z)
   }
   if(sum(is.nan(data$X))==0 && (sum(data$X == params$missing) == 0 || is.na(sum(data$X == params$missing)))){
     print('The input matrix X has no missing values to complete.')
