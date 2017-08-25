@@ -45,29 +45,35 @@ GLFM_infer<-function(data,varargin){
   X_aux<-data$X-V_offset_mat+1
   idx_catord<-which(data$C=='c' | data$C=='o')
   if(length(idx_catord)>0){
-    data$X[,idx_catord] <-X_aux[,idx_catord]
-    bu<-apply(X_aux[,idx_catord], 2, function(x)length(unique(x)))
-    #while(any(colMaxs(X_aux[,idx_catord])!=bu)){
-      idx_dat<-which(colMaxs(X_aux[,idx_catord])!=bu)
+    data$X[,idx_catord,drop=FALSE] <-X_aux[,idx_catord,drop=FALSE]
+    bu<-apply(X_aux[,idx_catord,drop=FALSE], 2, function(x)length(unique(x)))
+      idx_dat<-which(colMaxs(X_aux[,idx_catord,drop=FALSE])!=bu)
       if(length(idx_dat)>0){
       for(ii in 1:length(idx_dat)){
-      idxs_bad<-which(X_aux[,idx_dat[ii]]>bu[idx_dat[ii]])
+      idxs_bad<-which(X_aux[,idx_dat[ii],drop=FALSE]>bu[idx_dat[ii]])
       while(length(idxs_bad)>0){
-        X_aux[idxs_bad,idx_dat[ii]]<-X_aux[idxs_bad,idx_dat[ii]]-1
-        idxs_bad<-which(X_aux[,idx_dat[ii]]>bu[idx_dat[ii]])
+        X_aux[idxs_bad,idx_dat[ii],drop=FALSE]<-X_aux[idxs_bad,idx_dat[ii],drop=FALSE]-1
+        idxs_bad<-which(X_aux[,idx_dat[ii],drop=FALSE]>bu[idx_dat[ii]])
           }
         }
       }
     data$X[,idx_catord]<-X_aux[,idx_catord]
     data$X[idx_missing]<-params2$missing 
-      }
-  
+  }
   
   # eventually, apply external transform
   if( "transf_dummie" %in% names(params2)){
     if(params2$transf_dummie){
+      if(is.list(params2$t_1)==FALSE){
      data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
-    data$C[params2$idx_transform] <-params2$ext_datatype
+     data$C[params2$idx_transform] <-params2$ext_datatype
+      }else{
+        # idx_transform is a list with the indexes of each transformation per element
+        for(ell in 1:length(params2$t_1)){
+          data$X[,params2$idx_transform[[ell]]]<-params2$t_1[[ell]](data$X[,params2$idx_transform[[ell]]])
+          data$C[params2$idx_transform[[ell]]] <-params2$ext_datatype[[ell]]
+          }
+      }
     }
   }
   
