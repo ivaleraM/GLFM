@@ -70,16 +70,17 @@ X_map <- GLFM_computeMAP(data_counties, output$hidden$Z, output$hidden, output$p
 th <- 0.03 
 feat_toRemove <- which(sum(output$hidden$Z) < N*th)
 if(length(feat_toRemove)>0){
-hidden <- remove_dims(output$hidden, feat_toRemove)
-hidden <- sort_hidden(hidden$Z)
+output$hidden <- remove_dims(output$hidden, feat_toRemove)
+sorted_patterns <-get_feature_patterns_sorted(hidden$Z,c())
 }
-hidden <- sort_hidden(output$hidden$Z)
+sorted_patterns <- get_feature_patterns_sorted(output$hidden$Z,c())
 Kest <-dim(output$hidden$B[[1]])[1]
 Zp <- diag(Kest)
 Zp[,1] <- 1 # bias active
+Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 colours<-c('red','blue','green','pink','yellow')
-GLFM_plotPatterns(data_counties,hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
+GLFM_plotPatterns(data_counties,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 
 
 # To be completed

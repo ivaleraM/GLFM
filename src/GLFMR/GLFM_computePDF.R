@@ -26,11 +26,20 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   MM <- max(XXd[idxs_nonnans]) 
   # External transformation case
   if("transf_dummie" %in% names(params) ){
-    if(params$transf_dummie && d == params$idx_transform){
+    if(is.list(params2$t_1)==FALSE){
+    if(params$transf_dummie && d %in% params$idx_transform){
       mm <- params$t_1(mm)
       MM <- params$t_1(MM)
+      }
+    }else{
+      for(ell in 1:length(params2$t_1)){
+      if(d %in% params$idx_transform[[ell]]){
+      mm <- params$t_1[[ell]](mm)
+      MM <- params$t_1[[ell]](MM)
+          }
+        }
+      }
     }
-  }
   P <- dim(Zp)[1]
   K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
@@ -79,11 +88,19 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
     stop('Some values are nan!')
   }
   if("transf_dummie" %in% names(params)){
-   if(params$transf_dummie && d == params$idx_transform){
+    if(is.list(params2$t_1)==FALSE){
+   if(params$transf_dummie && d %in% params$idx_transform){
       xd <- params$t_inv(xd)
       pdf_val<-pdf_val%*%diag(abs(params$dt_1(xd)))
     }
+    }else{
+      for(ell in 1:length(params2$t_1)){
+        if(d %in% params$idx_transform[[ell]]){
+          xd <- params$t_inv[[ell]](xd)
+          pdf_val<-pdf_val%*%diag(abs(params$dt_1[[ell]](xd)))
+        }
+      }
   }
-  
+  }
   return(list("pdf"=pdf_val,"xd"=xd))
   }

@@ -71,8 +71,8 @@ X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$pa
 th <- 0.03 #threshold to filter out latent features that are not significant
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
 if(length(feat_toRemove)>0){
-  hidden <- remove_dims(output$hidden, feat_toRemove)
-  hidden <- sort_hidden(hidden$Z)
+  output$hidden <- remove_dims(output$hidden, feat_toRemove)
+  sorted_patterns <- get_feature_patterns_sorted(hidden$Z,c())
 }
 sorted_patterns<- get_feature_patterns_sorted(output$hidden$Z,c())
 Kest <-dim(output$hidden$B[[1]])[1]
