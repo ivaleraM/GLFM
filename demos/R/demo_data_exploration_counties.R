@@ -7,8 +7,8 @@ source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("GLFM_computePDF.R")
 source("GLFM_plotPatterns.R")
-#source("remove_dims.R")
 datos_counties<-readMat('counties.mat')
+source("aux/remove_dims.R")
 source("aux/get_feature_patterns_sorted.R")
 source("aux/computeLeg.R")
 Xauxi <- as.matrix(datos_counties$data[1,1,1][[1]],ncol=19,nrow= 3141, byrow=TRUE)
@@ -66,6 +66,21 @@ m0<-matrix(0,nrow=N,ncol=1)
 Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.2,0.8)))
 data_counties<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_counties, list(Z,params))
-X_map <- GLFM_computeMAP(data$C, output$hidden$Z, output$hidden, output$params,c())
+X_map <- GLFM_computeMAP(data_counties, output$hidden$Z, output$hidden, output$params,c())
+th <- 0.03 
+feat_toRemove <- which(sum(output$hidden$Z) < N*th)
+if(length(feat_toRemove)>0){
+hidden <- remove_dims(output$hidden, feat_toRemove)
+hidden <- sort_hidden(hidden$Z)
+}
+hidden <- sort_hidden(output$hidden$Z)
+Kest <-dim(output$hidden$B[[1]])[1]
+Zp <- diag(Kest)
+Zp[,1] <- 1 # bias active
+leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
+colours<-c('red','blue','green','pink','yellow')
+GLFM_plotPatterns(data_counties,hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
+
+
 # To be completed
 

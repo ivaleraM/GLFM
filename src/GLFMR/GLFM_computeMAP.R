@@ -59,7 +59,13 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   }
    if("transf_dummie" %in% names(params)){
     if(params$transf_dummie){
+      if(is.list(params$t_1)==FALSE){
       X_map[,params$idx_transform] <-params$t_inv( X_map[,params$idx_transform])
+      }
+    }else{
+      for(ell in 1:length(params$t_inv)){
+        X_map[,params$idx_transform[[ell]]] <-params$t_inv[[ell]]( X_map[,params$idx_transform[[ell]]])
+        }
     }
    }
   return(X_map)

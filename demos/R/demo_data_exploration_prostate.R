@@ -65,8 +65,6 @@ names(params)<-param_names
 Z<-c()
 data_prost<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_prost, list(Z,params))
-# Save in Matlab format
-writeMat("../../results/output.mat",Z=output$hidden$Z,B1=output$hidden$B[[1]],B2=output$hidden$B[[2]],B3=output$hidden$B[[3]],B4=output$hidden$B[[4]],B5=output$hidden$B[[5]], theta=output$hidden$theta,mu = output$hidden$mu,w = output$hidden$w,s2y = output$hidden$s2y,R = output$hidden$R )
 #Predict MAP estimate for the whole matrix X
 X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
@@ -74,6 +72,7 @@ th <- 0.03 #threshold to filter out latent features that are not significant
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
 if(length(feat_toRemove)>0){
   hidden <- remove_dims(output$hidden, feat_toRemove)
+  hidden <- sort_hidden(hidden$Z)
 }
 sorted_patterns<- get_feature_patterns_sorted(output$hidden$Z,c())
 Kest <-dim(output$hidden$B[[1]])[1]
