@@ -1,3 +1,0 @@
-useDynLib(RcppGSLExample)
-importFrom(Rcpp, evalCpp)
-export(IBPsampler)
