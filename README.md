@@ -9,7 +9,7 @@ To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, 
      "General Latent Feature Model for Heterogeneous Datasets", 
-     Available on [ArXiv](https://arxiv.org/abs/1706.03779), 2017.
+     Available on [ArXiv](https://arxiv.org/pdf/1706.03779.pdf), 2017.
 
 -----------------
 GLFM Description
@@ -129,6 +129,7 @@ and **params** is a list containing all simulation parameters and model
 
 Requirements
 ------------
+The main requirements include a C++ compiler (i.e., cython for Python, mex compiler for Matlab and Rcpp for R) and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
 
 For Python:
 
@@ -169,11 +170,11 @@ In order to run GLFM on your data, you need to:
 
 3) Compile the C++ code as
 
-    - For PYTHON In a terminal):
+    - For PYTHON (in a terminal):
         - Go to GLFM/src/Ccode/wrapper_python/ folder
         - Run command: python setup.py build_ext --inplace
 
-     - For MATLAB:
+     - For MATLAB (in Matlab workspace):
         - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
         - From matlab command window, execute: 
             >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
