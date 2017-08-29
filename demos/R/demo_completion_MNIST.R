@@ -6,10 +6,10 @@ source("GLFM_infer.R")
 source("GLFM_complete.R")
 source("GLFM_computePDF.R")
 source("GLFM_plotPatterns.R")
-datos_mninst <- read.csv(file="mnist_train_small_100.csv", header=TRUE,stringsAsFactors = FALSE, sep=",")
-n_labels<-datos_nminst[,1]
-Xauxi<-as.matrix(datos_nminst[,2:785],ncol=99,nrow= 784, byrow=TRUE)
-Xfull<-t(matrix(Xauxi,nrow=784,ncol=99))
+datos_mninst <- read.csv(file="../../datasets/mnist_train_small_100.csv", header=TRUE,stringsAsFactors = FALSE, sep=",")
+n_labels<-datos_mninst[,1]
+Xauxi<-as.matrix(datos_mninst[,2:785],ncol=99,nrow= 784, byrow=TRUE)
+Xfull<-matrix(t(Xauxi),ncol=784,nrow=99)
 Xfull<-Xfull+1
 Cfull<-rep('n',dim(Xfull)[1])
 perc_missing <- 0.3

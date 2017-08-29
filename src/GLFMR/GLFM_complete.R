@@ -33,6 +33,7 @@ GLFM_complete<-function(data,varargin){
     Xcompl <- c()
   }
   else{
+    print("press enter to continue")
     output <- GLFM_infer(data, list(Z,params))
     # NaN's are considered as missing
     data$X[which(is.nan(data$X))]=params$missing
