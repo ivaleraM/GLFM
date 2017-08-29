@@ -8,8 +8,8 @@ Python are provided. Moreover, several demos are provided to illustrate differen
 To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, 
-     "General Latent Feature Model for Heterogeneous Datasets", 
-     Available on [ArXiv](https://arxiv.org/pdf/1706.03779.pdf), 2017.
+     "General Latent Feature Model for Heterogeneous Datasets", 2017. 
+     Available on ArXiv: https://arxiv.org/abs/1706.03779.
 
 -----------------
 GLFM Description
