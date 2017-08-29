@@ -182,7 +182,7 @@ In order to run GLFM on your data, you need to:
         - Set directory as: 
             >> setwd("GLFM/src/Ccode")
         - Compile using the following command lines:
-            >> require("Rcpp")
+            >> require("Rcpp")                                                          
             >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source") 
             >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
         - Set the working directory as: 
