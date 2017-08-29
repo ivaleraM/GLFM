@@ -136,25 +136,25 @@ In order to run GLFM on your data, you need to:
     	- Cython: conda install -c anaconda cython=0.25.2
     	- Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
     	- cymsm library: conda install -c anaconda cymem=1.31.2
-3) Compile the C++ code, either for MATLAB or for PYTHON
-    - For PYTHON:
-	- Open a terminal
-        - Go to GLFM/src/Ccode/wrapper_python/ folder
-        - run command from terminal:
-            python setup.py build_ext --inplace
+3) Compile the C++ code as
+For PYTHON:
+    - Open a terminal
+    - Go to GLFM/src/Ccode/wrapper_python/ folder
+    - run command from terminal:
+         python setup.py build_ext --inplace
 
-     - For MATLAB:
-        - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
-        - From matlab command window, execute:
-            mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+For MATLAB:
+    - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
+    - From matlab command window, execute:
+         mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
-     - For R (in R or Rstudio):
-        - Set directory to  setwd("GLFM/src/Ccode")
-	- Compile using the following command liens:
-            install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
-            require("Rcpp")
-            compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
-	- Set the working directory as setwd("~/your directory/GLFM/src/GLFMR")
+For R (in R or Rstudio):
+    - Set directory to  setwd("GLFM/src/Ccode")
+    - Compile using the following command liens:
+         install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
+         require("Rcpp")
+         compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
+    - Set the working directory as setwd("~/your directory/GLFM/src/GLFMR")
 
 
 ------------
