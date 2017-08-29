@@ -9,13 +9,14 @@ source("GLFM_plotPatterns.R")
 datos_mninst <- read.csv(file="../../datasets/mnist_train_small_100.csv", header=TRUE,stringsAsFactors = FALSE, sep=",")
 n_labels<-datos_mninst[,1]
 Xauxi<-as.matrix(datos_mninst[,2:785],ncol=99,nrow= 784, byrow=TRUE)
-Xfull<-matrix(t(Xauxi),ncol=784,nrow=99)
+Xfull<-matrix((Xauxi),nrow=784,ncol=99)
+Xfull<-t(Xfull)
 Xfull<-Xfull+1
-Cfull<-rep('n',dim(Xfull)[1])
 perc_missing <- 0.3
 missing_val <- -100
 N<-dim(Xfull)[1]
 D<-dim(Xfull)[2]
+Cfull<-rep('n',D)
 rand_mat<-matrix(runif(N*D), ncol=D, nrow=N)
 mask_missings <- (rand_mat < perc_missing)
 Xmiss <- Xfull

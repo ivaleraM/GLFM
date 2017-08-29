@@ -9,7 +9,7 @@
 init_default_params<-function(data,params_init){
  
 param_names<-c("missing","alpha","bias","s2u","s2B","Niter","maxK","verbose","numS","t","t_1","dt_1","transf_dummie","ext_datatype","idx_transform")
-param_values<-list(-1,1,0,0.01,1,1000,dim(data$X)[2],1,100,c(),c(),c(),c(),c(),c())
+param_values<-list(-1,1,0,0.01,1,1000,dim(data$X)[2],1,100,c(),c(),c(),FALSE,c(),c())
  names(param_values)<-param_names 
 if (length(params_init)>0){
 idx_to_fill<-setdiff(1:length(param_names),which(param_names %in% names(params_init)))
