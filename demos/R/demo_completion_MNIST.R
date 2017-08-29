@@ -6,7 +6,7 @@ source("GLFM_infer.R")
 source("GLFM_complete.R")
 source("GLFM_computePDF.R")
 source("GLFM_plotPatterns.R")
-datos_mninst <- read.csv(file="mnist_train_small_100.csv", header=TRUE, sep=",")
+datos_mninst <- read.csv(file="mnist_train_small_100.csv", header=TRUE,stringsAsFactors = FALSE, sep=",")
 n_labels<-datos_nminst[,1]
 Xauxi<-as.matrix(datos_nminst[,2:785],ncol=99,nrow= 784, byrow=TRUE)
 Xfull<-t(matrix(Xauxi,nrow=784,ncol=99))

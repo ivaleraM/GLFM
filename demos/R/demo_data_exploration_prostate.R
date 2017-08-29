@@ -7,7 +7,7 @@ source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("GLFM_computePDF.R")
 source("GLFM_plotPatterns.R")
-source("remove_dims.R")
+source("aux/remove_dims.R")
 datos_prostate<-readMat('prostate_v3.mat')
 source("aux/get_feature_patterns_sorted.R")
 source("aux/computeLeg.R")
@@ -21,12 +21,19 @@ y_labels_long_full<-unlist(datos_prostate$data[6,1,1],use.names = FALSE)
 idx_toKeep <- c(1, 2, 4,13, 15)
 X<-Xfull[,idx_toKeep]
 C<-Cfull[[1]][idx_toKeep]
+#idx_cat1<-which(X[,1]==3)
+#idx_cat2<-which(X[,1]==4)
+#Xauxcat<-X[,1]
+#Xauxcat[idx_cat1]<-1
+#Xauxcat[idx_cat2]<-2
+#aux11<-rep("stage",dim(X)[1])
+#cat_labels1 <-paste(aux11,Xauxcat)
 aux1<-rep(paste("stage",cat_labels_full[1:2]),6)
 cat_labels1<-aux1[order(aux1)]
 aux2<-rep(paste(cat_labels_full[3:5], "mg"),6)
-ord_labels2<-aux2[order(aux2)]
+ord_labels2<-aux2[order(aux2,decreasing=FALSE)]
 aux3<-rep(cat_labels_full[6:9],6)
-cat_labels3<-aux3[order(aux3)]
+cat_labels3<-aux3[order(aux3,decreasing=FALSE)]
 y_labels<-y_labels_full[idx_toKeep]
 y_labels_long<-y_labels_long_full[idx_toKeep]
 N<-dim(X)[1]

@@ -10,9 +10,10 @@ P<-dim(Zp)[1]
     idxs_nonnans<-setdiff(1:(length(data$X[,d])),idxs_nans)
     mm <- min(data$X[idxs_nonnans,d])
     MM <- max(data$X[idxs_nonnans,d])
-    h <- hist(data$X[idxs_nonnans,d], breaks=(mm-1):(MM+0.5))
+    #h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE)
     if(data$C[d]=='c'| data$C[d] == 'o' ){
       # Adds the empirical
+      h <- hist(data$X[idxs_nonnans,d], breaks=(mm-1):(MM+0.5))
       auxpdf<-rbind(h$counts/sum(h$counts),pdf_val$pdf)
       condition <- rep(as.character(leges) , ncol(auxpdf))
       sa <- stack(as.data.frame((auxpdf)))
@@ -28,29 +29,28 @@ P<-dim(Zp)[1]
     else if(data$C[d] == 'n'||data$C[d] == 'p'||data$C[d] == 'g'){
       plot.new()
         if(params$transf_dummie && d == params$idx_transform){
-          h$density <- h$counts/sum(h$counts)
-          plot(h,xlab=expression("x"[d]), ylab=expression("pdf"[x]),freq=FALSE, main = plottitles[[d]],axes=F)
-          par(new=T)
-          plot(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[1],type="l")
-          par(new=T)
+          #plot(h,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]],axes=F)
+          #barplot(h$density,h$mids,xlab=expression("x"[d]), ylab=expression("pdf"[x]),freq=FALSE, main = plottitles[[d]],axes=F)
+          h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
+          lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[1],type="l")
+         
           for(pp in 2:P){
-            plot(pdf_val$xd,pdf_val$pdf[pp,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[pp],type="l",axes=F)
-            par(new=T)
+            lines(pdf_val$xd,pdf_val$pdf[pp,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
           }
-          par(new=F)
+          #par(new=F)
         }
       else{
-        h <- hist(data$X[idxs_nonnans,d], breaks=(mm-1):(MM+0.5))
-        h$density <- h$counts/sum(h$counts)
-        plot(h,freq=FALSE,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]],axes=F)
-        par(new=T)
-       plot(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[1],type="l")
-       par(new=T)
+        h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]])
+       # h$density <- h$counts/sum(h$counts)
+       # plot(h,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]],axes=F)
+        #par(new=T)
+       lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[1],type="l")
+       #par(new=T)
        for(pp in 2:P){
-         plot(pdf_val$xd,pdf_val$pdf[pp,],xlab =expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[pp],type="l",axes=F)
-         par(new=T)
+         lines(pdf_val$xd,pdf_val$pdf[pp,],xlab =expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
+        # par(new=T)
        }
-       par(new=F)
+       #par(new=F)
       }
     }
   }

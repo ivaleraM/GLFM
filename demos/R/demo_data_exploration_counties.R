@@ -18,13 +18,16 @@ C<-unlist(datos_counties$data[2,1,1],use.names = FALSE)
 Cfull<-strsplit(as.character(C), "")
 cat_labels_full <-unlist(datos_counties$data[3,1,1],use.names = FALSE)
 y_labels_full<-unlist(datos_counties$data[4,1,1],use.names = FALSE)
+plottitles<-list("Population density (inhabitants/miles^2)","Percentage of white population", "percentage of people >=65 years old","Average income (in dollars)")
+cat_labels1<-c(rep("cat 1",6), rep("cat 2",6))
+plotlabels<-list(cat_labels1)
 idx_to_remove <- c(1,3,4, 6, 7,8, 10,19) 
 idx_to_keep <- setdiff(1:19,idx_to_remove)
 X<-Xfull[,idx_to_keep]
 C<-Cfull[[1]][idx_to_keep]
 N<-dim(X)[1]
 D<-dim(X)[2]
-param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie")
+param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels","plottitles")
 missing <- -1
 s2Y <- 0   
 s2u <- .005 
@@ -57,9 +60,9 @@ if(transf_dummie){
   dt_1<-list(dt_11,dt_12)
   t_inv<-list(t_inv1,t_inv2)
   param_names<-c(param_names,'t_1','dt_1','t_inv','ext_datatype','idx_transform')
-  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,t_1,dt_1,t_inv,ext_datatype,idx_transform)
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,plottitles,t_1,dt_1,t_inv,ext_datatype,idx_transform)
  }else{ 
-  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie)
+  params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,plottitles)
     }
 names(params)<-param_names
 m0<-matrix(0,nrow=N,ncol=1)
