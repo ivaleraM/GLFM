@@ -46,31 +46,6 @@ GLFM Toolbox
 
 You can use GLFM from within Matlab or Python. Below we show an example of how to run the GLFM inference. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
 
-Calling from Matlab
--------------------
-    hidden = GLFM_infer(data);
-
-where **data** is a structure containing:
-
-    X: NxD observation matrix of N samples and D dimensions
-
-    C: 1xD string array indicating type of data for each dimension 
-
-
-
---- Alternative calls ---
-
-    hidden = GLFM_infer(data, hidden);
-OR
-
-    hidden = GLFM_infer(data, hidden, params);
-
-where **hidden** is a structure of latent variables:
-
-    Z: NxK binary matrix of feature assignments (initialization for the IBP)
-
-and **params** is a structure containing all simulation parameters and model
-    hyperparameters (see documentation for further details).
 
 Calling from Python
 -------------------
@@ -99,17 +74,70 @@ where **hidden** is a structure of latent variables:
 
 and **params** is a structure containing all simulation parameters and model hyperparameters (see documentation for further details).
 
+Calling from Matlab
+-------------------
+    hidden = GLFM_infer(data);
+
+where **data** is a structure containing:
+
+    X: NxD observation matrix of N samples and D dimensions
+
+    C: 1xD string array indicating type of data for each dimension 
+
+
+
+--- Alternative calls ---
+
+    hidden = GLFM_infer(data, hidden);
+OR
+
+    hidden = GLFM_infer(data, hidden, params);
+
+where **hidden** is a structure of latent variables:
+
+    Z: NxK binary matrix of feature assignments (initialization for the IBP)
+
+and **params** is a structure containing all simulation parameters and model
+    hyperparameters (see documentation for further details).
+
+Calling from R
+---------------
+    hidden <- GLFM_infer(data)
+
+where **data** is a structure containing:
+
+    X: NxD observation matrix of N samples and D dimensions
+
+    C: 1xD string array indicating type of data for each dimension 
+
+
+
+--- Alternative calls ---
+
+    hidden <- GLFM_infer(data,hidden)
+OR
+
+    hidden = GLFM_infer(data, list(hidden, params));
+
+where **hidden** is a list of latent variables:
+
+    Z: NxK binary matrix of feature assignments (initialization for the IBP)
+
+and **params** is a list containing all simulation parameters and model
+    hyperparameters (see documentation for further details).
 
 
 Requirements
 ------------
 
 For Python:
+
     - Python 2.7 or higher
     - Cython 0.25.2 or higher
     - Libraries: cymsm, cython_gsl
 
 For Matlab:
+
     - Matlab 2012b or higher
     - GNU GSLlibrary
         In UBUNTU: sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
@@ -117,6 +145,7 @@ For Matlab:
         In UBUNTU: sudo apt-get install libgmp3-dev
 
 For R:
+
     - R or Rstudio
     - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu)
     - Rcpp for seamless R and C++ integration
@@ -149,24 +178,18 @@ In order to run GLFM on your data, you need to:
 
      - For MATLAB:
         - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
-        - From matlab command window, execute:
-
-            mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+        - From matlab command window, execute: mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
      - For R (in R or Rstudio):
-        - Set directory to  
-
-            setwd("GLFM/src/Ccode")
+        - Set directory to setwd("GLFM/src/Ccode")
 
         - Compile using the following command liens:
 
-            install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
-            require("Rcpp")
-            compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
+            >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
+            >> require("Rcpp")
+            >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
 
-        - Set the working directory as 
-
-            setwd("~/your directory/GLFM/src/GLFMR")
+        - Set the working directory as setwd("~/your directory/GLFM/src/GLFMR")
 
 
 ------------
