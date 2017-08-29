@@ -9,7 +9,7 @@ To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, 
      "General Latent Feature Model for Heterogeneous Datasets", 
-     Submitted to JMLR, 2017.
+     Available on [ArXiv](https://arxiv.org/abs/1706.03779), 2017.
 
 -----------------
 GLFM Description
@@ -104,17 +104,22 @@ and **params** is a structure containing all simulation parameters and model hyp
 Requirements
 ------------
 
-For Matlab:
-    - Matlab 2012b or higher
-    - GSL library
-        In UBUNTU: sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
-    - GMP library
-        In UBUNTU: sudo apt-get install libgmp3-dev
-
 For Python:
     - Python 2.7 or higher
     - Cython 0.25.2 or higher
     - Libraries: cymsm, cython_gsl
+
+For Matlab:
+    - Matlab 2012b or higher
+    - GNU GSLlibrary
+        In UBUNTU: sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
+    - GMP library
+        In UBUNTU: sudo apt-get install libgmp3-dev
+
+For R:
+    - R or Rstudio
+    - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu)
+    - Rcpp for seamless R and C++ integration
 
 
 Installation Instructions
@@ -124,31 +129,42 @@ In order to run GLFM on your data, you need to:
 
 1) Download the latest git repository
 2) Install necessary libraries:
-    - Anaconda: https://www.continuum.io/downloads
-    - Library gsl: conda install gsl
-    - Cython: conda install -c anaconda cython=0.25.2
-    - Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
-    - cymsm library: conda install -c anaconda cymem=1.31.2
 
+    - For PYTHON:
+    	- Anaconda: https://www.continuum.io/downloads
+    	- Library gsl: conda install gsl
+    	- Cython: conda install -c anaconda cython=0.25.2
+    	- Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
+    	- cymsm library: conda install -c anaconda cymem=1.31.2
 3) Compile the C++ code, either for MATLAB or for PYTHON
-    - For MATLAB:
-        - Add path 'Ccode' and its children to Matlab workspace
+    - For PYTHON:
+	- Open a terminal
+        - Go to GLFM/src/Ccode/wrapper_python/ folder
+        - run command from terminal:
+            python setup.py build_ext --inplace
+
+     - For MATLAB:
+        - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
         - From matlab command window, execute:
             mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
-    - For PYTHON:
-        - Go to src/Ccode/wrapper_python/ folder
-        - run command from terminal:
-            python setup.py build_ext --inplace
+     - For R (in R or Rstudio):
+        - Set directory to  setwd("GLFM/src/Ccode")
+	- Compile using the following command liens:
+            install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
+            require("Rcpp")
+            compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
+	- Set the working directory as setwd("~/your directory/GLFM/src/GLFMR")
+
 
 ------------
 GLFM Demos
 ------------
 The folder `demos' contain scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
 
-As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb) replicates the example of the IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011). by generating a small set of images composed by different combinations of four original images plus additive Gaussian noise. Using the GLFM, we are able to recover the original images seamlessly.
+As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb) replicates the example of the IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011) by generating a small set of images composed by different combinations of four original images plus additive Gaussian noise. Using the GLFM, we are able to recover the original images seamlessly.
 
-Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for both in MATLAB and PYTHON. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
+Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for PYTHON, Matlab and R. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
 
 -------
 Contact
@@ -158,5 +174,6 @@ For further information or contact:
 
     Isabel Valera: isabel.valera.martinez (at) gmail.com
     Melanie F. Pradier: melanie.fpradier (at) gmail.com
+    Maria Lomeni: mdl40  (at) cam.ac.uk
 
 
