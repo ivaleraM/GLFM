@@ -8,7 +8,7 @@ rng( round(sum(1e5*clock)) );
 savePath = './results/';
 
 %% LOAD DATA
-input_file = '../../datasets/mat/prostate_v3.mat';
+input_file = '../../datasets/prostate_v3.mat';
 load(input_file);
 
 % Reduce dataset (we only focus on a few dimensions, since we have little num. of obs.
