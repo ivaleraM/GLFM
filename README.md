@@ -1,5 +1,5 @@
-GLFM: General Latent Feature Modeling toolbox for matlab and python
----------------------------------------------------------
+GLFM: General Latent Feature Modeling toolbox for python, matlab and R
+-----------------------------------------------------------------------
 
 This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
 observations. The core code is in C++. User interfaces in both Matlab and
@@ -8,8 +8,8 @@ Python are provided. Moreover, several demos are provided to illustrate differen
 To cite this work, please use
 
      I. Valera, M. F. Pradier and Z. Ghahramani, 
-     "General Latent Feature Model for Heterogeneous Datasets", 
-     Submitted to JMLR, 2017.
+     "General Latent Feature Model for Heterogeneous Datasets", 2017. 
+     Available on ArXiv: https://arxiv.org/abs/1706.03779.
 
 -----------------
 GLFM Description
@@ -38,7 +38,7 @@ As an example, an ordinal attribute taking values in the ordered set {*low*, *me
   <!-- <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/Model_example.png" width="600"/> -->
 </p>
 
-For more details on the GLMF, please refer to the paper. 
+For more details on the GLMF, please refer to the [research paper](https://arxiv.org/abs/1706.03779).  
 
 ------------
 GLFM Toolbox
@@ -46,31 +46,6 @@ GLFM Toolbox
 
 You can use GLFM from within Matlab or Python. Below we show an example of how to run the GLFM inference. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
 
-Calling from Matlab
--------------------
-    hidden = GLFM_infer(data);
-
-where **data** is a structure containing:
-
-    X: NxD observation matrix of N samples and D dimensions
-
-    C: 1xD string array indicating type of data for each dimension 
-
-
-
---- Alternative calls ---
-
-    hidden = GLFM_infer(data, hidden);
-OR
-
-    hidden = GLFM_infer(data, hidden, params);
-
-where **hidden** is a structure of latent variables:
-
-    Z: NxK binary matrix of feature assignments (initialization for the IBP)
-
-and **params** is a structure containing all simulation parameters and model
-    hyperparameters (see documentation for further details).
 
 Calling from Python
 -------------------
@@ -99,22 +74,82 @@ where **hidden** is a structure of latent variables:
 
 and **params** is a structure containing all simulation parameters and model hyperparameters (see documentation for further details).
 
+Calling from Matlab
+-------------------
+    hidden = GLFM_infer(data);
+
+where **data** is a structure containing:
+
+    X: NxD observation matrix of N samples and D dimensions
+
+    C: 1xD string array indicating type of data for each dimension 
+
+
+
+--- Alternative calls ---
+
+    hidden = GLFM_infer(data, hidden);
+OR
+
+    hidden = GLFM_infer(data, hidden, params);
+
+where **hidden** is a structure of latent variables:
+
+    Z: NxK binary matrix of feature assignments (initialization for the IBP)
+
+and **params** is a structure containing all simulation parameters and model
+    hyperparameters (see documentation for further details).
+
+Calling from R
+---------------
+    hidden <- GLFM_infer(data)
+
+where **data** is a structure containing:
+
+    X: NxD observation matrix of N samples and D dimensions
+
+    C: 1xD string array indicating type of data for each dimension 
+
+
+
+--- Alternative calls ---
+
+    hidden <- GLFM_infer(data,hidden)
+OR
+
+    hidden = GLFM_infer(data, list(hidden, params));
+
+where **hidden** is a list of latent variables:
+
+    Z: NxK binary matrix of feature assignments (initialization for the IBP)
+
+and **params** is a list containing all simulation parameters and model
+    hyperparameters (see documentation for further details).
 
 
 Requirements
 ------------
+The main requirements include a C++ compiler (i.e., cython for Python, mex compiler for Matlab and Rcpp for R) and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
+
+For Python:
+
+    - Python 2.7 or higher
+    - Cython 0.25.2 or higher
+    - Libraries: cymsm, cython_gsl
 
 For Matlab:
+
     - Matlab 2012b or higher
-    - GSL library
+    - GNU GSLlibrary
         In UBUNTU: sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
     - GMP library
         In UBUNTU: sudo apt-get install libgmp3-dev
 
-For Python:
-    - Python 2.7 or higher
-    - Cython 0.25.2 or higher
-    - Libraries: cymsm, cython_gsl
+For R:
+
+    - R or Rstudio
+    - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu)
+    - Rcpp for seamless R and C++ integration
 
 
 Installation Instructions
@@ -123,32 +158,46 @@ Installation Instructions
 In order to run GLFM on your data, you need to:
 
 1) Download the latest git repository
-2) Install necessary libraries:
-    - Anaconda: https://www.continuum.io/downloads
-    - Library gsl: conda install gsl
-    - Cython: conda install -c anaconda cython=0.25.2
-    - Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
-    - cymsm library: conda install -c anaconda cymem=1.31.2
 
-3) Compile the C++ code, either for MATLAB or for PYTHON
-    - For MATLAB:
-        - Add path 'Ccode' and its children to Matlab workspace
-        - From matlab command window, execute:
-            mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+2) Install necessary libraries:
 
     - For PYTHON:
-        - Go to src/Ccode/wrapper_python/ folder
-        - run command from terminal:
-            python setup.py build_ext --inplace
+    	- Anaconda: https://www.continuum.io/downloads
+    	- Library gsl: conda install gsl
+    	- Cython: conda install -c anaconda cython=0.25.2
+    	- Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
+    	- cymsm library: conda install -c anaconda cymem=1.31.2
+
+3) Compile the C++ code as
+
+    - For PYTHON (in a terminal):
+        - Go to GLFM/src/Ccode/wrapper_python/ folder
+        - Run command: python setup.py build_ext --inplace
+
+     - For MATLAB (in Matlab workspace):
+        - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
+        - From matlab command window, execute: 
+            >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+
+     - For R (in R or Rstudio):
+        - Set directory as: 
+            >> setwd("GLFM/src/Ccode")
+        - Compile using the following command lines:
+            >> require("Rcpp")                                                          
+            >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source") 
+            >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
+        - Set the working directory as: 
+            >> setwd("~/your directory/GLFM/src/GLFMR")
+
 
 ------------
 GLFM Demos
 ------------
 The folder `demos' contain scripts, as well as Jupiter notebooks, with application examples of the GLFM, including missing data estimation (a.k.a. matrix completion) and data exploratory analysis.
 
-As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb) replicates the example of the IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011). by generating a small set of images composed by different combinations of four original images plus additive Gaussian noise. Using the GLFM, we are able to recover the original images seamlessly.
+As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/blob/master/demos/python/demo_toy_images.ipynb) replicates the example of the IBP linear-Gaussian model in (Griffiths and Ghahramani, 2011) by generating a small set of images composed by different combinations of four original images plus additive Gaussian noise. Using the GLFM, we are able to recover the original images seamlessly.
 
-Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for both in MATLAB and PYTHON. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
+Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for PYTHON, Matlab and R. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
 
 -------
 Contact
@@ -158,5 +207,6 @@ For further information or contact:
 
     Isabel Valera: isabel.valera.martinez (at) gmail.com
     Melanie F. Pradier: melanie.fpradier (at) gmail.com
+    Maria Lomeni: mdl40  (at) cam.ac.uk
 
 
