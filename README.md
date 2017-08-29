@@ -38,7 +38,7 @@ As an example, an ordinal attribute taking values in the ordered set {*low*, *me
   <!-- <img src="https://github.com/ivaleraM/GLFM/blob/master/figures/Model_example.png" width="600"/> -->
 </p>
 
-For more details on the GLMF, please refer to the paper. 
+For more details on the GLMF, please refer to the [research paper](https://arxiv.org/abs/1706.03779).  
 
 ------------
 GLFM Toolbox
