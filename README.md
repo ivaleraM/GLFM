@@ -1,5 +1,4 @@
 GLFM: General Latent Feature Modeling toolbox for python, matlab and R
-
 -----------------------------------------------------------------------
 
 This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
