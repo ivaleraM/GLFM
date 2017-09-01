@@ -3,7 +3,6 @@ sys.path.append('../../src/GLFMpython/')
 
 import numpy as np
 import GLFM
-import pdb
 
 # --------------------------------------------------
 # Function to verify good behavior of GLFM library
