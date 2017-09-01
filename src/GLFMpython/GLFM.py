@@ -86,7 +86,7 @@ def infer(data,hidden=dict(), params=dict()):
         if (tmp_data['C'][d]=='c' or tmp_data['C'][d]=='o'):
             mask = tmp_data['X'][:,d] != params['missing']
             uniqueVal = np.unique(tmp_data['X'][mask,d])
-            Xaux = np.zeros((N,1))
+            Xaux = np.zeros(N)
             for i in xrange(len(uniqueVal)):
                 Xaux[tmp_data['X'][:,d] == uniqueVal[i]] = i
             Xaux[map(lambda x: not x, mask)] = params['missing']
