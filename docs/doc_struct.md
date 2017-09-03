@@ -9,7 +9,7 @@ Basic definitions
 * K: number of inferred latent features
 * maxR: maximum number of categories among all categorical variables
 
-Structures
+Structures (lists in the case of R)
 --------------------------
 1. **data**: structure with data to analyze/complete
     * X:  N x D observation matrix of N samples and D dimensions
@@ -40,3 +40,5 @@ Structures
         t = cell(1,size(data.X,2) ); % optional external transformation of obs. X(d) = params.t{d}(Xraw(d)). For example, params.t_1{d} = @(x) log(x + 1);
         t_1 = cell(1,size(data.X,2) ); % inverse transform. For example, params.t{d} = @(y) exp(y) - 1;
         dt_1 = cell(1,size(data.X,2) ); % derivative of the inverse transform. For example, params.dt_1{d} = @(x) 1./(x+1);
+
+4. (Only for R) **output**: list containing the output lists **hidden** and **params**.
