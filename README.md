@@ -178,28 +178,25 @@ Compilation Instructions
 
 In order to run GLFM on your data, you need to:
 
-1) Download the latest git repository
+1) Download the latest git repository (command: "git clone https://github.com/ivaleraM/GLFM.git")
 
 2) Compile the C++ code as
 
     - For PYTHON (in a terminal):
-        - Go to GLFM/src/Ccode/wrapper_python/ folder
-        - Run command: python setup.py build_ext --inplace
+        - Go to folder "GLFM/src/Ccode/wrapper_python/"
+        - Run command: >>python setup.py build_ext --inplace
 
      - For MATLAB (in Matlab workspace):
-        - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
-        - From matlab command window, execute: 
-            >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+        - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
+        - From matlab command window, execute command: >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
      - For R (in R or Rstudio):
-        - Set directory as: 
-            >> setwd("GLFM/src/Ccode")
+        - Set working directory to "GLFM/src/Ccode"
         - Compile using the following command lines:
             >> require("Rcpp")                                                          
             >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source") 
             >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
-        - Set the working directory as: 
-            >> setwd("~/your directory/GLFM/src/GLFMR")
+        - Set the working directory to "GLFM/src/GLFMR"
 
 
 ------------
