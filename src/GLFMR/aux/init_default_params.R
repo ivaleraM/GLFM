@@ -18,7 +18,7 @@ filled_param_names<-param_names[idx_to_fill]
 #names(param_values)<-param_names
 params_to_return_aux<-param_values[idx_to_fill]
 names(params_to_return_aux)<-filled_param_names
-params_to_return<-append(params,params_to_return_aux)
+params_to_return<-append(params_init,params_to_return_aux)
 print(params_to_return$Niter)
 return(params_to_return)
 }

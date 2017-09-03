@@ -80,13 +80,10 @@ GLFM_infer<-function(data,varargin){
   func_bit<-rep(1,dim(data$X)[2])
   setwd("../Ccode/")
   library(RcppGSLExample)
-  #print(params2)
-  print(data$X)
   readline("Press return to continue")
   # call .Rcpp wrapper function
-  
-  hidden<-IBPsampler(t(data$X),(data$C),t(Z),params2$bias,func_bit,params2$s2u,params2$s2B,
-                    params2$alpha,params2$Niter,params2$maxK,params2$missing)
+  # print(list(Z))
+  hidden<-IBPsampler(t(data$X),(data$C),t(Z),params2$bias,func_bit,params2$s2u,params2$s2B,params2$alpha,params2$Niter,params2$maxK,params2$missing)
  #print(hidden)
  #readline("press return to continue")
   R<-rep(1,D)

@@ -33,7 +33,7 @@ GLFM_complete<-function(data,varargin){
     Xcompl <- c()
   }
   else{
-    print("press enter to continue")
+    print(params2)
     output <- GLFM_infer(data, list(Z,params2))
     # NaN's are considered as missing
     data$X[which(is.nan(data$X))]=params2$missing
@@ -41,8 +41,10 @@ GLFM_complete<-function(data,varargin){
     print(idxs_missing)
     readline("press return to continue")
     # For each missing value, compute a MAP estimate, en la ultima componente debes dar la d de la posicion (n,d) del missing value
-    for(j in 1:dim(idxs_missing)[1]){
-    X_compl[idxs_missing[j]]<-GLFM_computeMAP(data$C, Z[idxs_missing[j]], output$hidden, output$params,idxs_missing[j])
+    for(j in 1:dim(idxs_missing)[2]){
+    GLFM_computeMAP(data$C, Z[idxs_missing[j],drop=FALSE], output$hidden, output$params,idxs_missing[2,j])
+   # print()
+      readline("press return to continue")
     }
   }
   return(list("X_compl"=X_compl,"hidden"=output$hidden))

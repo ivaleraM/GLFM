@@ -28,5 +28,5 @@ source("aux/init_default_params.R")
  X[1,5]<--1
  X[10,5]<--1
  data<-list("X"=X,"C"=C)
-output2<-GLFM_complete(data,c())
+output2<-GLFM_complete(data,list(c(),c()))
  # Aqui tengo duda sobre como llamar a GLFM_computeMAP
