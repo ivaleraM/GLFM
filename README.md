@@ -141,14 +141,14 @@ For Python:
     - Libraries: cymsm, cython_gsl
 
     Example to Install necessary libraries:
-
         - Anaconda: https://www.continuum.io/downloads
         - Library gsl: conda install gsl
         - Cython: conda install -c anaconda cython=0.25.2
         - Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
         - cymsm library: conda install -c anaconda cymem=1.31.2
 
-    Alternatively, Anaconda (https://www.anaconda.com/download/)
+    Alternatively, 
+        - Intall Anaconda (https://www.anaconda.com/download/)
         - Install gcc compiler and qt functionality. For example, in Ubuntu:
 
             sudo apt-get install build-essential
