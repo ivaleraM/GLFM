@@ -13,7 +13,7 @@ Structures (lists in the case of R)
 --------------------------
 1. **data**: structure with data to analyze/complete
     * X:  N x D observation matrix of N samples and D dimensions
-    * C:  1 x D string array indicating type of data for each dimension
+    * C:  1 x D string array indicating type of data for each dimension. There are currently five types of data defined: 'g'= continuous real-valued; 'p'= continuous positive real-valued; 'n'= discrete count data; 'c'= discrete categorical; and 'o'= discrete ordinal
     * ylabel: 1 x D string cell with variable names
     * cat_labels: 1 x D cell with categorical labels (cell is empty for other data types)
 
