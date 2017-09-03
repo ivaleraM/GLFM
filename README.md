@@ -154,7 +154,7 @@ For Python:
             sudo apt-get install build-essential
             sudo apt-get install python-qt4)
      
-        - In terminal:
+        - Download and compile library in a terminal as:
             git clone https://github.com/ivaleraM/GLFM.git
             bash GLFM/install/install_for_python.sh
 
