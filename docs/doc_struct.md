@@ -36,7 +36,7 @@ Structures (lists in the case of R)
     * maxK = size(data.X,2); % maximum number of latent features for memory allocation inside C++ routine
     * verbose = 1; % show info in command line
 
-    -- parameters for optional data-preprocessing --
+    -- parameters for **optional data-preprocessing** --
     * t = cell(1,size(data.X,2) ); % optional external transformation of obs. X(d) = params.t{d}(Xraw(d)). For example, params.t_1{d} = @(x) log(x + 1);
     * t_1 = cell(1,size(data.X,2) ); % inverse transform. For example, params.t{d} = @(y) exp(y) - 1;
     * dt_1 = cell(1,size(data.X,2) ); % derivative of the inverse transform. For example, params.dt_1{d} = @(x) 1./(x+1);
