@@ -57,7 +57,7 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension 
+    C: 1xD string array indicating type of data for each dimension. There are currently five types of data defined: 'g'= continuous real-valued; 'p'= continuous positive real-valued; 'n'= discrete count data; 'c'= discrete categorical; and 'o'= discrete ordinal 
 
 
 --- Alternative calls ---
@@ -83,7 +83,7 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension 
+    C: 1xD string array indicating type of data for each dimension. There are currently five types of data defined: 'g'= continuous real-valued; 'p'= continuous positive real-valued; 'n'= discrete count data; 'c'= discrete categorical; and 'o'= discrete ordinal
 
 
 
@@ -109,7 +109,8 @@ where **data** is a structure containing:
 
     X: NxD observation matrix of N samples and D dimensions
 
-    C: 1xD string array indicating type of data for each dimension 
+    C: 1xD string array indicating type of data for each dimension. There are currently five types of data defined: 'g'= continuous real-valued; 'p'= continuous positive real-valued; 'n'= discrete count data; 'c'= discrete categorical; and 'o'= discrete ordinal
+ 
 
 and **output** is a list containing the lists **hidden** and **params**.
 
