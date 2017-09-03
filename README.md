@@ -2,8 +2,8 @@ GLFM: General Latent Feature Modeling toolbox for python, matlab and R
 -----------------------------------------------------------------------
 
 This code implements a package for General Laten Feature Model (GLFM) suitable for heterogeneous
-observations. The core code is in C++. User interfaces in both Matlab and
-Python are provided. Moreover, several demos are provided to illustrate different applications, including missing data estimation and data exploratory analysis, of the GLFM.
+observations. The core code is in C++ and the package provides user interfaces in
+Python, Matlab and R. Moreover, several demos are provided to illustrate different applications, including missing data estimation and data exploratory analysis, of the GLFM.
 
 To cite this work, please use
 
@@ -23,7 +23,8 @@ GLFM is a general Bayesian nonparametric latent feature model suitable for heter
 * Positive real-valued ('p'): the attribute takes values in the real line.
 
 • Discrete variables:
-* Categorical data ('c'): the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
+
+* Categorical data ('c'): the attribute takes a value in a finite unordered set, e.g., {‘blue’,‘red’, ‘black’}.
 * Ordinal data ('o'): the attribute takes values in a finite ordered set, e.g., {‘never’, ‘often’, ‘always’}.
 * Count data ('n'): the attribute takes values in the set {0,...,∞}.
 
@@ -44,7 +45,7 @@ For more details on the GLMF, please refer to the [research paper](https://arxiv
 GLFM Toolbox
 ------------
 
-You can use GLFM from within Matlab or Python. Below we show an example of how to run the GLFM inference. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
+You can use GLFM from within Python, Matlab and R. Below we show an example of how to run the GLFM inference. For mode details on the functions and data structures, please refer to the [GLFM documentation](https://ivaleram.github.io/GLFM/).
 
 
 Calling from Python
@@ -102,7 +103,7 @@ and **params** is a structure containing all simulation parameters and model
 
 Calling from R
 ---------------
-    hidden <- GLFM_infer(data)
+    output <- GLFM_infer(data)
 
 where **data** is a structure containing:
 
@@ -110,32 +111,52 @@ where **data** is a structure containing:
 
     C: 1xD string array indicating type of data for each dimension 
 
+and **output** is a list containing the lists **hidden** and **params**.
+
 
 
 --- Alternative calls ---
 
-    hidden <- GLFM_infer(data,hidden)
+    output <- GLFM_infer(data,hidden)
 OR
 
-    hidden = GLFM_infer(data, list(hidden, params));
+    output = GLFM_infer(data, list(hidden, params));
 
 where **hidden** is a list of latent variables:
 
     Z: NxK binary matrix of feature assignments (initialization for the IBP)
 
 and **params** is a list containing all simulation parameters and model
-    hyperparameters (see documentation for further details).
+    hyperparameters (see documentation for further details). The **output** list contains the output lists **hidden** and **params**.
 
 
 Requirements
 ------------
-The main requirements include a C++ compiler (i.e., cython for Python, mex compiler for Matlab and Rcpp for R) and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
+The main requirements include a gcc compiler suitable for your OS and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
 
 For Python:
 
     - Python 2.7 or higher
     - Cython 0.25.2 or higher
     - Libraries: cymsm, cython_gsl
+
+    Example to Install necessary libraries:
+        - Anaconda: https://www.continuum.io/downloads
+        - Library gsl: conda install gsl
+        - Cython: conda install -c anaconda cython=0.25.2
+        - Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
+        - cymsm library: conda install -c anaconda cymem=1.31.2
+
+    Alternatively, 
+        - Intall Anaconda (https://www.anaconda.com/download/)
+        - Install gcc compiler and qt functionality. For example, in Ubuntu:
+
+            sudo apt-get install build-essential
+            sudo apt-get install python-qt4)
+     
+        - Download and compile library in a terminal as:
+            git clone https://github.com/ivaleraM/GLFM.git
+            bash GLFM/install/install_for_python.sh
 
 For Matlab:
 
@@ -152,42 +173,30 @@ For R:
     - Rcpp for seamless R and C++ integration
 
 
-Installation Instructions
+Compilation Instructions
 --------------------------
 
 In order to run GLFM on your data, you need to:
 
-1) Download the latest git repository
+1) Download the latest git repository (command: "git clone https://github.com/ivaleraM/GLFM.git")
 
-2) Install necessary libraries:
-
-    - For PYTHON:
-    	- Anaconda: https://www.continuum.io/downloads
-    	- Library gsl: conda install gsl
-    	- Cython: conda install -c anaconda cython=0.25.2
-    	- Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
-    	- cymsm library: conda install -c anaconda cymem=1.31.2
-
-3) Compile the C++ code as
+2) Compile the C++ code as
 
     - For PYTHON (in a terminal):
-        - Go to GLFM/src/Ccode/wrapper_python/ folder
-        - Run command: python setup.py build_ext --inplace
+        - Go to folder "GLFM/src/Ccode/wrapper_python/"
+        - Run command: >>python setup.py build_ext --inplace
 
      - For MATLAB (in Matlab workspace):
-        - Add path 'GLFM/src/Ccode' and its children to Matlab workspace
-        - From matlab command window, execute: 
-            >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+        - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
+        - From matlab command window, execute command: >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
      - For R (in R or Rstudio):
-        - Set directory as: 
-            >> setwd("GLFM/src/Ccode")
+        - Set working directory to "GLFM/src/Ccode"
         - Compile using the following command lines:
             >> require("Rcpp")                                                          
             >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source") 
             >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
-        - Set the working directory as: 
-            >> setwd("~/your directory/GLFM/src/GLFMR")
+        - Set the working directory to "GLFM/src/GLFMR"
 
 
 ------------

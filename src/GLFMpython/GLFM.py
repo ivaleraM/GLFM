@@ -4,7 +4,7 @@ import random
 import mapping_functions as mf
 import matplotlib.pyplot as plt
 
-import time as timeI
+import time
 import os
 import sys
 root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2])
@@ -14,8 +14,6 @@ import GLFMlib # python wrapper library in order to run C++ inference routine
 import mapping_functions as mf
 
 import copy
-
-import pdb
 
 def infer(data,hidden=dict(), params=dict()):
     """
@@ -86,9 +84,9 @@ def infer(data,hidden=dict(), params=dict()):
         if (tmp_data['C'][d]=='c' or tmp_data['C'][d]=='o'):
             mask = tmp_data['X'][:,d] != params['missing']
             uniqueVal = np.unique(tmp_data['X'][mask,d])
-            Xaux = np.zeros((N,1))
+            Xaux = np.zeros(N)
             for i in xrange(len(uniqueVal)):
-                Xaux[tmp_data['X'][:,d] == uniqueVal[i]] = i
+                Xaux[tmp_data['X'][:,d] == uniqueVal[i]] = i+1
             Xaux[map(lambda x: not x, mask)] = params['missing']
             tmp_data['X'][:,d] = Xaux
             #V_offset[d] = np.min( tmp_data['X'][mask,d] )
@@ -104,14 +102,17 @@ def infer(data,hidden=dict(), params=dict()):
     Fin = np.ones(tmp_data['X'].shape[1]) # choose internal transform function (for positive)
     Xin = np.ascontiguousarray( tmp_data['X'].transpose() ) # specify way to store matrices to be
     Zin = np.ascontiguousarray( hidden['Z'].transpose() ) # compatible with C code
-    tic = timeI.time() # start counting time
+    tinit = time.time() # start counting time
 
     # RUN C++ routine
     (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out) = \
             GLFMlib.infer(Xin, tmp_data['C'], Zin, Fin, params['bias'], params['s2u'],\
             params['s2B'], params['alpha'], params['Niter'],\
             params['maxK'], params['missing'], params['verbose'])
-    hidden['time'] = timeI.time() - tic
+
+    tlast = time.time()
+
+    hidden['time'] = tlast - tinit
     if params['verbose']:
         print '\n\tElapsed time: %.2f seconds.\n' % hidden['time']
 
@@ -297,7 +298,6 @@ def computePDF(data, Zp, hidden, params, d):
 
     for p in xrange(P):
         if tmp_data['C'][d] == 'g':
-            pdb.set_trace()
             pdf[p,:] = mf.pdf_g(xd,Zp[p,:], hidden['B'][d,:,0], hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params['s2u'])
         elif tmp_data['C'][d] == 'p':
             pdf[p,:] = mf.pdf_p(xd,Zp[p,:], hidden['B'][d,:,0], hidden['mu'][d], hidden['w'][d], hidden['s2Y'][d], params['s2u'])
