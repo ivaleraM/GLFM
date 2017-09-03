@@ -27,18 +27,18 @@ Structures (lists in the case of R)
 
 3. **params**: structure with all simulation parameters (if not defined, the default values listed below will be used):
 
-        missing = -1; % value for missings
-        alpha = 1; % Concentration parameter for the IBP
-        bias = 0; % number of bias terms, i.e., number of latent features not to be sampled
-        s2u = 0.01; % variance of auxiliary noise
-        s2B = 1; % Variance of the Gaussian prior of the weighing vectors B^d
-        Niter = 1000; % number of Gibbs sampling iterations to run
-        maxK = size(data.X,2); % maximum number of latent features for memory allocation inside C++ routine
-        verbose = 1; % show info in command line
+    * missing = -1; % value for missings
+    * alpha = 1; % Concentration parameter for the IBP
+    * bias = 0; % number of bias terms, i.e., number of latent features not to be sampled
+    * s2u = 0.01; % variance of auxiliary noise
+    * s2B = 1; % Variance of the Gaussian prior of the weighing vectors B^d
+    * Niter = 1000; % number of Gibbs sampling iterations to run
+    * maxK = size(data.X,2); % maximum number of latent features for memory allocation inside C++ routine
+    * verbose = 1; % show info in command line
 
-        * parameters for optional data-preprocessing
-        t = cell(1,size(data.X,2) ); % optional external transformation of obs. X(d) = params.t{d}(Xraw(d)). For example, params.t_1{d} = @(x) log(x + 1);
-        t_1 = cell(1,size(data.X,2) ); % inverse transform. For example, params.t{d} = @(y) exp(y) - 1;
-        dt_1 = cell(1,size(data.X,2) ); % derivative of the inverse transform. For example, params.dt_1{d} = @(x) 1./(x+1);
+    -- parameters for optional data-preprocessing --
+    * t = cell(1,size(data.X,2) ); % optional external transformation of obs. X(d) = params.t{d}(Xraw(d)). For example, params.t_1{d} = @(x) log(x + 1);
+    * t_1 = cell(1,size(data.X,2) ); % inverse transform. For example, params.t{d} = @(y) exp(y) - 1;
+    * dt_1 = cell(1,size(data.X,2) ); % derivative of the inverse transform. For example, params.dt_1{d} = @(x) 1./(x+1);
 
 4. (Only for R) **output**: list containing the output lists **hidden** and **params**.
