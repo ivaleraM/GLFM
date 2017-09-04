@@ -16,8 +16,8 @@ print('# SCRIPT TO CHECK CALL TO GLFM LIBRARY')
 print('# -------------------------------------------------\n')
 
 data = dict()
-data['X'] = np.array([[1.0, 1, -0.3, 1],[6, 2, 3.8, 23],[11, 3, 4.1, 4]]) # (N,D)
-data['C'] = 'goGN'
+data['X'] = np.array([[1.0, 1, -0.3, 1, 1],[6.3, 2, 3.8, 23, 1],[11, 3, 4.1, 4, 2]]) # (N,D)
+data['C'] = 'poGNc'
 
 hidden = dict()
 hidden['Z'] = np.array([[1.0,0],[1,1],[1,1]]) # dimensions (N,K)
