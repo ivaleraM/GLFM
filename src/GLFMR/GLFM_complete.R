@@ -33,18 +33,28 @@ GLFM_complete<-function(data,varargin){
     Xcompl <- c()
   }
   else{
-    print(params2)
     output <- GLFM_infer(data, list(Z,params2))
     # NaN's are considered as missing
     data$X[which(is.nan(data$X))]=params2$missing
     idxs_missing<-which(data$X == params2$missing, arr.in=TRUE)
-    print(idxs_missing)
-    readline("press return to continue")
+    #print(idxs_missing)
+    #print(data$C[idxs_missing[,2]])
     # For each missing value, compute a MAP estimate, en la ultima componente debes dar la d de la posicion (n,d) del missing value
-    for(j in 1:dim(idxs_missing)[2]){
-    GLFM_computeMAP(data$C, Z[idxs_missing[j],drop=FALSE], output$hidden, output$params,idxs_missing[2,j])
-   # print()
-      readline("press return to continue")
+    X_compl<-data$X
+    for(j in 1:dim(idxs_missing)[1]){
+     # print(X_compl[idxs_missing[j,1],idxs_missing[j,2]])
+     #print(list("Z"=output$hidden$Z[idxs_missing[j,1],,drop=FALSE],"tamZ"=dim(output$hidden$Z[idxs_missing[j,1],,drop=FALSE])))
+    #X_compl[idxs_missing[j,1],idxs_missing[j,2]]<- GLFM_computeMAP(data$C,output$hidden$Z[idxs_missing[j,1],,drop=FALSE],output$hidden,output$params,idxs_missing[j,2])
+      X_compl[idxs_missing[j,1],idxs_missing[j,2]]<-GLFM_computeMAP(data$C,output$hidden$Z[idxs_missing[j,1],,drop=FALSE], output$hidden, output$params,idxs_missing[j,2])
+  # print(X_aux_map)
+   #print(X_compl[idxs_missing[j,1],idxs_missing[j,2]])
+   #if(length(X_aux_map)>1){
+     #print(list(output$hidden$Z[idxs_missing[j,1],,drop=FALSE],output$hidden$B[[idxs_missing[j,2]]],output$hidden$Z[idxs_missing[j,1],,drop=FALSE]%*%output$hidden$B[[idxs_missing[j,2]]]
+    # print(f_n(output$hidden$Z[idxs_missing[j,1],,drop=FALSE]%*%output$hidden$B[[idxs_missing[j,2]]],output$hidden$mu[idxs_missing[j,2]],output$hidden$w[idxs_missing[j,1]])           
+     #           ))
+   #}
+   #X_compl[idxs_missing[j,1],idxs_missing[j,2]]<-X_aux_map
+  
     }
   }
   return(list("X_compl"=X_compl,"hidden"=output$hidden))

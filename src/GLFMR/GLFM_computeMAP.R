@@ -28,32 +28,33 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
   source("mapping_functions/f_n.R")
   
   if (length(varargin) == 1){
-    D <- varargin[1]
+    idxsD <- varargin[1]
   }
   else if(length(varargin) > 1){
     stop('Too many input arguments')
   }
   else{
-    D <- length(hidden$B)
+    idxsD <- 1:length(hidden$B)
   }
   P <- dim(Zp)[1]
   #print(dim(Zp)[2])
   K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
+  #print(Zp)
   if(dim(Zp)[2]!= K){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
-  X_map<-matrix(0,nrow=P,ncol=D)
-  for(d in 1:D){ # for each dimension
-  #('g','p','n','c','o')
-  switch(C[d],'g'={X_map[,d] <- f_g(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
-         'p'={X_map[,d] <- f_p(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
-         'n'={X_map[,d] <- f_n(Zp%*%hidden$B[[d]],hidden$mu[d],hidden$w[d])},
-         'o'={X_map[,d] <- f_o(Zp%*%hidden$B[[d]],hidden$theta[d,1:(hidden$R[d]-1)])},
-         'c'={X_map[,d] <- f_c(Zp%*%hidden$B[[d]])},
+  X_map<-matrix(0,nrow=P,ncol=length(idxsD))
+  
+  for(jj in 1:length(idxsD)){# for each dimension
+   dd<-idxsD[jj]
+  switch(C[dd],'g'={X_map[,jj] <- f_g(Zp%*%hidden$B[[dd]],hidden$mu[dd],hidden$w[dd])},
+         'p'={X_map[,jj] <- f_p(Zp%*%hidden$B[[dd]],hidden$mu[dd],hidden$w[dd])},
+         'n'={X_map[,jj] <- f_n(Zp%*%hidden$B[[dd]],hidden$mu[dd],hidden$w[dd])},
+         'o'={X_map[,jj] <- f_o(Zp%*%hidden$B[[dd]],hidden$theta[dd,1:(hidden$R[dd]-1)])},
+         'c'={X_map[,jj] <- f_c(Zp%*%hidden$B[[dd]])},
          stop('Unknown data type'))
-
-    if(sum(is.nan(X_map[,d])) > 0){
+    if(sum(is.nan(X_map[,jj])) > 0){
     warning('Some values are nan!') 
     }
   }

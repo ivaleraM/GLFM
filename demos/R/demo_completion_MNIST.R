@@ -6,6 +6,7 @@ source("GLFM_infer.R")
 source("GLFM_complete.R")
 source("GLFM_computePDF.R")
 source("GLFM_plotPatterns.R")
+source("GLFM_computeMAP.R")
 datos_mninst <- read.csv(file="../../datasets/mnist_train_small_100.csv", header=TRUE,stringsAsFactors = FALSE, sep=",")
 n_labels<-datos_mninst[,1]
 Xauxi<-as.matrix(datos_mninst[,2:785],ncol=99,nrow= 784, byrow=TRUE)
@@ -26,7 +27,7 @@ param_names<-c("missing","s2B","alpha","Niter","maxK","bias","transf_dummie")
 bias <- 0 
 s2B <- 0.5      
 alpha <- 10   
-Niter <- 50   
+Niter <- 1   
 maxK <- 100  
 missing <- -100
 transf_dummie<-FALSE
