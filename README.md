@@ -132,31 +132,16 @@ and **params** is a list containing all simulation parameters and model
 
 Requirements
 ------------
-The main requirements include a gcc compiler suitable for your OS and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
+In general, the main requirements include a gcc compiler suitable for your OS and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
 
 For Python:
 
-    - Python 2.7 or higher
-    - Cython 0.25.2 or higher
-    - Libraries: cymsm, cython_gsl
+        - Anaconda (install at https://www.anaconda.com/download/)
+        - gcc compiler and qt functionality (these modules are normally already available)
+          If not, it can be installed in Ubuntu as:
 
-    Example to Install necessary libraries:
-        - Anaconda: https://www.continuum.io/downloads
-        - Library gsl: conda install gsl
-        - Cython: conda install -c anaconda cython=0.25.2
-        - Cython_gsl: conda install -c pesoto cython_gsl=1.0.0
-        - cymsm library: conda install -c anaconda cymem=1.31.2
-
-    Alternatively, 
-        - Intall Anaconda (https://www.anaconda.com/download/)
-        - Install gcc compiler and qt functionality. For example, in Ubuntu:
-
-            sudo apt-get install build-essential
-            sudo apt-get install python-qt4)
-     
-        - Download and compile library in a terminal as:
-            git clone https://github.com/ivaleraM/GLFM.git
-            bash GLFM/install/install_for_python.sh
+                sudo apt-get install build-essential
+                sudo apt-get install python-qt4
 
 For Matlab:
 
@@ -182,9 +167,8 @@ In order to run GLFM on your data, you need to:
 
 2) Compile the C++ code as
 
-    - For PYTHON (in a terminal):
-        - Go to folder "GLFM/src/Ccode/wrapper_python/"
-        - Run command: >>python setup.py build_ext --inplace
+    - For PYTHON (go to "install/" folder and execute in a terminal):
+            bash install_for_python.sh
 
      - For MATLAB (in Matlab workspace):
         - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
@@ -193,8 +177,8 @@ In order to run GLFM on your data, you need to:
      - For R (in R or Rstudio):
         - Set working directory to "GLFM/src/Ccode"
         - Compile using the following command lines:
-            >> require("Rcpp")                                                          
-            >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source") 
+            >> require("Rcpp")
+            >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
             >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
         - Set the working directory to "GLFM/src/GLFMR"
 
