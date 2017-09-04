@@ -1,8 +1,26 @@
-#' @description Function to complete a matrix that has missing values
-#' @param data a list with the N*D matrix X and C 1*D vector
+#' @description Function to complete a data matrix X that has missing values
+#' Inputs:
+#'@param data is a list with the data matrix X and a string of data types C
+#'@param X: N*D data matrix X
+#'@param C: 1xD string with data types, D = number of dimensions
+#' # ----------------(optional) ------------------
+#' @param varargin is a list of lists containing 2 lists hidden and params 
+#'@param hidden: list with the following latent variables (Z,B):
+#'@param Z: NxK matrix of feature patterns
+#'@param B: latent feature list with D matrices of size  K * maxR  where
+#'@param D: number of dimensions
+#'@param K: number of latent variables
+#'@param maxR: maximum number of categories across all dimensions
+#'@param params: list with parameters (mu,w,theta)
+#'@param  mu: 1*D shift parameter
+#'@param w: 1*D scale parameter
+#'@param theta: D*maxR matrix of auxiliary vars (for ordinal variables)
+#'@param s2y: 1*D per dim inferred noise variance for pseudo observations
 #' @param hidden feature assignment N*K matrix Z
 #' @param params a list with the simulation parameters and hyperparameters
+#' Outputs:
 #' @return Xcompl the completed data matrix 
+
 GLFM_complete<-function(data,varargin){
   source("aux/init_default_params.R")
   X_compl<-data$X
@@ -37,24 +55,9 @@ GLFM_complete<-function(data,varargin){
     # NaN's are considered as missing
     data$X[which(is.nan(data$X))]=params2$missing
     idxs_missing<-which(data$X == params2$missing, arr.in=TRUE)
-    #print(idxs_missing)
-    #print(data$C[idxs_missing[,2]])
-    # For each missing value, compute a MAP estimate, en la ultima componente debes dar la d de la posicion (n,d) del missing value
     X_compl<-data$X
     for(j in 1:dim(idxs_missing)[1]){
-     # print(X_compl[idxs_missing[j,1],idxs_missing[j,2]])
-     #print(list("Z"=output$hidden$Z[idxs_missing[j,1],,drop=FALSE],"tamZ"=dim(output$hidden$Z[idxs_missing[j,1],,drop=FALSE])))
-    #X_compl[idxs_missing[j,1],idxs_missing[j,2]]<- GLFM_computeMAP(data$C,output$hidden$Z[idxs_missing[j,1],,drop=FALSE],output$hidden,output$params,idxs_missing[j,2])
-      X_compl[idxs_missing[j,1],idxs_missing[j,2]]<-GLFM_computeMAP(data$C,output$hidden$Z[idxs_missing[j,1],,drop=FALSE], output$hidden, output$params,idxs_missing[j,2])
-  # print(X_aux_map)
-   #print(X_compl[idxs_missing[j,1],idxs_missing[j,2]])
-   #if(length(X_aux_map)>1){
-     #print(list(output$hidden$Z[idxs_missing[j,1],,drop=FALSE],output$hidden$B[[idxs_missing[j,2]]],output$hidden$Z[idxs_missing[j,1],,drop=FALSE]%*%output$hidden$B[[idxs_missing[j,2]]]
-    # print(f_n(output$hidden$Z[idxs_missing[j,1],,drop=FALSE]%*%output$hidden$B[[idxs_missing[j,2]]],output$hidden$mu[idxs_missing[j,2]],output$hidden$w[idxs_missing[j,1]])           
-     #           ))
-   #}
-   #X_compl[idxs_missing[j,1],idxs_missing[j,2]]<-X_aux_map
-  
+       X_compl[idxs_missing[j,1],idxs_missing[j,2]]<-GLFM_computeMAP(data$C,output$hidden$Z[idxs_missing[j,1],,drop=FALSE], output$hidden, output$params,idxs_missing[j,2])
     }
   }
   return(list("X_compl"=X_compl,"hidden"=output$hidden))
