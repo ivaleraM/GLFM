@@ -9,5 +9,5 @@ conda install -y gsl
 conda install -y -c anaconda cython=0.25.2
 conda install -y -c pesoto cython_gsl=1.0.0
 conda install -y -c anaconda cymem=1.31.2
-cd src/Ccode/wrapper_python
+cd ../src/Ccode/wrapper_python
 python setup.py build_ext --inplace

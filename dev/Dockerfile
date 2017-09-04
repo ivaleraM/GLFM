@@ -26,20 +26,17 @@ RUN echo 'export PATH=/home/anaconda/conda/bin:$PATH' > /home/anaconda/.bashrc &
     /bin/bash ~/anaconda.sh -b -p /home/anaconda/conda && \
     rm ~/anaconda.sh
 
-# install QT dependencies for plotting functionality
 USER root
 RUN apt-get -y install python-qt4
-
-# ---------------
-# executable part
-# ---------------
-#
 USER anaconda
-RUN git clone https://github.com/ivaleraM/GLFM.git
-RUN /home/anaconda/GLFM/install/install_for_python.sh
 
-# Run app.py when the container launches
-CMD ["python", "/home/anaconda/GLFM/demos/demo_GLFM_infer_simple_call.py"]
+# executable part
+#RUN git clone https://github.com/ivaleraM/GLFM.git
+# RUN /home/anaconda/GLFM/install/install_for_python.sh
+
+## Run app.py when the container launches
+#CMD ["python", "/home/anaconda/GLFM/demos/demo_GLFM_infer_simple_call.py"]
+
 
 #ADD install.sh /home/anaconda
 #RUN mv install.sh GLFM/install.sh
