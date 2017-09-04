@@ -1,5 +1,8 @@
 import sys
-sys.path.append('../../src/GLFMpython/')
+import os
+#sys.path.append('../../src/GLFMpython/')
+root = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-3])
+sys.path.append(os.path.join(root, 'src/GLFMpython/'))
 
 import numpy as np
 import GLFM
