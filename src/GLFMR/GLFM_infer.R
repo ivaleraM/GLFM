@@ -90,7 +90,7 @@ GLFM_infer<-function(data,varargin){
   }
   
   func_bit<-rep(1,dim(data$X)[2])
-  setwd("../Ccode/")
+  setwd("../Ccode/wrapper_R/")
   library(RcppGSLExample)
   # call .Rcpp wrapper function
   hidden<-IBPsampler(t(data$X),(data$C),t(Z),params2$bias,func_bit,params2$s2u,params2$s2B,params2$alpha,params2$Niter,params2$maxK,params2$missing)
@@ -104,7 +104,7 @@ GLFM_infer<-function(data,varargin){
   }
   hidden$Z<-t(hidden$Z)
   hidden<-append(hidden, list("R"=R))
-  setwd("../GLFMR")
+  setwd("../../GLFMR")
   return(list("data"=data,"hidden"=hidden,"params"=params2))
 }
  
