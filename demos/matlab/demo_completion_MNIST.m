@@ -7,7 +7,7 @@ rng( round(sum(1e5*clock)) );
 
 %% LOAD MNIST dataset
 % This DB can be downloaded here: http://yann.lecun.com/exdb/mnist/
-images = loadMNISTImages('../../datasets/raw/MNIST/train-images-idx3-ubyte');
+images = load('../../datasets/mnist_train_small_100.csv'); 
 N = 50;                                             % subset of images to consider
 % Xtrue is the ground truth data (each column is one pixel)
 Xtrue = images(:, randperm(size(images,2),N))' + 1; % N*D matrix
