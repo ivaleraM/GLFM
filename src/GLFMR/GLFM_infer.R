@@ -1,11 +1,26 @@
-#' @param data is a list with X and C
-#' @param varargin is a list of lists containing hidden variables and parameters 
-#' @return A list with posterior draws
+#' @description Wrapper .R function to call .cpp R wrapper
+#' Inputs:
+#'@param data is a list with X and C
+#'@param X: N*D data matrix X
+#'@param C: 1xD string with data types, D = number of dimensions
+# ----------------(optional) ------------------
+#' @param varargin is a list of lists containing 2 lists hidden and params 
+#'@param hidden: list with the following latent variables (Z,B):
+#'@param Z: NxK matrix of feature patterns
+#'@param B: latent feature list with D matrices of size  K * maxR  where
+#'@param D: number of dimensions
+#'@param K: number of latent variables
+#'@param maxR: maximum number of categories across all dimensions
+#'@param params: list with parameters (mu,w,theta)
+#'@param  mu: 1*D shift parameter
+#'@param w: 1*D scale parameter
+#'@param theta: D*maxR matrix of auxiliary vars (for ordinal variables)
+#'@param s2y: 1*D per dim inferred noise variance for pseudo observations
+#' @return A list of 3 lists (data, hidden, params) with inferred values
 
 GLFM_infer<-function(data,varargin){
   require(matrixStats)
   source("aux/init_default_params.R")
-  #print(length(varargin[[1]]))
   varargin_size<-length(varargin)
   if(varargin_size==0){
     Z<-c()
@@ -35,7 +50,6 @@ GLFM_infer<-function(data,varargin){
   # replace missing values
   idx_missing<-which(is.nan(data$X))
   data$X[idx_missing] <- params2$missing
-  # Change labels of categorical or ordinal data such that the minimum value is 1
   idx_missing<-which((data$X)==params2$missing)
   X_aux<-data$X
   aa<-max(X_aux)
@@ -61,14 +75,12 @@ GLFM_infer<-function(data,varargin){
     data$X[idx_missing]<-params2$missing 
   }
   
-  # eventually, apply external transform
   if( "transf_dummie" %in% names(params2)){
     if(params2$transf_dummie){
       if(is.list(params2$t_1)==FALSE){
      data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
      data$C[params2$idx_transform] <-params2$ext_datatype
       }else{
-        # idx_transform is a list with the indexes of each transformation per element
         for(ell in 1:length(params2$t_1)){
           data$X[,params2$idx_transform[[ell]]]<-params2$t_1[[ell]](data$X[,params2$idx_transform[[ell]]])
           data$C[params2$idx_transform[[ell]]] <-params2$ext_datatype[[ell]]
@@ -78,14 +90,10 @@ GLFM_infer<-function(data,varargin){
   }
   
   func_bit<-rep(1,dim(data$X)[2])
-  setwd("../Ccode/")
+  setwd("../Ccode/wrapper_R/")
   library(RcppGSLExample)
-  readline("Press return to continue")
   # call .Rcpp wrapper function
-  # print(list(Z))
   hidden<-IBPsampler(t(data$X),(data$C),t(Z),params2$bias,func_bit,params2$s2u,params2$s2B,params2$alpha,params2$Niter,params2$maxK,params2$missing)
- #print(hidden)
- #readline("press return to continue")
   R<-rep(1,D)
   if(length(idx_catord)>0){
     X_aux<-data$X
@@ -96,7 +104,7 @@ GLFM_infer<-function(data,varargin){
   }
   hidden$Z<-t(hidden$Z)
   hidden<-append(hidden, list("R"=R))
-  setwd("../GLFMR")
+  setwd("../../GLFMR")
   return(list("data"=data,"hidden"=hidden,"params"=params2))
 }
  

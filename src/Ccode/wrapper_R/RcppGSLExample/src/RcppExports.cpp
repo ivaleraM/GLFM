@@ -28,11 +28,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP colNorm_old(SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"RcppGSLExample_IBPsampler", (DL_FUNC) &RcppGSLExample_IBPsampler, 11},
-    {"colNorm_old",               (DL_FUNC) &colNorm_old,                2},
     {NULL, NULL, 0}
 };
 

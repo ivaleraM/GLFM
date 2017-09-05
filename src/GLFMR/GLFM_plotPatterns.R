@@ -1,3 +1,24 @@
+#' @description A function that plots the pdf/probability functions
+#' Inputs:
+#'@param data is a list with X and C
+#'@param X: N*D data matrix X
+#'@param C: 1xD string with data types, D = number of dimensions
+#'@param Zp: P*K matrix of patterns (P is the number of patterns)
+#'@param hidden: list with the following latent variables learned by the model (B,Z):
+#'@param B: latent feature list with D matrices of size  K * maxR  where
+#'@param D: number of dimensions
+#'@param K: number of latent variables
+#'@param maxR: maximum number of categories across all dimensions
+#'@param Z: PxK matrix of feature patterns
+#'@param params: list with parameters (mu,w,theta)
+#'@param  mu: 1*D shift parameter
+#'@param w:  1*D scale parameter
+#'@param  theta: D*maxR matrix of auxiliary vars (for ordinal variables)
+# ----------------(optional) ------------------
+#'@param varargin a list with extra arguments: list of legends and colours (leges,plotcols)
+#'@param leges string of legends for patterns
+#'@param plotcols vector of colours
+
 GLFM_plotPatterns<-function(data,hidden,params,Zp,varargin){
 leges<-varargin$leges
 plotcols<-varargin$colours
@@ -10,7 +31,6 @@ P<-dim(Zp)[1]
     idxs_nonnans<-setdiff(1:(length(data$X[,d])),idxs_nans)
     mm <- min(data$X[idxs_nonnans,d])
     MM <- max(data$X[idxs_nonnans,d])
-    #h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE)
     if(data$C[d]=='c'| data$C[d] == 'o' ){
       # Adds the empirical
       h <- hist(data$X[idxs_nonnans,d], breaks=(mm-1):(MM+0.5))
@@ -29,28 +49,19 @@ P<-dim(Zp)[1]
     else if(data$C[d] == 'n'||data$C[d] == 'p'||data$C[d] == 'g'){
       plot.new()
         if(params$transf_dummie && d == params$idx_transform){
-          #plot(h,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]],axes=F)
-          #barplot(h$density,h$mids,xlab=expression("x"[d]), ylab=expression("pdf"[x]),freq=FALSE, main = plottitles[[d]],axes=F)
-          h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
+           h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
           lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[1],type="l")
          
           for(pp in 2:P){
             lines(pdf_val$xd,pdf_val$pdf[pp,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
           }
-          #par(new=F)
         }
       else{
         h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]])
-       # h$density <- h$counts/sum(h$counts)
-       # plot(h,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]],axes=F)
-        #par(new=T)
        lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[1],type="l")
-       #par(new=T)
        for(pp in 2:P){
          lines(pdf_val$xd,pdf_val$pdf[pp,],xlab =expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
-        # par(new=T)
        }
-       #par(new=F)
       }
     }
   }

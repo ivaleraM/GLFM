@@ -1,7 +1,7 @@
 
 # set by configure
-GSL_CFLAGS = -I/usr/local/include
-GSL_LIBS   = -L/usr/local/lib -lgsl -lgslcblas
+GSL_CFLAGS = -I/Users/ivalera/anaconda2/include
+GSL_LIBS   = -L/Users/ivalera/anaconda2/lib -lgsl -lgslcblas
 
 # combine with standard arguments for R
 PKG_CPPFLAGS = $(GSL_CFLAGS)

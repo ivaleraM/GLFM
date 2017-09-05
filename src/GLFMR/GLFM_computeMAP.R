@@ -1,25 +1,26 @@
-#' Function to generate the MAP solution corresponding to patterns in Zp
-#' Inputs:
+#'@description: Function that generates the MAP solution corresponding to patterns in Zp
+#'Inputs:
 #'@param C: 1xD string with data types, D = number of dimensions
-#'@param Zp: PxK matrix of feature patterns for which it computes the MAP estimate
-#'    (P is the number of feature patterns)
-#' @param hidden: structure with latent variables learned by the model
-#'@param B: latent feature list with D elements of size ( K * maxR)  where
+#'@param Zp: PxK matrix of feature patterns for which it computes the MAP estimate where
+#'@param P is the number of feature patterns
+#'@param hidden: list with the following latent variables learned by the model (B,Z):
+#'@param B: latent feature list with D matrices of size  K * maxR  where
 #'@param D: number of dimensions
 #'@param K: number of latent variables
 #'@param maxR: maximum number of categories across all dimensions
+#'@param Z: PxK matrix of feature patterns
+#'@param params: list with parameters (mu,w,theta)
 #'@param  mu: 1*D shift parameter
-#' @param w:  1*D scale parameter
-#' @param  theta: D*maxR matrix of auxiliary vars (for ordinal variables)
-  # ----------------(optional) ------------------
-  #' @param     - idxsD: dimensions to infer
-#' @return X_map: P*D matrix with MAP estimate where Di = length(idxsD)
+#'@param w:  1*D scale parameter
+#'@param  theta: D*maxR matrix of auxiliary vars (for ordinal variables)
+# ----------------(optional) ------------------
+#'@param varargin: dimensions to infer
+#'Outputs:
+#'@return X_map: P*L matrix with MAP estimate where L = length(idxsD)
  
-#It does not allow external transformations yet!
-# It is not reading the dimension of B properly, 5 element list where 
-# hidden$B is a list where each element is a vector of size 2
+
 GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
-  # We need to call the transformation functions! 
+  
   source("mapping_functions/f_o.R")
   source("mapping_functions/f_g.R")
   source("mapping_functions/f_c.R")
@@ -37,10 +38,8 @@ GLFM_computeMAP<-function(C,Zp,hidden,params,varargin){
     idxsD <- 1:length(hidden$B)
   }
   P <- dim(Zp)[1]
-  #print(dim(Zp)[2])
   K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
-  #print(Zp)
   if(dim(Zp)[2]!= K){
     stop('Incongruent sizes between Zp and hidden.B: number of latent variables should not be different')
   }
