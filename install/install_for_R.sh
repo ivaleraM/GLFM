@@ -1,6 +1,12 @@
-Rscript -e "setwd('../src/Ccode')"
+#!/bin/bash
+
 Rscript -e 'install.packages("Rcpp")'
-Rscript -e 'require("Rcpp")'
-Rscript -e 'install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")'
-Rscript -e 'setwd("../src/GLFMR")'
+Rscript -e 'install.packages("RcppGSL")'
+Rscript -e 'install.packages("matrixStats")'
+Rscript -e 'install.packages("ggplot2")'
+Rscript -e 'install.packages("R.matlab")'
+
+cd ../src/Ccode/wrapper_R
+R CMD build RcppGSLExample
+R CMD INSTALL RcppGSLExample
 
