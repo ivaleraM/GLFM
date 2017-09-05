@@ -1,7 +1,20 @@
-# demo_data_exploration_prostate
+#'@description Demo for the prostate dataset
+#'@param alpha is the concentration parameter for the IBP
+#'@param N is the number of datapoints
+#'@param s2x is the noise variance
+#'@param Z: NxK matrix of feature patterns
+#'@param Niter: number of iterations for the Gibbs sampler
+#'@param maxR: maximum number of categories across all dimensions
+#'@param transf_dummie is a 0-1 variable that indicates if there are data transformations
+#'@param th is the threshold to filter out the variables that are not significant
+#'@return A list of two elements, output is a list with the output$hidden and output$params
+#'lists and Xmap is the maximum a posteriori estimate
 
+demo_data_exploration_prostate<-function(){
 rm(list=ls())
 graphics.off()
+#Duda de como cambiar a directorio relativo
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
 source("GLFM_infer.R")
@@ -59,15 +72,13 @@ transf_dummie <-TRUE
       params<-list(missing,s2u,s2B,alpha,Niter,maxK,bias,transf_dummie,plotlabels,plottitles)
           }
 names(params)<-param_names
-
 # Inference
 Z<-c()
 data_prost<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_prost, list(Z,params))
-#Predict MAP estimate for the whole matrix X
 X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
-th <- 0.03 #threshold to filter out latent features that are not significant
+th <- 0.03 
 feat_toRemove <- which(sum(output$hidden$Z) < N*th) # filter features with insufficient number of obs. assigned
 if(length(feat_toRemove)>0){
   output$hidden <- remove_dims(output$hidden, feat_toRemove)
@@ -76,12 +87,10 @@ if(length(feat_toRemove)>0){
 sorted_patterns<- get_feature_patterns_sorted(output$hidden$Z,c())
 Kest <-dim(output$hidden$B[[1]])[1]
 Zp <- diag(Kest)
-Zp[,1] <- 1 # bias active
+Zp[,1] <- 1 
 Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 colours<-c('red','blue','green','pink','yellow')
-# Falta calcular la probabilidad empirica (es lo que llaman baseline)
-
 GLFM_plotPatterns(data_prost,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
-
-
+return(list("output"=output,"Xmap"=Xmap))
+}

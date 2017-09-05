@@ -1,7 +1,21 @@
 # demo_data_exploration_counties.R
+#'@description Demo for the counties dataset
+#'@param alpha is the concentration parameter for the IBP
+#'@param N is the number of datapoints
+#'@param s2x is the noise variance
+#'@param Z: NxK matrix of feature patterns
+#'@param Niter: number of iterations for the Gibbs sampler
+#'@param maxR: maximum number of categories across all dimensions
+#'@param transf_dummie is a 0-1 variable that indicates if there are data transformations
+#'@param th is the threshold to filter out the variables that are not significant
+#'@return A list of two elements, output is a list with the output$hidden and output$params
+#'lists and Xmap is the maximum a posteriori estimate
 
+demo_data_exploration_counties<-function(){
 rm(list=ls())
 graphics.off()
+#Duda de como cambiar a directorio relativo
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
 source("GLFM_infer.R")
@@ -85,5 +99,6 @@ Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 colours<-c('red','blue','green','pink','yellow')
 GLFM_plotPatterns(data_counties,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
-
+return(list("output"=output,"Xmap"=Xmap))
+}
 # The labels for the plots are needed 

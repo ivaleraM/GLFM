@@ -1,18 +1,19 @@
-#' @description Wrapper .R function to call .cpp R wrapper
+#'@description Wrapper .R function to call .cpp R wrapper
 #' Inputs:
 #'@param data is a list with X and C
 #'@param X: N*D data matrix X
 #'@param C: 1xD string with data types, D = number of dimensions
 # ----------------(optional) ------------------
-#' @param varargin is a list of lists containing 2 lists hidden and params 
+#'@param varargin is a list of lists containing 2 lists hidden and params 
 #'@param hidden: list with the following latent variables (Z,B):
-#'@param Z: NxK matrix of feature patterns
+#'@param Z: NxK matrix of feature patterns where
+#'@param N: is the number of datapoints
 #'@param B: latent feature list with D matrices of size  K * maxR  where
 #'@param D: number of dimensions
 #'@param K: number of latent variables
 #'@param maxR: maximum number of categories across all dimensions
 #'@param params: list with parameters (mu,w,theta)
-#'@param  mu: 1*D shift parameter
+#'@param mu: 1*D shift parameter
 #'@param w: 1*D scale parameter
 #'@param theta: D*maxR matrix of auxiliary vars (for ordinal variables)
 #'@param s2y: 1*D per dim inferred noise variance for pseudo observations

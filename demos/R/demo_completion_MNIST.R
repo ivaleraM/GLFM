@@ -1,7 +1,21 @@
 #demo_completion_MNIST.R
+#'@description Demo for the MNIST dataset, data completion
+#'@param alpha is the concentration parameter for the IBP
+#'@param N is the number of datapoints
+#'@param s2x is the noise variance
+#'@param Z: NxK matrix of feature patterns
+#'@param Niter: number of iterations for the Gibbs sampler
+#'@param maxR: maximum number of categories across all dimensions
+#'@param transf_dummie is a 0-1 variable that indicates if there are data transformations
+#'@param th is the threshold to filter out the variables that are not significant
+#'@return Xcompl is the completed matrix with maximum a posteriori estimates where the
+#'missing values were
 
+demo_data_exploration_MNIST<-function(){
 rm(list=ls())
 graphics.off()
+#Duda de como cambiar a directorio relativo
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(ggplot2)
 source("GLFM_infer.R")
 source("GLFM_complete.R")
@@ -35,3 +49,6 @@ transf_dummie<-FALSE
 params<-list(missing,s2B,alpha,Niter,maxK,bias,transf_dummie)
 names(params)<-param_names
 output2<-GLFM_complete(data_mnist,list(c(),params))
+return(list("Xcompl"=output))
+}
+#Falta pintar
