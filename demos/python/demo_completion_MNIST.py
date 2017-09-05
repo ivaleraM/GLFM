@@ -24,7 +24,7 @@ import pdb
 # ---------------------------------------------
 print 'Loading data...'
 # DB can be downloaded here: http://pjreddie.com/projects/mnist-in-csv/
-file = '../../datasets/raw/MNIST/mnist_train_small_100.csv'
+file = '../../datasets/mnist_train_small_100.csv'
 N = 50
 images = []
 with open(file, 'r') as csv_file:

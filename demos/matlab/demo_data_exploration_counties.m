@@ -6,7 +6,7 @@ addpath(genpath('../../src/'));
 rng(round(sum(1e5*clock)));
 
 %% LOAD DATA
-input_file = '../../datasets/mat/counties.mat';
+input_file = '../../datasets/counties.mat';
 load(input_file);
 
 %% ADAPT INPUT DATA --> put bias

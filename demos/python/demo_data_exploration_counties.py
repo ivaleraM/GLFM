@@ -19,7 +19,7 @@ import pdb
 # ---------------------------------------------
 print '\n 1. LOAD DATABASE TO EXPLORE\n'
 
-with open('../../datasets/py/counties.pk','rb') as f:
+with open('../../datasets/counties.pk','rb') as f:
     data = cPickle.load(f)
 
 # ---------------------------------------------

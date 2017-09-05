@@ -17,7 +17,7 @@ import cPickle
 # ---------------------------------------------
 print '\n 1. LOAD DATABASE TO EXPLORE\n'
 
-with open('../../datasets/py/prostate.pk','rb') as f:
+with open('../../datasets/prostate.pk','rb') as f:
     data = cPickle.load(f)
 
 # ---------------------------------------------
