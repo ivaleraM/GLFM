@@ -1,4 +1,5 @@
 # demo_data_exploration_counties.R
+
 rm(list=ls())
 graphics.off()
 require(R.matlab)
@@ -40,7 +41,6 @@ bias <- 1
 func <- 1*rep(1,D)
 transf_dummie <-TRUE
 if(transf_dummie){
-  # this should be a list of lenght equal to the number of different transformations
   idx_transform1 <- c(2, 5, 6, 11)
   idx_transform2 <- 10
   idx_transform <- list(idx_transform1,idx_transform2)
@@ -86,6 +86,4 @@ leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 colours<-c('red','blue','green','pink','yellow')
 GLFM_plotPatterns(data_counties,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 
-
-# To be completed
-
+# The labels for the plots are needed 

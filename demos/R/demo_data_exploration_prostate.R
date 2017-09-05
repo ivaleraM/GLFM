@@ -1,4 +1,5 @@
 # demo_data_exploration_prostate
+
 rm(list=ls())
 graphics.off()
 require(R.matlab)
@@ -21,13 +22,6 @@ y_labels_long_full<-unlist(datos_prostate$data[6,1,1],use.names = FALSE)
 idx_toKeep <- c(1, 2, 4,13, 15)
 X<-Xfull[,idx_toKeep]
 C<-Cfull[[1]][idx_toKeep]
-#idx_cat1<-which(X[,1]==3)
-#idx_cat2<-which(X[,1]==4)
-#Xauxcat<-X[,1]
-#Xauxcat[idx_cat1]<-1
-#Xauxcat[idx_cat2]<-2
-#aux11<-rep("stage",dim(X)[1])
-#cat_labels1 <-paste(aux11,Xauxcat)
 aux1<-rep(paste("stage",cat_labels_full[1:2]),6)
 cat_labels1<-aux1[order(aux1)]
 aux2<-rep(paste(cat_labels_full[3:5], "mg"),6)
@@ -40,8 +34,6 @@ N<-dim(X)[1]
 D<-dim(X)[2]
 plotlabels<-list(cat_labels1,ord_labels2,cat_labels3)
 plottitles<-list("Type of cancer","Prognosis status", "Drug level", "Size of primary tumor (cm^2)","Serum prostatic acid phosphatase")
-# pre-transform a subset of variables
-#params
 param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels","plottitles")
 missing<--1
 s2u<-0.005

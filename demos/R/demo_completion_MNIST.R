@@ -1,4 +1,5 @@
 #demo_completion_MNIST.R
+
 rm(list=ls())
 graphics.off()
 require(ggplot2)

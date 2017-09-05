@@ -1,6 +1,6 @@
-# Tiny example
+#' @description Tiny example to check that the package with the Ccode is properly installed
+
 rm(list=ls())
-# Aqui pones el path de tu directorio. Lo puedes obtener con getwd()
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("GLFM_complete.R")
@@ -18,5 +18,4 @@ print(list("The data matrix is:"=X,"The hidden matrix Z is:"=Z))
 print("Checks if we can call C correctly:")
 output<-GLFM_infer(data_test,list(Z,c()))
 print(list("The inferred Z matrix is:"=output$hidden$Z,"the B matrix"=output$hidden$B, "the parameters"=output$params))
-
 print("Succesful")
