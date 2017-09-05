@@ -172,7 +172,7 @@ In order to run GLFM on your data, you need to:
 
     - For MATLAB (in Matlab workspace):
         - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
-        - From matlab command window, execute command: >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+        - From matlab command window, execute command: mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
     - For R (in a terminal, go to folder "GLFM/install/" and execute):
             bash install_for_R.sh
