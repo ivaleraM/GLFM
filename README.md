@@ -167,20 +167,16 @@ In order to run GLFM on your data, you need to:
 
 2) Compile the C++ code as
 
-    - For PYTHON (go to "install/" folder and execute in a terminal):
+    - For PYTHON (in a terminal, go to folder "GLFM/install/" and execute):
             bash install_for_python.sh
 
-     - For MATLAB (in Matlab workspace):
+    - For MATLAB (in Matlab workspace):
         - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
         - From matlab command window, execute command: >> mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
-     - For R (in R or Rstudio):
-        - Set working directory to "GLFM/src/Ccode"
-        - Compile using the following command lines:
-            >> require("Rcpp")
-            >> install.packages("GLFM/src/Ccode/wrapper_R", repos = NULL, type="source")
-            >> compileAttributes("GLFM/src/Ccode/wrapper_R",verbose=TRUE)
-        - Set the working directory to "GLFM/src/GLFMR"
+    - For R (in a terminal, go to folder "GLFM/install/" and execute):
+            bash install_for_R.sh
+
 
 
 ------------
