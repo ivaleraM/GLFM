@@ -155,7 +155,7 @@ For R:
 
     - R or Rstudio
     - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu)
-    - Rcpp for seamless R and C++ integration
+    - R packages: Rcpp, RcppGSL, matrixStats, ggplot2, R.matlab
 
 
 Compilation Instructions
@@ -200,6 +200,6 @@ For further information or contact:
 
     Isabel Valera: isabel.valera.martinez (at) gmail.com
     Melanie F. Pradier: melanie.fpradier (at) gmail.com
-    Maria Lomeni: mdl40  (at) cam.ac.uk
+    Maria Lomeni: maria.lomeli  (at) eng.cam.ac.uk
 
 
