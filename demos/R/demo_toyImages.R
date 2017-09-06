@@ -36,11 +36,11 @@ Kest <-dim(output$hidden$B[[1]])[1]
 Zp <-diag(Kest)
 X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
 for(k in 1:dim(data_gen$gTB)[1]){
-image(matrix(data_gen$gTB[k,],nrow=6,ncol=6))
+image(matrix(data_gen$gTB[k,],nrow=6,ncol=6),col = grey(seq(0, 1, length = 256)))
   readline("Press return to continue")
 }
 for(k in 1:Kest){
-  image(matrix(X_map[k,],nrow=6,ncol=6))
+  image(matrix(X_map[k,],nrow=6,ncol=6),col = grey(seq(0, 1, length = 256)))
   readline("Press return to continue")
 }
 return(list("output"=output,"Xmap"=Xmap))

@@ -49,6 +49,19 @@ transf_dummie<-FALSE
 params<-list(missing,s2B,alpha,Niter,maxK,bias,transf_dummie)
 names(params)<-param_names
 output2<-GLFM_complete(data_mnist,list(c(),params))
-return(list("Xcompl"=output))
+# Visualization of a random image
+idxs_rndrow<-sample(1:dim(Xfull)[1],28,replace = TRUE, prob=rep(1/dim(Xfull)[1],dim(Xfull)[1]))
+idxs_rndcol<-sample(1:dim(Xfull)[2],28,replace = TRUE, prob=rep(1/dim(Xfull)[2],dim(Xfull)[2]))
+pixels<-Xfull[idxs_rndrow,idxs_rndcol]
+plot.new()
+image(pixels,col = grey(seq(0, 1, length = 256)))
+# Example with missing 
+pixels<-Xmiss[idxs_rndrow,idxs_rndcol]
+plot.new()
+image(pixels,col = grey(seq(0, 1, length = 256)))
+# Example with the completed matrix
+pixels<-output2$X_compl[idxs_rndrow,idxs_rndcol]
+plot.new()
+image(pixels,col = grey(seq(0, 1, length = 256)))
+return(list("Xcompl"=output2$X_compl))
 }
-#Falta pintar
