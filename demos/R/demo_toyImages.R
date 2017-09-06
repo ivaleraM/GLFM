@@ -12,8 +12,8 @@
 demo_toyImages<-function(){
 rm(list=ls())
 graphics.off()
-#Duda de como cambiar a directorio relativo
-setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+#setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+setwd("../../GLFMR")
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
 source("generate_toy_images.R")

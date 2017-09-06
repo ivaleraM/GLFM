@@ -44,7 +44,6 @@ P<-dim(Zp)[1]
       p1<-p1+ ggtitle(plottitles[[d]])
       plot.new()
       print(p1)
-      print("Press return to continue")
     }
     else if(data$C[d] == 'n'||data$C[d] == 'p'||data$C[d] == 'g'){
       plot.new()
@@ -57,6 +56,7 @@ P<-dim(Zp)[1]
           }
         }
       else{
+        plot.new()
         h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]])
        lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[1],type="l")
        for(pp in 2:P){

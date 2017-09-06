@@ -14,7 +14,7 @@
 demo_data_exploration_counties<-function(){
 rm(list=ls())
 graphics.off()
-#Duda de como cambiar a directorio relativo
+#setwd("../../GLFMR")
 setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
@@ -33,23 +33,24 @@ C<-unlist(datos_counties$data[2,1,1],use.names = FALSE)
 Cfull<-strsplit(as.character(C), "")
 cat_labels_full <-unlist(datos_counties$data[3,1,1],use.names = FALSE)
 y_labels_full<-unlist(datos_counties$data[4,1,1],use.names = FALSE)
-plottitles<-list("Population density (inhabitants/miles^2)","Percentage of white population", "percentage of people >=65 years old","Average income (in dollars)")
-auxcat<-paste(rep("cat",306),1:51)
-cat_labels1<-auxcat[order(auxcat)]
-plotlabels<-list(cat_labels1)
+#plottitles<-list("Population density (inhabitants/miles^2)","Percentage of white population", "percentage of people >=65 years old","Average income (in dollars)")
+plottitles<-list(rep("Plottitle",11))
 idx_to_remove <- c(1,3,4, 6, 7,8, 10,19) 
 idx_to_keep <- setdiff(1:19,idx_to_remove)
 X<-Xfull[,idx_to_keep]
 C<-Cfull[[1]][idx_to_keep]
 N<-dim(X)[1]
 D<-dim(X)[2]
+auxcat<-rep(unique(X[,1]),6)
+cat_labels1<-auxcat[order(auxcat)]
+plotlabels<-list(cat_labels1)
 param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels","plottitles")
 missing <- -1
 s2Y <- 0   
 s2u <- .005 
 s2B <- 1   
 alpha <- 1   
-Niter <- 100
+Niter <- 10
 maxK <- 10;
 bias <- 1
 func <- 1*rep(1,D)
@@ -97,7 +98,8 @@ Zp <- diag(Kest)
 Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
-colours<-c('red','blue','green','pink','yellow')
+cl <- colors(distinct = TRUE)
+colours<-list(sample(cl, 51))
 GLFM_plotPatterns(data_counties,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 return(list("output"=output,"Xmap"=Xmap))
 }

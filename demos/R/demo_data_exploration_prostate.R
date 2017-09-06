@@ -13,8 +13,8 @@
 demo_data_exploration_prostate<-function(){
 rm(list=ls())
 graphics.off()
-#Duda de como cambiar a directorio relativo
-setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+setwd("../../GLFMR")
+#setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
 source("GLFM_infer.R")

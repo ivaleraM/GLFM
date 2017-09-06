@@ -73,9 +73,8 @@ GLFM_computePDF<-function(data,Zp,hidden,params,d){
   }
   else{
     xd <- unique(XXd[idxs_nonnans])
-    print(list("xd are unique values, categorical or ordinal data"))
-    
     numS<-length(xd)
+    print(list("xd are unique values, categorical or ordinal data"))
   }
   pdf_val <-matrix(0,P,numS)
   
