@@ -20,8 +20,12 @@
 #'@param plotcols vector of colours
 
 GLFM_plotPatterns<-function(data,hidden,params,Zp,varargin){
-leges<-varargin$leges
-plotcols<-varargin$colours
+  if(length(varargin)>0){
+#leges<-varargin$leges
+leges<-varargin[[1]]
+#plotcols<-varargin$colours
+plotcols<-varargin[[2]]
+  }
 D<-dim(hidden$B)[1]
 P<-dim(Zp)[1]
   for(d in 1:D){
@@ -47,10 +51,10 @@ P<-dim(Zp)[1]
     }
     else if(data$C[d] == 'n'||data$C[d] == 'p'||data$C[d] == 'g'){
       plot.new()
-        if(params$transf_dummie && d == params$idx_transform){
-           h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
+          if(params$transf_dummie && d %in% params$idx_transform){
+          h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
           lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[1],type="l")
-         
+
           for(pp in 2:P){
             lines(pdf_val$xd,pdf_val$pdf[pp,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
           }

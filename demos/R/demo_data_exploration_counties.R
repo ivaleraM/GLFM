@@ -33,8 +33,10 @@ C<-unlist(datos_counties$data[2,1,1],use.names = FALSE)
 Cfull<-strsplit(as.character(C), "")
 cat_labels_full <-unlist(datos_counties$data[3,1,1],use.names = FALSE)
 y_labels_full<-unlist(datos_counties$data[4,1,1],use.names = FALSE)
-#plottitles<-list("Population density (inhabitants/miles^2)","Percentage of white population", "percentage of people >=65 years old","Average income (in dollars)")
-plottitles<-list(rep("Plottitle",11))
+plottitles<-vector("list", 11)
+for(rr in 1:length(plottitles)){
+  plottitles[[rr]]<-"Plot title"
+}
 idx_to_remove <- c(1,3,4, 6, 7,8, 10,19) 
 idx_to_keep <- setdiff(1:19,idx_to_remove)
 X<-Xfull[,idx_to_keep]
@@ -99,8 +101,8 @@ Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 cl <- colors(distinct = TRUE)
-colours<-list(sample(cl, 51))
+colours<-sample(cl, 51)
 GLFM_plotPatterns(data_counties,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 return(list("output"=output,"Xmap"=Xmap))
 }
-# The labels for the plots are needed 
+
