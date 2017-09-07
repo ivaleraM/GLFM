@@ -12,17 +12,17 @@
 demo_toyImages<-function(){
 rm(list=ls())
 graphics.off()
-#setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
-setwd("../../GLFMR")
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+#setwd("../../GLFMR")
 source("GLFM_infer.R")
 source("GLFM_computeMAP.R")
-source("generate_toy_images.R")
+source("aux/generate_toy_images.R")
 source("init_default_params.R")
 N<-1000
 s2x<-1
 #Initialisation
 data_gen<- generate_toy_images(N,s2x)
-data<-list("X"=data_gen$X,"C"=data_gen$C)
+data_toy<-list("X"=data_gen$X,"C"=data_gen$C)
 m0<-matrix(0,nrow=N,ncol=1)
 Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.2,0.8)))
 alpha <- 2   
@@ -31,10 +31,10 @@ maxK <- 10
 transf_dummie <-FALSE
 params<-list("alpha"=alpha,"Niter"=Niter,"maxK"=maxK,"transf_dummie"=transf_dummie)
 # Inference
-output <- GLFM_infer(data, list(Z,params))
+output<- GLFM_infer(data_toy, list(Z,params))
 Kest <-dim(output$hidden$B[[1]])[1]
 Zp <-diag(Kest)
-X_map <- GLFM_computeMAP(data$C, Zp, output$hidden, output$params,c())
+X_map <- GLFM_computeMAP(data_toy$C, Zp, output$hidden, output$params,c())
 for(k in 1:dim(data_gen$gTB)[1]){
 image(matrix(data_gen$gTB[k,],nrow=6,ncol=6),col = grey(seq(0, 1, length = 256)))
   readline("Press return to continue")

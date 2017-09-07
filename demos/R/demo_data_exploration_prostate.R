@@ -14,7 +14,7 @@ demo_data_exploration_prostate<-function(){
 rm(list=ls())
 graphics.off()
 setwd("../../GLFMR")
-#setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
+setwd("~/Documents/Working_papers/FAP_Rpackage/GLFM/src/GLFMR")
 require(R.matlab)
 require(ggplot2)
 source("GLFM_infer.R")
@@ -76,6 +76,7 @@ names(params)<-param_names
 Z<-c()
 data_prost<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_prost, list(Z,params))
+data_prost$C<-output$data$C
 X_map <- GLFM_computeMAP(data_prost$C, output$hidden$Z, output$hidden, output$params,c())
 # Remove latent dimensions
 th <- 0.03 

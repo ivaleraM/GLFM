@@ -49,6 +49,7 @@ transf_dummie<-FALSE
 params<-list(missing,s2B,alpha,Niter,maxK,bias,transf_dummie)
 names(params)<-param_names
 output2<-GLFM_complete(data_mnist,list(c(),params))
+data_mnist$C<-output2$data$C
 # Visualization of a random image
 idxs_rndrow<-sample(1:dim(Xfull)[1],28,replace = TRUE, prob=rep(1/dim(Xfull)[1],dim(Xfull)[1]))
 idxs_rndcol<-sample(1:dim(Xfull)[2],28,replace = TRUE, prob=rep(1/dim(Xfull)[2],dim(Xfull)[2]))

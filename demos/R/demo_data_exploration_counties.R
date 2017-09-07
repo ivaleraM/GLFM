@@ -75,6 +75,9 @@ if(transf_dummie){
   dt_12<-function(x){-1/as.vector(101-x)}
   # change type of data due to transformation
   ext_datatype <-list('p','p')
+  for(ell in 1:length(ext_datatype)){
+    C[idx_transform[[ell]]]<-ext_datatype[[ell]]  
+  }
   t_1<-list(t_11,t_12)
   dt_1<-list(dt_11,dt_12)
   t_inv<-list(t_inv1,t_inv2)
@@ -88,11 +91,13 @@ m0<-matrix(0,nrow=N,ncol=1)
 Z <- apply(m0, c(1,2), function(x) sample(c(0,1),1,prob=c(0.2,0.8)))
 data_counties<-list("X"=X,"C"=C)
 output <- GLFM_infer(data_counties, list(Z,params))
+data_counties$C<-output$data$C
 X_map <- GLFM_computeMAP(data_counties, output$hidden$Z, output$hidden, output$params,c())
 th <- 0.03 
 feat_toRemove <- which(sum(output$hidden$Z) < N*th)
 if(length(feat_toRemove)>0){
 output$hidden <- remove_dims(output$hidden, feat_toRemove)
+data_counties$C<-output$data$C
 sorted_patterns <-get_feature_patterns_sorted(hidden$Z,c())
 }
 sorted_patterns <- get_feature_patterns_sorted(output$hidden$Z,c())
