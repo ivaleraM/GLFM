@@ -34,8 +34,9 @@ Cfull<-strsplit(as.character(C), "")
 cat_labels_full <-unlist(datos_counties$data[3,1,1],use.names = FALSE)
 y_labels_full<-unlist(datos_counties$data[4,1,1],use.names = FALSE)
 plottitles<-vector("list", 11)
+plotnames<-c("State in which the county is located","Population density per squared miles", "Percentage of white population", "Percentage of people above 65","Percentage of people above 25 with a bachelor degree or higher","Median family income (dollars)","Percentage of farm population","Percentage of votes for democrats","Percentage of votes for Republicans","Percentage of votes for Ross Perot")
 for(rr in 1:length(plottitles)){
-  plottitles[[rr]]<-"Plot title"
+  plottitles[[rr]]<-plotnames[rr]
 }
 idx_to_remove <- c(1,3,4, 6, 7,8, 10,19) 
 idx_to_keep <- setdiff(1:19,idx_to_remove)
@@ -48,7 +49,7 @@ cat_labels1<-auxcat[order(auxcat)]
 plotlabels<-list(cat_labels1)
 param_names<-c("missing","s2u","s2B","alpha","Niter","maxK","bias","transf_dummie","plotlabels","plottitles")
 missing <- -1
-s2Y <- 0   
+#s2Y <- 0   
 s2u <- .005 
 s2B <- 1   
 alpha <- 1   
@@ -101,7 +102,8 @@ Zp[,1] <- 1 # bias active
 Zp <- Zp[1:(min(5,Kest)),]
 leges <- computeLeg(rbind(rep(0, ncol(Zp)),Zp),c())
 cl <- colors(distinct = TRUE)
-colours<-sample(cl, 51)
+#colours<-sample(cl, 51)
+colours<-c('red','blue','green','pink','yellow')
 GLFM_plotPatterns(data_counties,output$hidden,output$params,Zp, list("leges"=leges,"colours"=colours) )
 return(list("output"=output,"Xmap"=Xmap))
 }
