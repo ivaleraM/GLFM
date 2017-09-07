@@ -52,19 +52,19 @@ P<-dim(Zp)[1]
     else if(data$C[d] == 'n'||data$C[d] == 'p'||data$C[d] == 'g'){
       plot.new()
           if(params$transf_dummie && d %in% params$idx_transform){
-          h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
-          lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[1],type="l")
+          h <- hist(data$X[idxs_nonnans,d], xlim = c(mm,MM), breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]),main = plottitles[[d]])
+          lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[1],type="l",lwd = 2)
 
           for(pp in 2:P){
-            lines(pdf_val$xd,pdf_val$pdf[pp,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
+            lines(pdf_val$xd,pdf_val$pdf[pp,],xlab = expression("x"[d]),ylab=expression("pdf"[x]),col=plotcols[pp],type="l",lwd = 2)
           }
         }
       else{
         plot.new()
-        h <- hist(data$X[idxs_nonnans,d], breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]])
-       lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[1],type="l")
+        h <- hist(data$X[idxs_nonnans,d],xlim = c(mm,MM), breaks=100,prob=TRUE,xlab=expression("x"[d]), ylab=expression("pdf"[x]), main = plottitles[[d]])
+       lines(pdf_val$xd,pdf_val$pdf[1,],xlab = expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[1],type="l",lwd = 2)
        for(pp in 2:P){
-         lines(pdf_val$xd,pdf_val$pdf[pp,],xlab =expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[pp],type="l")
+         lines(pdf_val$xd,pdf_val$pdf[pp,],xlab =expression("x"[d]), ylab=expression("pdf"[x]),col=plotcols[pp],type="l",lwd = 2)
        }
       }
     }
