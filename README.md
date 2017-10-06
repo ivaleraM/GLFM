@@ -191,7 +191,7 @@ Other examples include demo_matrix_completion_MNIST, demo_data_exploration_count
 -------
 Licence
 -------
-The Python and Matlab implementations are under MIT licence. The R implementation extends the RcppGSLExample (provided in https://github.com/eddelbuettel/rcppgsl/tree/master/inst/examples/RcppGSLExample), and therefore, is under GPL (>= 2) licence. 
+The Python and Matlab implementations are under MIT license. The R implementation extends the [RcppGSLExample](https://github.com/eddelbuettel/rcppgsl/tree/master/inst/examples/RcppGSLExample), and therefore, is under GPL (>= 2) license. 
 
 -------
 Contact
