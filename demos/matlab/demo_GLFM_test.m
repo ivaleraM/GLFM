@@ -8,5 +8,8 @@ data.C=['p','o','G','N','c'];
 disp(['The hidden matrix Z is:\n'])
 hidden.Z= [1.0 , 0 ; 1 , 1; 1 , 1]
 hidden = GLFM_infer(data, hidden);
-disp(['The inferred Z matrix is:', hidden.Z , 'The B matrix:', hidden.B])
+disp(['The inferred matrix Z is:\n'])
+hidden.Z
+disp(['The inferred matrix B is:\n'])
+hidden.B
 disp('Succesful')
