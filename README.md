@@ -189,6 +189,11 @@ As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/bl
 Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for PYTHON, Matlab and R. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
 
 -------
+Licence
+-------
+The Python and Matlab implementations are under MIT licence. The R implementation extends the RcppGSLExample (provided in https://github.com/eddelbuettel/rcppgsl/tree/master/inst/examples/RcppGSLExample), and therefore, is under GPL (>= 2) licence. 
+
+-------
 Contact
 -------
 
