@@ -168,7 +168,7 @@ In order to run GLFM on your data, you need to:
  
 1) Download the latest git repository (command: "git clone https://github.com/ivaleraM/GLFM.git")
 
-3) Compile the C++ code as
+2) Compile the C++ code as
 
     **For PYTHON** (in a terminal):
         - Go to folder "GLFM/install/"
@@ -181,6 +181,8 @@ In order to run GLFM on your data, you need to:
     **For R** (in a terminal):
         - Go to folder "GLFM/install/"
         - Run command: >> bash install_for_R.sh
+        
+3) Check  the success of the compilation by running the scipt 'demo_GLFM_test' available for Python, Matlab and R in the 'demos' folder.
 
 ------------
 

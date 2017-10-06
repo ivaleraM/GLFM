@@ -177,7 +177,7 @@ In order to run GLFM on your data, you need to:
     - For R (in a terminal, go to folder "GLFM/install/" and execute):
             bash install_for_R.sh
 
-
+3) Check  the success of the compilation by running the scipt 'demo_GLFM_test' available for Python, Matlab and R in the 'demos' folder. 
 
 ------------
 GLFM Demos
