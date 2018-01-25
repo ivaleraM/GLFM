@@ -1,6 +1,6 @@
 [**Introduction**](https://ivaleram.github.io/GLFM/) | [**Functions**](doc_functions.html) | [**Data Structures**](doc_struct.html) | [**Demos**](demos.html) | [**FAQ**](FAQ_errors.html)
 
-## Description of the data structures defined in GLFM package 
+## Description of data structures defined in GLFM package
 
 Basic definitions
 --------------------------
@@ -46,7 +46,7 @@ Structures (lists in the case of R)
 Examples of data structures
 -----------------------------
 
-# Examples of structure "data" in python
+**Examples of structure "data" in python**
 
 {'cat_labels': [['3', '4'], ['0', '1', '5'], ['alive', 'vascular', 'prostatic ca', 'others'], None, None], 'X': array([[ 3.        ,  0.        ,  1.        ,  2.        ,  0.29998779],
       [ 3.        ,  0.        ,  4.        , 42.        ,  0.69995117],
@@ -70,13 +70,13 @@ Examples of data structures
        [5.10000000e+01, 3.00000000e+00, 1.27000003e+01, ...,
         2.73999996e+01, 9.80362091e+01, 4.60263900e-02]]), 'C': 'cnppnpppppp', 'ylabel': ['state', 'pop.density', 'age >= 65', 'college', 'income', 'farm', 'democrat', 'republican', 'Perot', 'white', 'black']}
 
-# Examples of structure "params" in python
+**Examples of structure "params" in python**
 
 {'ext_dataType': [None, None, None, None, 'p'], 'Niter': 100, 'dt_1': [None, None, None, None, <function <lambda> at 0x7fa8e53ce5f0>], 'maxK': 10, 's2B': 1, 'bias': 1, 't': [None, None, None, None, <function <lambda> at 0x7fa8e53ce500>], 's2u': 0.005, 'alpha': 1, 't_1': [None, None, None, None, <function <lambda> at 0x7fa8e53ce578>]}
 
 {'s2B': 1, 'Niter': 100, 'dt_1': [None, <function <lambda> at 0x7f345f9015f0>, None, None, <function <lambda> at 0x7f345f901758>, <function <lambda> at 0x7f345f9018c0>, None, None, None, <function <lambda> at 0x7f345f901b90>, <function <lambda> at 0x7f345f901a28>], 'maxK': 10, 'bias': 1, 't': [None, <function <lambda> at 0x7f345f901500>, None, None, <function <lambda> at 0x7f345f9016e0>, <function <lambda> at 0x7f345f901848>, None, None, None, <function <lambda> at 0x7f345f901b18>, <function <lambda> at 0x7f345f9019b0>], 's2u': 0.005, 'alpha': 1, 't_1': [None, <function <lambda> at 0x7f345f901578>, None, None, <function <lambda> at 0x7f345f901668>, <function <lambda> at 0x7f345f9017d0>, None, None, None, <function <lambda> at 0x7f345f901aa0>, <function <lambda> at 0x7f345f901938>], 'ext_dataType': [None, 'p', None, None, 'p', 'p', None, None, None, 'p', 'p']}
 
-# Examples of structure "hidden" in python
+**Examples of structure "hidden" in python**
 
 {'Z': array([[1., 0.],
        [1., 0.],
