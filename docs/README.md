@@ -10,7 +10,7 @@
 
 To cite this work, please use
 
-     I. Valera, M. F. Pradier and Z. Ghahramani, 
+     I. Valera, M. F. Pradier, M. Lomeli and Z. Ghahramani, 
      "General Latent Feature Model for Heterogeneous Datasets", 2017.
      Available on ArXiv: https://arxiv.org/abs/1706.03779.
 
@@ -208,6 +208,6 @@ For further information or contact:
 
     Isabel Valera: isabel.valera.martinez (at) gmail.com
     Melanie F. Pradier: melanie.fpradier (at) gmail.com
-    Maria Lomeni: mdl40  (at) cam.ac.uk
+    Maria Lomeli: maria.lomeli  (at) eng.cam.ac.uk
 
 
