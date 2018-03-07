@@ -201,6 +201,6 @@ For further information or contact:
 
     Isabel Valera: isabel.valera.martinez (at) gmail.com
     Melanie F. Pradier: melanie.fpradier (at) gmail.com
-    Maria Lomeni: maria.lomeli  (at) eng.cam.ac.uk
+    Maria Lomeli: maria.lomeli  (at) eng.cam.ac.uk
 
 
