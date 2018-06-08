@@ -1,8 +1,15 @@
 function pdf = pdf_c(Zp, B, s2Y)
     %
+    % Likelihood function for categorical data
+    % Eq. (4) in the paper:
+    % "General Latent Feature Models for Heterogeneous Datasets"
+    %
     % Inputs:
-    %   B: K*R
-    %   Zp: 1*K, where K: number of latent features
+    %   B: K*R   weight matrix, where R: number of categories
+    %   Zp: 1*K, binary vector of feature assignment,
+    %       where K: number of latent features
+    %   s2Y: Gaussian noise variance  for u
+
 
     numMC = 1000; % number of Monte Carlo samples to approximate the Expectation
     R = size(B,2);

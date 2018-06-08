@@ -95,52 +95,42 @@ def df_p_1(x, mu, w):
     y = ( w * np.exp(w*(x-mu)) ) / ( np.exp(w*(x-mu) - 1) )
     return y
 
-#def fpos_1_sq(x):
-#    y = np.sqrt(x)
-#    return y
-#
-#def fpos_sq(y):
-#    # Inputs:
-#    #   y: pseudo-observations
-#    x =  y**2
-#    return x
-#
-#def dfpos_1_xi(x):
-#    y = -0.5* (x**(-1.5))
-#    return y
-
 # ------------------------------------------
 # Functions to compute pdf values
 # ------------------------------------------
 
-def pdf_g(X,Zp, B,mu , w, s2y, s2u):
+def pdf_g(X,Zp, Bd, mu , w, s2y, s2u):
     # Probability Density Function for real variables
     # Inputs:
-    #   X: observations (dimensions?)
+    #   X: univariate observations (for a particular dimension)
     #   Zp: 1*K array
-    #   B: K*D array
+    #   Bd: K*D array
     #  s2y: noise variance for pseudo-observations (scalar)
     #  s2u: auxiliary noise variance (scalar)
-    pdb.set_trace()
     df_1 = lambda x: w*(x-mu)
-    pdf = norm.pdf( df_1(X) , np.dot(Zp,Bd) , np.sqrt(s2y + s2u)*w )
+    pdf = norm.pdf( df_1(X) , np.dot(Zp,Bd) , np.sqrt(s2y + s2u)) * w
     return pdf
 
 def pdf_c(Zn,B,s2y,numMC_samples=100):
-    # Function to compute pdf of an ordinal variable. It returns the whole
+    # Function to compute pdf of a categorical variable. It returns the whole
     # pdf, a probability vector of length R (number of categories)
-    # Input parameters:
-    #    Zn: [K], feature activation vector
-    #    B: [R*K], feature weights (dictionary)
-    #   s2u: scalar, variance of auxiliary noise
+    #
+    # Eq. (4) in the paper:
+    # "General Latent Feature Models for Heterogeneous Datasets"
+    #
+    # Inputs:
+    #   B: [R*K]  feature weight matrix (dictionary)
+    #       where R: number of categories
+    #   Zn: [K], binary vector of feature assignment,
+    #       where K: number of latent features
+    #   s2y: scalar, variance of auxiliary noise
 
     R = B.shape[0]
     pdf = np.zeros(R)
-    uV = np.sqrt(s2y) * np.random.randn(numMC_samples) # mean = 0
+    uV = np.sqrt(s2y) * np.random.randn(numMC_samples) # mean for u = 0
     for r in xrange(R):
         tmp = np.ones((1,numMC_samples))
         # we compute the expectation using Monte Carlo samples
-        # TODO: check that u does not depend on j
         for j in xrange(R):
             if (j==r):
                 continue
@@ -151,50 +141,70 @@ def pdf_c(Zn,B,s2y,numMC_samples=100):
     pdf = pdf / sum(pdf)
     return pdf
 
-def pdf_n(X,Zn,B,mu,w,s2y):
+def pdf_n(X,Zn,Bd,mu,w,s2y):
+    #
+    # Likelihood function for count data
+    # Eq. (8) in the paper:
+    # "General Latent Feature Models for Heterogeneous Datasets"
     #
     # Inputs:
-    #   B: K*R
-    #   Zp: 1*K, where K: number of latent features
-    pdf = norm.cdf(f_n_1(X+1,mu,w), np.inner(Zn,B), np.sqrt(s2y)) \
-        - norm.cdf(f_n_1(X,mu,w), np.inner(Zn,B), np.sqrt(s2y))
+    #    X: count-data observation
+    #   Bd: K*1  weight vector for a particular dimension d
+    #   Zn: 1*K, binary vector of feature assignment,
+    #       where K: number of latent features
+    #  s2y: Gaussian noise variance  for u
+    # mu,w: Hyper-parameters linked to the transformation described in the paper
+
+    pdf = norm.cdf(f_n_1(X+1,mu,w), np.inner(Zn,Bd), np.sqrt(s2y)) \
+        - norm.cdf(f_n_1(X,mu,w), np.inner(Zn,Bd), np.sqrt(s2y))
     return pdf
 
-def pdf_o(Zn,B,theta,s2y):
+def pdf_o(Zn,Bd,theta,s2y):
     # Function to compute pdf of an ordinal variable. It returns the whole
     # pdf, a probability vector of length R (number of categories)
+    #
+    # Eq. (6) in the paper:
+    # "General Latent Feature Models for Heterogeneous Datasets"
+    #
     # Input parameters:
-    #    Zn: [1*K], feature activation vector
-    #     B: [R*K], feature weights (dictionary) # TODO: Review dimensions
+    #    Zn: [1*K], binary feature activation vector
+    #    Bd: [K*1], feature weight vector (dictionary) for dimension d
     # theta: [1*(R-1)]
     #   s2y: scalar, variance of pseudo-observations
+    # theta: 1xR auxiliary thresholds, see description in the paper
+
     R = len(theta)+1 # number of categories
     pdf = np.zeros(R)
     for r in xrange(R):
         if (r==0):
-            a = norm.cdf(theta[0],np.inner(Zn,B),np.sqrt(s2y))
+            a = norm.cdf(theta[0],np.inner(Zn,Bd),np.sqrt(s2y))
             b = 0
         elif (r==(R-1)):
             a = 1
-            b = norm.cdf(theta[r-1],np.inner(Zn,B),np.sqrt(s2y))
+            b = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
         else:
-            a = norm.cdf(theta[r],np.inner(Zn,B),np.sqrt(s2y))
-            b = norm.cdf(theta[r-1],np.inner(Zn,B),np.sqrt(s2y))
+            a = norm.cdf(theta[r],np.inner(Zn,Bd),np.sqrt(s2y))
+            b = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
         pdf[r] = a - b
     return pdf
 
-def pdf_p(X,Zn,B,mu, w, s2y,s2u):
+def pdf_p(X,Zn,Bd,mu, w, s2y,s2u):
     # Probability density function for positive real variables
+    # Eq. (2) in the paper:
+    # "General Latent Feature Models for Heterogeneous Datasets"
+    #
     # Inputs:
     #   X: values in which to evaluate pdf
-    #  Zn: [1*K] vector
-    #  Bd: [K*1] vector
-    #   w: scalar: normalization weight (this is computed by GLFM infer function)
+    #  Zn: [1*K] vector, binary vector of feature assignment
+    #  Bd: [K*1] weight vector for dimension d
+    #  mu,w: scalar, hyper-parameters for transformation described in the paper
+    #       In particular, w: normalization weight
+    #       (this is computed by GLFM infer function and passed to this function)
     # s2y: scalar, variance of pseudo-observations
     # s2u: scalar, variance of auxiliary noise
 
-    pdf = 1.0/(2*np.pi*np.sqrt(s2u+s2y)) * np.exp( \
-            -1.0/(2.0*(s2y+s2u)) * (f_p_1(X,mu,w) - np.inner(Zn,B))**2)\
+    pdf = 1.0/np.sqrt(2*np.pi*(s2u+s2y)) * np.exp( \
+            -1.0/(2.0*(s2y+s2u)) * (f_p_1(X,mu,w) - np.inner(Zn,Bd))**2)\
             * np.abs( df_p_1(X,mu, w) )
     return pdf
 
