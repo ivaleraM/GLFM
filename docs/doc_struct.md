@@ -24,6 +24,7 @@ Structures (lists in the case of R)
     * mu: 1 x D vector of shift parameters for internal transformation
     * w: 1 x D vector or scale parameters for internal transformation
     * s2y: 1 x D vector with inferred noise variance for pseudo-observations Y
+    * R: 1 x D vector with unique labels for discrete variables (categorical or ordinal data), None otherwise
 
 3. **params**: structure with all simulation parameters (if not defined, the default values listed below will be used):
 

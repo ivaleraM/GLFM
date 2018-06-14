@@ -9,6 +9,9 @@ import GLFM        # import General Latent Feature Model Library
 import matplotlib.pyplot as plt # import plotting library
 import time        # import time to be able to measure iteration speed
 
+import pdb
+from IPython import embed
+
 # import libraries for I/O of data
 import cPickle
 
@@ -79,25 +82,6 @@ print '\tElapsed: #.2f seconds.' # (toc-tic)
 # 4. PROCESS RESULTS
 # ---------------------------------------------
 print '\n 4. PROCESSING RESULTS\n'
-
-#for d in xrange(D):
-#    ylab = str(data['ylabel_long'][0][d].tolist()[0]) # label for dimension d
-#    V = np.squeeze(data['cat_labels'][0][d]) # labels for categories (empty if not categorical)
-#    catlab = tuple( map(lambda x: str(x.tolist()[0]),V) ) # transform list of categories into tuple
-#    Zp = np.zeros((3,Kest)) # dimensions (numPatterns,Kest)
-#    Zp[0,0] = 1.0
-#    Zp[1,1] = 1.0
-#    Zp[2,2] = 1.0
-#    plot_dim(X, hidden['B'], hidden['Theta'], C,d,Zp,s2y,s2u,\
-#            xlabel=ylab, catlabel=catlab) # function to plot patterns corresponding to Zp
-#    pdb.set_trace()
-#
-#k = 1
-#d = 3
-#ylab = str(data['ylabel_long'][0][d].tolist()[0])
-#V = np.squeeze(data['cat_labels'][0][d])
-#catlab = tuple( map(lambda x: str(x.tolist()[0]),V) )
-#plot_dim_1feat(X, hidden['B'], hidden['Theta'], C,d,k,s2y,s2u, xlabel=ylab, catlabel=catlab)
 
 ## Predict MAP estimate for the whole matrix X
 patterns = hidden['Z']

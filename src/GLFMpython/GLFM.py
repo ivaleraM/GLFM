@@ -4,6 +4,9 @@ import random
 import mapping_functions as mf
 import matplotlib.pyplot as plt
 
+import pdb
+from IPython import embed
+
 import time
 import os
 import sys
@@ -72,14 +75,9 @@ def infer(data,hidden=dict(), params=dict()):
 
     # replace nan by missing values
     tmp_data['X'][np.isnan(tmp_data['X'])] = params['missing']
-    # # dealing with missing data: replace np.nan by -1
-    # (xx,yy) = np.where(np.isnan(X)) # find positions where X is nan (i.e. missing data)
-    # for r in xrange(len(xx)):
-    #     X[xx[r],yy[r]] = -1
 
     # change labels for categorical and ordinal vars such that categories
     # start counting at 1 and all of them are bigger than 0
-    V_offset = np.zeros(D)
     for d in xrange(D):
         if (tmp_data['C'][d]=='c' or tmp_data['C'][d]=='o'):
             mask = tmp_data['X'][:,d] != params['missing']
@@ -89,8 +87,6 @@ def infer(data,hidden=dict(), params=dict()):
                 Xaux[tmp_data['X'][:,d] == uniqueVal[i]] = i+1
             Xaux[map(lambda x: not x, mask)] = params['missing']
             tmp_data['X'][:,d] = Xaux
-            #V_offset[d] = np.min( tmp_data['X'][mask,d] )
-            #tmp_data['X'][mask,d] = tmp_data['X'][mask,d] - V_offset[d] + 1
 
     # eventually, apply external transform specified by the user
     for r in xrange(tmp_data['X'].shape[1]):
@@ -100,8 +96,8 @@ def infer(data,hidden=dict(), params=dict()):
 
     # prepare input data for C++ inference routine
     Fin = np.ones(tmp_data['X'].shape[1]) # choose internal transform function (for positive)
-    Xin = np.ascontiguousarray( tmp_data['X'].transpose() ) # specify way to store matrices to be
-    Zin = np.ascontiguousarray( hidden['Z'].transpose() ) # compatible with C code
+    Xin = np.ascontiguousarray( tmp_data['X'].transpose() ) # specify way to store matrices
+    Zin = np.ascontiguousarray( hidden['Z'].transpose() )   # to be compatible with C code
     tinit = time.time() # start counting time
 
     # RUN C++ routine
