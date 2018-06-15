@@ -184,17 +184,25 @@ def pdf_o(Zn,Bd,theta,s2y):
     R = len(theta)+1 # number of categories
     pdf = np.zeros(R)
     for r in xrange(R):
-        if (r==0):
-            a = norm.cdf(theta[0],np.inner(Zn,Bd),np.sqrt(s2y))
-            b = 0
-        elif (r==(R-1)):
-            a = 1
-            b = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
-        else:
-            a = norm.cdf(theta[r],np.inner(Zn,Bd),np.sqrt(s2y))
-            b = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
-        pdf[r] = a - b
+        pdf[r] = pdf_o_single(r,Zn,Bd,theta,s2y)
     return pdf
+
+def pdf_o_single(r,Zn,Bd,theta,s2y):
+    """
+    Function to compute p(X=r|Z,B) for ordinal value r
+    """
+    assert (r>=0) and (r<= (len(theta)+1))
+    if (r==0):
+        a = norm.cdf(theta[0],np.inner(Zn,Bd),np.sqrt(s2y))
+        b = 0
+    elif (r==(R-1)):
+        a = 1
+        b = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
+    else:
+        a = norm.cdf(theta[r],np.inner(Zn,Bd),np.sqrt(s2y))
+        b = norm.cdf(theta[r-1],np.inner(Zn,Bd),np.sqrt(s2y))
+    return (a-b)
+
 
 def pdf_p(X,Zn,Bd,mu, w, s2y,s2u):
     """
