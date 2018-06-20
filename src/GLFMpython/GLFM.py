@@ -4,6 +4,9 @@ import random
 import mapping_functions as mf
 import matplotlib.pyplot as plt
 
+import pdb
+from IPython import embed
+
 import time
 import os
 import sys
@@ -72,14 +75,9 @@ def infer(data,hidden=dict(), params=dict()):
 
     # replace nan by missing values
     tmp_data['X'][np.isnan(tmp_data['X'])] = params['missing']
-    # # dealing with missing data: replace np.nan by -1
-    # (xx,yy) = np.where(np.isnan(X)) # find positions where X is nan (i.e. missing data)
-    # for r in xrange(len(xx)):
-    #     X[xx[r],yy[r]] = -1
 
     # change labels for categorical and ordinal vars such that categories
     # start counting at 1 and all of them are bigger than 0
-    V_offset = np.zeros(D)
     for d in xrange(D):
         if (tmp_data['C'][d]=='c' or tmp_data['C'][d]=='o'):
             mask = tmp_data['X'][:,d] != params['missing']
@@ -89,8 +87,6 @@ def infer(data,hidden=dict(), params=dict()):
                 Xaux[tmp_data['X'][:,d] == uniqueVal[i]] = i+1
             Xaux[map(lambda x: not x, mask)] = params['missing']
             tmp_data['X'][:,d] = Xaux
-            #V_offset[d] = np.min( tmp_data['X'][mask,d] )
-            #tmp_data['X'][mask,d] = tmp_data['X'][mask,d] - V_offset[d] + 1
 
     # eventually, apply external transform specified by the user
     for r in xrange(tmp_data['X'].shape[1]):
@@ -100,8 +96,8 @@ def infer(data,hidden=dict(), params=dict()):
 
     # prepare input data for C++ inference routine
     Fin = np.ones(tmp_data['X'].shape[1]) # choose internal transform function (for positive)
-    Xin = np.ascontiguousarray( tmp_data['X'].transpose() ) # specify way to store matrices to be
-    Zin = np.ascontiguousarray( hidden['Z'].transpose() ) # compatible with C code
+    Xin = np.ascontiguousarray( tmp_data['X'].transpose() ) # specify way to store matrices
+    Zin = np.ascontiguousarray( hidden['Z'].transpose() )   # to be compatible with C code
     tinit = time.time() # start counting time
 
     # RUN C++ routine
@@ -128,7 +124,7 @@ def infer(data,hidden=dict(), params=dict()):
     for d in xrange(D):
         if (data['C'][d] == 'c' or data['C'][d] == 'o'):
             hidden['R'][d] = np.unique( data['X']\
-                    [data['X'][:,d] != params['missing'],d] )
+                    [(data['X'][:,d] != params['missing']) & (~np.isnan(data['X'][:,d])),d] )
     return hidden
 
 def complete(data, hidden=dict(), params=dict()):
@@ -427,12 +423,12 @@ def plotPatterns(data, hidden, params, patterns, colors=[], styles=[],\
 
         (xd,pdf) = computePDF(tmp_data, patterns, hidden, params, d)
         if (tmp_data['C'][d] == 'c') or (tmp_data['C'][d] == 'o'):
-            mask = tmp_data['X'][:,d] != params['missing']
-            (tmp,bla) =  np.histogram(tmp_data['X'][:,d], \
-                   np.unique(tmp_data['X'][:,d]).tolist() + \
-                   [np.unique(tmp_data['X'][:,d])[-1] + 1],\
+            mask = (tmp_data['X'][:,d] != params['missing']) & \
+                    (~np.isnan(tmp_data['X'][:,d]))
+            (tmp,bla) =  np.histogram(tmp_data['X'][mask,d], \
+                   np.unique(tmp_data['X'][mask,d]).tolist() + \
+                   [np.unique(tmp_data['X'][mask,d])[-1] + 1],\
                    density=True)
-            # tmp = hist(data.X(mask,d), unique(data.X(mask,d)));
             bar_width = 0.8/(numPatterns+1)
             plt.bar(xd,tmp,width=bar_width, color=colors[0], label=leg[0]) # plot empirical
             for p in xrange(numPatterns):

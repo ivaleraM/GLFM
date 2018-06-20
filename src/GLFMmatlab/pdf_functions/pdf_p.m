@@ -1,9 +1,18 @@
-function pdf = pdf_p(x,Zp, B, mu, w, s2Y, params)
+function pdf = pdf_p(x,Zp, Bd, mu, w, s2Y, params)
+    %
+    % Likelihood function for positive data
+    % Eq. (2) in the paper:
+    % "General Latent Feature Models for Heterogeneous Datasets"
+    %
+    % Inputs:
+    %     x: positive observation
+    %    Bd: K*1  weight vector for individual dimension d
+    %    Zp: 1*K, binary vector of feature assignment,
+    %          where K: number of latent features
+    %   s2Y: Gaussian noise variance
+    %  mu,w: Hyper-parameters linked to the transformation described in the paper
 
-% IMPORTANT: func = 2 does not have f_p_1 function implemented
-% func 2 = deprecated
-
-    pdf = 1./(2*pi*sqrt(s2Y + params.s2u)) * ...
+    pdf = 1./sqrt(2*pi*(s2Y + params.s2u)) * ...
         exp( -1/(2*(s2Y + params.s2u)) .* ...
-        (f_p_1(x, mu, w) - Zp * B).^2 ) .* abs(df_p_1(x, mu, w));
+        (f_p_1(x, mu, w) - Zp * Bd).^2 ) .* abs(df_p_1(x, mu, w));
 end

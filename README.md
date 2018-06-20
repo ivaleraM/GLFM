@@ -7,7 +7,7 @@ Python, Matlab and R. Moreover, several demos are provided to illustrate differe
 
 To cite this work, please use
 
-     I. Valera, M. F. Pradier and Z. Ghahramani, 
+     I. Valera, M. F. Pradier, M. Lomeli and Z. Ghahramani, 
      "General Latent Feature Model for Heterogeneous Datasets", 2017. 
      Available on ArXiv: https://arxiv.org/abs/1706.03779.
 
@@ -177,7 +177,7 @@ In order to run GLFM on your data, you need to:
     - For R (in a terminal, go to folder "GLFM/install/" and execute):
             bash install_for_R.sh
 
-
+3) Check  the success of the compilation by running the scipt 'demo_GLFM_test' available for Python, Matlab and R in the 'demos' folder. 
 
 ------------
 GLFM Demos
@@ -189,6 +189,11 @@ As an example, the script [`demo_toyImages'](https://github.com/ivaleraM/GLFM/bl
 Other examples include demo_matrix_completion_MNIST, demo_data_exploration_counties, and demo_data_exploration_prostate, available for PYTHON, Matlab and R. For more detail, please visit our [demo website](https://ivaleram.github.io/GLFM/demos.html). 
 
 -------
+Licence
+-------
+The Python and Matlab implementations are under MIT license. The R implementation extends the [RcppGSLExample](https://github.com/eddelbuettel/rcppgsl/tree/master/inst/examples/RcppGSLExample), and therefore, is under GPL (>= 2) license. 
+
+-------
 Contact
 -------
 
@@ -196,6 +201,6 @@ For further information or contact:
 
     Isabel Valera: isabel.valera.martinez (at) gmail.com
     Melanie F. Pradier: melanie.fpradier (at) gmail.com
-    Maria Lomeni: maria.lomeli  (at) eng.cam.ac.uk
+    Maria Lomeli: maria.lomeli  (at) eng.cam.ac.uk
 
 
