@@ -39,50 +39,49 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   X_transformed <- data$X
   Z_p <-hidden$Z 
   for(d in 1:D){
-    # if there is an external transformation change type of dimension d by external data type
-    #
-    #Find coordinates of missing values (NaN's are considered as missing)
-    idxs_nonnans<-which(!is.nan(data$X), arr.in=TRUE)
-    if(data$C[d] == 'g' || data$C[d] == 'p'){
-      if((params$numS %in% params)){
-        numS<-params$numS
-        xd <- seq(mm,MM,length.out=params$numS)
-        print(list("xd is a linspace, positive or real data"))
+      # if there is an external transformation change type of dimension d by external data type
+      #Find coordinates of missing values (NaN's are considered as missing)
+      idxs_nonnans<-which(!is.nan(X_true), arr.in=TRUE)
+      if(data$C[d] == 'g' || data$C[d] == 'p'){
+        if((params$numS %in% params)){
+          numS<-params$numS
+          xd <- seq(mm,MM,length.out=params$numS)
+          print(list("xd is a linspace, positive or real data"))
+        }
+        else{
+          numS <-100
+          xd <- seq(mm,MM,length.out=numS)
+        }
+      }
+      else if(data$C[d] == 'n'){
+        xd <-mm:MM
+        numS <-length(xd)
+        print("xd is a grid, count data")
       }
       else{
-        numS <-100
-        xd <- seq(mm,MM,length.out=numS)
+        #***difficult bit
+        xd <- unique(X[idxs_nans[1,d])
+        numS<-length(xd)
+        print(list("xd are unique values, categorical or ordinal data"))
       }
     }
-    else if(data$C[d] == 'n'){
-      xd <-mm:MM
-      numS <-length(xd)
-      print("xd is a grid, count data")
-    }
-    else{
-      #***difficult bit
-      xd <- unique(X[idxs_nans[1,d])
-      numS<-length(xd)
-      print(list("xd are unique values, categorical or ordinal data"))
-    }
-  }
   # Gives the number of non-missing entries:
  rowsnum<-dim(idxs_nonnans)[1]
  lik<-rep(0,rowsnum)
-  for(ell in rowsnum){
-    n_idx = idxs_nonnans[ell,][1]
-    d_idx = idxs_nonnans[ell,][2]
-    xd = X_true[n_idx,d_idx]
-    switch(data$C[d],'g'={lik[ell]<-pdf_g(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
-           'p'={lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d],hidden$s2y[d_idx])},
-           'n'={lik[ell]<-pdf_n(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d],hidden$s2y[d_idx],params)},
-           'c'={lik[ell]<-pdf_c(Zp[n_idx,],hidden$B[[d_idx]],hidden$s2y[d_idx])},
-           'o'={lik[ell]<-pdf_o(Zp[n_idx,],hidden$B[[d_idx]],hidden$theta[d,1:(hidden$R[d_idx]-1)],hidden$s2y[d_idx])},
-           stop('Unknown data type'))
-    if(sum(is.nan(lik[ell])) > 0){
-      print(data$C[d])
-      stop('Some values are nan!')
-    }
+    for(ell in rowsnum){
+      n_idx = idxs_nonnans[ell,][1]
+      d_idx = idxs_nonnans[ell,][2]
+      xd = X_true[n_idx,d_idx]
+      switch(data$C[d],'g'={lik[ell]<-pdf_g(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
+             'p'={lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d],hidden$s2y[d_idx])},
+             'n'={lik[ell]<-pdf_n(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d],hidden$s2y[d_idx],params)},
+             'c'={lik[ell]<-pdf_c(Zp[n_idx,],hidden$B[[d_idx]],hidden$s2y[d_idx])},
+             'o'={lik[ell]<-pdf_o(Zp[n_idx,],hidden$B[[d_idx]],hidden$theta[d,1:(hidden$R[d_idx]-1)],hidden$s2y[d_idx])},
+             stop('Unknown data type'))
+      if(sum(is.nan(lik[ell])) > 0){
+        print(data$C[d])
+        stop('Some values are nan!')
+      }
   }
  
   
