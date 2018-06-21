@@ -34,37 +34,48 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   }
   D <- dim(data$X)[2]
   N <- dim(data$X)[1]
-  # Copy of the data
-  X_true <- data$X
-  X_transformed <- data$X
-  Z_p <-hidden$Z 
-  for(d in 1:D){
-      # if there is an external transformation change type of dimension d by external data type
-      #Find coordinates of missing values (NaN's are considered as missing)
-      idxs_nonnans<-which(!is.nan(X_true), arr.in=TRUE)
-      if(data$C[d] == 'g' || data$C[d] == 'p'){
-        if((params$numS %in% params)){
-          numS<-params$numS
-          xd <- seq(mm,MM,length.out=params$numS)
-          print(list("xd is a linspace, positive or real data"))
+  Z_p <-hidden$Z
+  # Deals with missing values
+  X_aux<-data$X
+  aa<-max(X_aux)
+  X_aux[idx_missing] <- aa+1
+  V_offset<-colMins(X_aux)
+  V_offset_mat<-matrix(V_offset,nrow=N,ncol=D,byrow=TRUE)
+  X_aux<-data$X-V_offset_mat+1
+  idx_catord<-which(data$C=='c' | data$C=='o')
+  if(length(idx_catord)>0){
+    data$X[,idx_catord] <-X_aux[,idx_catord]
+    bu<-apply(X_aux[,idx_catord,drop=FALSE], 2, function(x)length(unique(x)))
+    idx_dat<-which(colMaxs(X_aux[,idx_catord,drop=FALSE])!=bu)
+    if(length(idx_dat)>0){
+      for(ii in 1:length(idx_dat)){
+        idxs_bad<-which(X_aux[,idx_dat[ii]]>bu[idx_dat[ii]])
+        while(length(idxs_bad)>0){
+          X_aux[idxs_bad,idx_dat[ii]]<-X_aux[idxs_bad,idx_dat[ii]]-1
+          idxs_bad<-which(X_aux[,idx_dat[ii]]>bu[idx_dat[ii]])
         }
-        else{
-          numS <-100
-          xd <- seq(mm,MM,length.out=numS)
-        }
-      }
-      else if(data$C[d] == 'n'){
-        xd <-mm:MM
-        numS <-length(xd)
-        print("xd is a grid, count data")
-      }
-      else{
-        #***difficult bit
-        xd <- unique(X[idxs_nans[1,d])
-        numS<-length(xd)
-        print(list("xd are unique values, categorical or ordinal data"))
       }
     }
+    data$X[,idx_catord]<-X_aux[,idx_catord]
+  
+# if there is an external transformation change type of dimension d by external data type
+    if( "transf_dummie" %in% names(params)){
+      if(params2$transf_dummie){
+        if(is.list(params2$t_1)==FALSE){
+          data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
+          data$C[params2$idx_transform] <-params2$ext_datatype
+        }else{
+          for(ell in 1:length(params2$t_1)){
+            data$X[,params2$idx_transform[[ell]]]<-params2$t_1[[ell]](data$X[,params2$idx_transform[[ell]]])
+            data$C[params2$idx_transform[[ell]]] <-params2$ext_datatype[[ell]]
+          }
+        }
+      }
+    }
+    
+      #Find coordinates of missing values (NaN's are considered as missing)
+      idxs_nonnans<-which(!is.nan(X_true), arr.in=TRUE)
+      
   # Gives the number of non-missing entries:
  rowsnum<-dim(idxs_nonnans)[1]
  lik<-rep(0,rowsnum)
