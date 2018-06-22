@@ -7,7 +7,7 @@
 #'@param X: N*D data matrix X
 #'@param C: 1xD string with data types, D = number of dimensions
 
-GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
+GLFM_computeloglikelihood<-function(data,hidden,params){
   
   source("pdf_functions/pdf_g.R")
   source("pdf_p.R")
@@ -37,8 +37,6 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   Z_p <-hidden$Z
   # Deals with missing values
   idx_missing<-which(is.nan(data$X))
-  #data$X[idx_missing] <- params$missing
-  #idx_missing<-which((data$X)==params$missing)
   X_aux<-data$X
   aa<-max(X_aux)
   X_aux[idx_missing] <- aa+1
@@ -68,9 +66,9 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
           data$X[,params$idx_transform]<-params$t_1(data$X[,params$idx_transform])
           data$C[params$idx_transform] <-params$ext_datatype
         }else{
-          for(ell in 1:length(params$t_1)){
-            data$X[,params$idx_transform[[ell]]]<-params$t_1[[ell]](data$X[,params$idx_transform[[ell]]])
-            data$C[params$idx_transform[[ell]]] <-params$ext_datatype[[ell]]
+          for(jj in 1:length(params$t_1)){
+            data$X[,params$idx_transform[[jj]]]<-params$t_1[[jj]](data$X[,params$idx_transform[[jj]]])
+            data$C[params$idx_transform[[jj]]] <-params$ext_datatype[[jj]]
           }
         }
       }
@@ -88,7 +86,8 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
       print(data$C[d_idx])
       xd = X_true[n_idx,d_idx]
       switch(data$C[d_idx],'g'={lik[ell]<-pdf_g(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
-             'p'={lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx])},
+             'p'={
+               lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx])},
              'n'={lik[ell]<-pdf_n(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
              'c'={lik[ell]<-pdf_c(Zp[n_idx,],hidden$B[[d_idx]],hidden$s2y[d_idx])},
              'o'={lik[ell]<-pdf_o(Zp[n_idx,],hidden$B[[d_idx]],hidden$theta[d_idx,1:(hidden$R[d_idx]-1)],hidden$s2y[d_idx])},
@@ -97,9 +96,26 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
         #print(data$C[d_idx])
         stop('Some values are nan!')
       }
-    }
- 
-  
+      
+     if("transf_dummie" %in% names(params)){
+       if(is.list(params$t_1)==FALSE){
+       if(params$transf_dummie && d_idx %in% params$idx_transform){
+         #print(xd)
+          xd <- params$t_inv(xd)
+          #print(xd)
+          lik[ell]<-lik[ell]*abs(params$dt_1(xd))
+       }
+      }
+        # else{
+        #    for(kk in 1:length(params$t_1)){
+        #     if(d_idx %in% params$idx_transform[[kk]]){
+        #         xd <- params$t_inv[[kk]](xd)
+        #        lik[ell]<-lik[ell]*abs(params$dt_1[[kk]](xd)))
+        #       }
+        #     }
+        #   }
+        }
+     lik[ell] <-log(lik[ell]) 
   }
-  
+ return lik 
 }
