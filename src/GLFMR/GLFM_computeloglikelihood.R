@@ -37,8 +37,8 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   Z_p <-hidden$Z
   # Deals with missing values
   idx_missing<-which(is.nan(data$X))
-  data$X[idx_missing] <- params$missing
-  idx_missing<-which((data$X)==params$missing)
+  #data$X[idx_missing] <- params$missing
+  #idx_missing<-which((data$X)==params$missing)
   X_aux<-data$X
   aa<-max(X_aux)
   X_aux[idx_missing] <- aa+1
@@ -65,7 +65,7 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
     if( "transf_dummie" %in% names(params)){
       if(params$transf_dummie){
         if(is.list(params$t_1)==FALSE){
-          data$X[,params$idx_transform]<-params$t_1(data$X[,params2$idx_transform])
+          data$X[,params$idx_transform]<-params$t_1(data$X[,params$idx_transform])
           data$C[params$idx_transform] <-params$ext_datatype
         }else{
           for(ell in 1:length(params$t_1)){
@@ -81,18 +81,20 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   # Gives the number of non-missing entries:
  rowsnum<-dim(idxs_nonnans)[1]
  lik<-rep(0,rowsnum)
-    for(ell in rowsnum){
+    for(ell in 1:rowsnum){
       n_idx = idxs_nonnans[ell,][1]
       d_idx = idxs_nonnans[ell,][2]
+      print(c(n_idx,d_idx,ell))
+      print(data$C[d_idx])
       xd = X_true[n_idx,d_idx]
       switch(data$C[d_idx],'g'={lik[ell]<-pdf_g(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
              'p'={lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx])},
              'n'={lik[ell]<-pdf_n(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
              'c'={lik[ell]<-pdf_c(Zp[n_idx,],hidden$B[[d_idx]],hidden$s2y[d_idx])},
-             'o'={lik[ell]<-pdf_o(Zp[n_idx,],hidden$B[[d_idx]],hidden$theta[d,1:(hidden$R[d_idx]-1)],hidden$s2y[d_idx])},
+             'o'={lik[ell]<-pdf_o(Zp[n_idx,],hidden$B[[d_idx]],hidden$theta[d_idx,1:(hidden$R[d_idx]-1)],hidden$s2y[d_idx])},
              stop('Unknown data type'))
       if(sum(is.nan(lik[ell])) > 0){
-        print(data$C[d_idx])
+        #print(data$C[d_idx])
         stop('Some values are nan!')
       }
     }
