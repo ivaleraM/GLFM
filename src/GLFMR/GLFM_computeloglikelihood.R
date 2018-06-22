@@ -9,23 +9,23 @@
 
 GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   
-  source("mapping_functions/f_o.R")
-  source("mapping_functions/f_g.R")
-  source("mapping_functions/f_c.R")
-  source("mapping_functions/f_p.R")
-  source("mapping_functions/f_o.R")
-  source("mapping_functions/f_n.R")
+  source("pdf_functions/pdf_g.R")
+  source("pdf_p.R")
+  source("pdf_functions/pdf_n.R")
+  source("pdf_functions/pdf_c.R")
+  source("pdf_functions/pdf_o.R")
+  source("df_p_1.R")
   
   # Not sure if I need extra stuff in varargin yet
-  if (length(varargin) == 1){
-    idxsD <- varargin[1]
-  }
-  else if(length(varargin) > 1){
-    stop('Too many input arguments')
-  }
-  else{
-    idxsD <- 1:length(hidden$B)
-  }
+  # if (length(varargin) == 1){
+  #   idxsD <- varargin[1]
+  # }
+  # else if(length(varargin) > 1){
+  #   stop('Too many input arguments')
+  # }
+  # else{
+  #   idxsD <- 1:length(hidden$B)
+  # }
   P <- dim(Zp)[1]
   K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
@@ -36,6 +36,9 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   N <- dim(data$X)[1]
   Z_p <-hidden$Z
   # Deals with missing values
+  idx_missing<-which(is.nan(data$X))
+  data$X[idx_missing] <- params$missing
+  idx_missing<-which((data$X)==params$missing)
   X_aux<-data$X
   aa<-max(X_aux)
   X_aux[idx_missing] <- aa+1
@@ -60,22 +63,21 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
   
 # if there is an external transformation change type of dimension d by external data type
     if( "transf_dummie" %in% names(params)){
-      if(params2$transf_dummie){
-        if(is.list(params2$t_1)==FALSE){
-          data$X[,params2$idx_transform]<-params2$t_1(data$X[,params2$idx_transform])
-          data$C[params2$idx_transform] <-params2$ext_datatype
+      if(params$transf_dummie){
+        if(is.list(params$t_1)==FALSE){
+          data$X[,params$idx_transform]<-params$t_1(data$X[,params2$idx_transform])
+          data$C[params$idx_transform] <-params$ext_datatype
         }else{
-          for(ell in 1:length(params2$t_1)){
-            data$X[,params2$idx_transform[[ell]]]<-params2$t_1[[ell]](data$X[,params2$idx_transform[[ell]]])
-            data$C[params2$idx_transform[[ell]]] <-params2$ext_datatype[[ell]]
+          for(ell in 1:length(params$t_1)){
+            data$X[,params$idx_transform[[ell]]]<-params$t_1[[ell]](data$X[,params$idx_transform[[ell]]])
+            data$C[params$idx_transform[[ell]]] <-params$ext_datatype[[ell]]
           }
         }
       }
     }
-    
-      #Find coordinates of missing values (NaN's are considered as missing)
-      idxs_nonnans<-which(!is.nan(X_true), arr.in=TRUE)
-      
+  #Find coordinates of missing values (NaN's are considered as missing)
+  X_true <-data$X
+  idxs_nonnans<-which(!is.nan(X_true), arr.in=TRUE)
   # Gives the number of non-missing entries:
  rowsnum<-dim(idxs_nonnans)[1]
  lik<-rep(0,rowsnum)
@@ -83,19 +85,19 @@ GLFM_computeloglikelihood<-function(data,hidden,params,varargin){
       n_idx = idxs_nonnans[ell,][1]
       d_idx = idxs_nonnans[ell,][2]
       xd = X_true[n_idx,d_idx]
-      switch(data$C[d],'g'={lik[ell]<-pdf_g(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
-             'p'={lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d],hidden$s2y[d_idx])},
-             'n'={lik[ell]<-pdf_n(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d],hidden$s2y[d_idx],params)},
+      switch(data$C[d_idx],'g'={lik[ell]<-pdf_g(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
+             'p'={lik[ell]<-pdf_p(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx])},
+             'n'={lik[ell]<-pdf_n(xd,Zp[n_idx,],hidden$B[[d_idx]],hidden$mu[d_idx],hidden$w[d_idx],hidden$s2y[d_idx],params)},
              'c'={lik[ell]<-pdf_c(Zp[n_idx,],hidden$B[[d_idx]],hidden$s2y[d_idx])},
              'o'={lik[ell]<-pdf_o(Zp[n_idx,],hidden$B[[d_idx]],hidden$theta[d,1:(hidden$R[d_idx]-1)],hidden$s2y[d_idx])},
              stop('Unknown data type'))
       if(sum(is.nan(lik[ell])) > 0){
-        print(data$C[d])
+        print(data$C[d_idx])
         stop('Some values are nan!')
       }
-  }
+    }
  
   
-  
+  }
   
 }
