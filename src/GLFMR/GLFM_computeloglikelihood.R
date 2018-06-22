@@ -1,3 +1,4 @@
+
 #'@description This function calculates the log-lik of
 #' the held-out data in the GLFM. The function uses the trained
 #' parameters,
@@ -6,6 +7,8 @@
 #'@param data is a list with X and C
 #'@param X: N*D data matrix X
 #'@param C: 1xD string with data types, D = number of dimensions
+#'@param hidden is a list that contains Z and B
+#'@param params contains the other parameters
 
 GLFM_computeloglikelihood<-function(data,hidden,params){
   
@@ -15,17 +18,7 @@ GLFM_computeloglikelihood<-function(data,hidden,params){
   source("pdf_functions/pdf_c.R")
   source("pdf_functions/pdf_o.R")
   source("df_p_1.R")
-  
-  # Not sure if I need extra stuff in varargin yet
-  # if (length(varargin) == 1){
-  #   idxsD <- varargin[1]
-  # }
-  # else if(length(varargin) > 1){
-  #   stop('Too many input arguments')
-  # }
-  # else{
-  #   idxsD <- 1:length(hidden$B)
-  # }
+  Zp<-hidden$Z
   P <- dim(Zp)[1]
   K <-dim(hidden$B[[1]])[1]
   #readline("press return to continue")
@@ -100,9 +93,7 @@ GLFM_computeloglikelihood<-function(data,hidden,params){
      if("transf_dummie" %in% names(params)){
        if(is.list(params$t_1)==FALSE){
        if(params$transf_dummie && d_idx %in% params$idx_transform){
-         #print(xd)
           xd <- params$t_inv(xd)
-          #print(xd)
           lik[ell]<-lik[ell]*abs(params$dt_1(xd))
        }
       }
@@ -117,5 +108,6 @@ GLFM_computeloglikelihood<-function(data,hidden,params){
         }
      lik[ell] <-log(lik[ell]) 
   }
- return lik 
-}
+ return(lik) 
+
+  }}
