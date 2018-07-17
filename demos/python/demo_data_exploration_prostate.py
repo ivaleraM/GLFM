@@ -87,6 +87,9 @@ print '\n 4. PROCESSING RESULTS\n'
 patterns = hidden['Z']
 X_map = GLFM.computeMAP(data['C'], patterns, hidden, params)
 
+### Compute log lik of the data
+loglik = GLFM.compute_log_likelihood(data['X'],data['C'],hidden,params)
+
 ## Plot Dimensions
 sum(hidden['Z'])
 th = 0.03 # threshold to filter out latent features that are not significant

@@ -85,14 +85,23 @@ def f_p_1(x, mu, w):
     # transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
     assert not(w == 0), 'scaling factor should never be 0'
-    y = np.log( np.exp(w*(x-mu) - 1) )
+    try:
+        #y = np.log( np.exp(w*(x-mu) - 1) )
+        y = w*(x-mu) - 1
+    except:
+        print('Waiting at debugging point')
+        pdb.set_trace()
     return y
 
 def df_p_1(x, mu, w):
     # derivative of transformation function for positive data
     # X -> Y (from data to pseudo-obversations)
     assert not(w == 0), 'scaling factor should never be 0'
-    y = ( w * np.exp(w*(x-mu)) ) / ( np.exp(w*(x-mu) - 1) )
+    try:
+        y = ( w * np.exp(w*(x-mu)) ) / ( np.exp(w*(x-mu) - 1) )
+    except:
+        print('Waiting at debugging point')
+        pdb.set_trace()
     return y
 
 # ------------------------------------------
@@ -191,6 +200,7 @@ def pdf_o_single(r,Zn,Bd,theta,s2y):
     """
     Function to compute p(X=r|Z,B) for ordinal value r
     """
+    R = len(theta)+1 # number of categories
     assert (r>=0) and (r<= (len(theta)+1))
     if (r==0):
         a = norm.cdf(theta[0],np.inner(Zn,Bd),np.sqrt(s2y))
