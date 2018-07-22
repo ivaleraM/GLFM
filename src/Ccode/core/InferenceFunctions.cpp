@@ -114,7 +114,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                if (isinf(p1_n) || isnan(p1_n)){
                     //printf("nest[%d]=%d \n", k,nest[k]);
                     //printf("lik0=%f , lik1=%f \n", lik0, lik1);
-                    printf("EXECUTION STOPPED: numerical error at the sampler. \n                   Please restart the sampler and if error persists check hyperparameters. \n",n);
+                    printf("EXECUTION STOPPED: numerical error at the sampler. \n  Please restart the sampler and if error persists check hyperparameters. \n",n);
                     return 0;
                     }
                //sampling znk
