@@ -139,6 +139,7 @@ The main requirements include a **gcc compiler** suitable for your OS and the  [
  
 • **For Python:**
 
+    - Python 2.7
     - Anaconda (install at https://www.anaconda.com/download/)
     - gcc compiler and qt functionality (these modules are normally already available)
       If not, it can be installed in Ubuntu as:
