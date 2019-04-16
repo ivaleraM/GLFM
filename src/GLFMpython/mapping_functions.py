@@ -86,8 +86,8 @@ def f_p_1(x, mu, w):
     # X -> Y (from data to pseudo-obversations)
     assert not(w == 0), 'scaling factor should never be 0'
     try:
-        #y = np.log( np.exp(w*(x-mu) - 1) )
-        y = w*(x-mu) - 1
+        y = np.log( np.exp(w*(x-mu) - 1) )
+        #y = w*(x-mu) - 1
     except:
         print('Waiting at debugging point')
         pdb.set_trace()
