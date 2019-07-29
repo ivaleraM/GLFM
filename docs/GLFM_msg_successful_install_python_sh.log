@@ -1,0 +1,71 @@
+$ sh install_for_python.sh 
+Solving environment: done
+
+# All requested packages already installed.
+
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /opt/anaconda3/envs/IBP
+
+  added / updated specs: 
+    - cython=0.25.2
+
+
+The following packages will be UPDATED:
+
+    ca-certificates: 2018.03.07-0      --> 2018.03.07-0      anaconda
+    certifi:         2018.4.16-py27_0  --> 2018.4.16-py27_0  anaconda
+    openssl:         1.0.2o-h20670df_0 --> 1.0.2o-h20670df_0 anaconda
+
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
+Solving environment: \ 
+Warning: 8 possible package resolutions (only showing differing packages):
+  - anaconda::ca-certificates-2018.03.07-0, anaconda::certifi-2018.4.16-py27_0, anaconda::openssl-1.0.2o-h20670df_0
+  - anaconda::certifi-2018.4.16-py27_0, anaconda::openssl-1.0.2o-h20670df_0, defaults::ca-certificates-2018.03.07-0
+  - anaconda::ca-certificates-2018.03.07-0, anaconda::certifi-2018.4.16-py27_0, defaults::openssl-1.0.2o-h20670df_0
+  - anaconda::certifi-2018.4.16-py27_0, defaults::ca-certificates-2018.03.07-0, defaults::openssl-1.0.2o-h20670df_0
+  - anaconda::ca-certificates-2018.03.07-0, defaults::certifi-2018.4.16-py27_0, defaults::openssl-1.0.2o-h20670df_0
+  - defaults::ca-certificates-2018.03.07-0, defaults::certifi-2018.4.16-py27_0, defaults::openssl-1.0.2o-h20670df_0
+  - anaconda::ca-certificates-2018.03.07-0, anaconda::openssl-1.0.2o-h20670df_0, defaults::certifi-2018.4.16-py27_0
+  - anaconda::openssl-1.0.2o-h20670df_0, defaults::ca-certificates-2018.03.07-0, defaults::certifi-2018.4.16-py27done
+
+# All requested packages already installed.
+
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /opt/anaconda3/envs/IBP
+
+  added / updated specs: 
+    - cymem=1.31.2
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    cymem-1.31.2               |   py27h6bb024c_0          26 KB  anaconda
+
+The following packages will be UPDATED:
+
+    cymem: 1.31.2-py27_0 anaconda --> 1.31.2-py27h6bb024c_0 anaconda
+
+
+Downloading and Extracting Packages
+cymem-1.31.2         |   26 KB | ####################################### | 100% 
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
+running build_ext
+skipping 'GLFM.cpp' Cython extension (up-to-date)
+building 'GLFMlib' extension
+gcc -pthread -B /opt/anaconda3/envs/IBP/compiler_compat -Wl,--sysroot=/ -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -fPIC -I/opt/anaconda3/envs/IBP/lib/python2.7/site-packages -I/opt/anaconda3/envs/IBP/include -I/opt/anaconda3/envs/IBP/lib/python2.7/site-packages/numpy/core/include -I/opt/anaconda3/envs/IBP/include/python2.7 -c GLFM.cpp -o build/temp.linux-x86_64-2.7/GLFM.o -w
+gcc -pthread -B /opt/anaconda3/envs/IBP/compiler_compat -Wl,--sysroot=/ -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -fPIC -I/opt/anaconda3/envs/IBP/lib/python2.7/site-packages -I/opt/anaconda3/envs/IBP/include -I/opt/anaconda3/envs/IBP/lib/python2.7/site-packages/numpy/core/include -I/opt/anaconda3/envs/IBP/include/python2.7 -c ../core/GeneralFunctions.cpp -o build/temp.linux-x86_64-2.7/../core/GeneralFunctions.o -w
+gcc -pthread -B /opt/anaconda3/envs/IBP/compiler_compat -Wl,--sysroot=/ -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -fPIC -I/opt/anaconda3/envs/IBP/lib/python2.7/site-packages -I/opt/anaconda3/envs/IBP/include -I/opt/anaconda3/envs/IBP/lib/python2.7/site-packages/numpy/core/include -I/opt/anaconda3/envs/IBP/include/python2.7 -c ../core/InferenceFunctions.cpp -o build/temp.linux-x86_64-2.7/../core/InferenceFunctions.o -w
+g++ -pthread -shared -B /opt/anaconda3/envs/IBP/compiler_compat -L/opt/anaconda3/envs/IBP/lib -Wl,-rpath=/opt/anaconda3/envs/IBP/lib -Wl,--no-as-needed -Wl,--sysroot=/ build/temp.linux-x86_64-2.7/GLFM.o build/temp.linux-x86_64-2.7/../core/GeneralFunctions.o build/temp.linux-x86_64-2.7/../core/InferenceFunctions.o -L/opt/anaconda3/envs/IBP/lib -L/opt/anaconda3/envs/IBP/lib -lgsl -lgslcblas -lpython2.7 -o /home/melanie/git/GLFM/src/Ccode/wrapper_python/GLFMlib.so
+
