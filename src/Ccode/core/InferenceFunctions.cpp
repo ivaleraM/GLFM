@@ -15,7 +15,7 @@
 #include "gsl/gsl_randist.h"
 
 // Functions
-int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, double alpha, double s2B, double *s2Y, gsl_matrix **Y, gsl_matrix *Z, int *nest, gsl_matrix *P, gsl_matrix *Pnon, gsl_matrix **lambda, gsl_matrix **lambdanon){
+int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, double alpha, double s2B, double *s2Y, gsl_matrix **Y, gsl_matrix *Z, int *nest, gsl_matrix *P, gsl_matrix *Pnon, gsl_matrix **lambda, gsl_matrix **lambdanon,  double *LIK, int it){
    int flagErr=0;
    int TK=2;
    gsl_matrix_view Zn;
@@ -33,7 +33,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
    for (int d =0; d<D; d++){
         gsl_matrix_memcpy (lambdanon[d], lambda[d]);
     }
-
+   LIK[it] =0;
    for (int n=0; n<N; n++){
        double p[TK];
        // Pnon, LambdaNon
@@ -97,7 +97,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                    gsl_matrix_free(muy);
                }
 
-//                printf("lik0=%f , lik1=%f \n", lik0, lik1);
+               //printf("lik0=%f , lik1=%f \n", lik0, lik1);
                double p0= gsl_sf_log(N-nest[k])+lik0;
                double p1= gsl_sf_log(nest[k])+lik1;
                double p1_n, p0_n;
@@ -114,7 +114,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                if (isinf(p1_n) || isnan(p1_n)){
                     //printf("nest[%d]=%d \n", k,nest[k]);
                     //printf("lik0=%f , lik1=%f \n", lik0, lik1);
-                    printf("EXECUTION STOPPED: numerical error at the sampler. \n  Please restart the sampler and if error persists check hyperparameters. \n",n);
+                    printf("EXECUTION STOPPED: numerical error at the sampler. \n                   Please restart the sampler and if error persists check hyperparameters. \n",n);
                     return 0;
                     }
                //sampling znk
@@ -134,7 +134,8 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
            } 
        }
        gsl_matrix_free(Snon);
-
+       LIK[it]+=p[0];
+       //printf("likn=%f likT=%f", p[0], LIKit);
        // remove empty features
        int flagDel=0;
        int Kdel=0;
@@ -420,7 +421,7 @@ double Samples2Y (double missing, int N, int d, int K, char Cd,  int Rd, double 
 }
 
 
-int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u,int maxK,int Nsim){
+int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u,int maxK,int Nsim, double *LIK){
 //Starting C function
 
 //     // For debugging, print input parameters
@@ -563,10 +564,9 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     printf("Nsim=%d\n", Nsim);
     //....Body functions....//      
     for (int it=0; it<Nsim; it++){
-//         if (it==0){
-        double Kaux=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon);
+        double Kaux=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon, LIK, it);
+        //printf("likit = %f \n", LIK[it]);
         if (Kaux==0){return Kest;}else{Kest= Kaux;}
-//         }
         gsl_matrix_view P_view = gsl_matrix_submatrix (P, 0, 0, Kest, Kest);
         gsl_matrix *S= gsl_matrix_calloc(Kest,Kest);
         gsl_matrix_memcpy (S, &P_view.matrix);
@@ -696,6 +696,8 @@ int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char
                 if (R[d]>maxR){maxR=R[d];}
                 break;
          }
+         
+
 //           printf("mu = %f ", mu[d]);
 //           printf("w = %f \n", w[d]);
 //           printf("varX = %f \n", varX[d]);

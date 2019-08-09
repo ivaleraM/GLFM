@@ -25,6 +25,7 @@
 #define output_MU plhs[3]
 #define output_W plhs[4]
 #define output_s2Y plhs[5]
+#define output_LIK plhs[6]
 
 void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
@@ -92,7 +93,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     gsl_matrix *X = &Xview.matrix;
     gsl_matrix **B=(gsl_matrix **) calloc(D,sizeof(gsl_matrix*));
     gsl_vector **theta=(gsl_vector **) calloc(D,sizeof(gsl_vector*));
-    double w[D],mu[D],s2Y[D];
+    double w[D],mu[D],s2Y[D], LIK[Nsim];
     int R[D];
     printf("In C++: Transforming input data... ");
     int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w, s2Y);
@@ -107,7 +108,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
   //...............Inference Function.......................//
     printf("In C++: Running Inference Routine... ");
-   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, f, mu, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
+   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, f, mu, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim, LIK);
 
    //...............SET OUTPUT POINTERS.......................//
     output_Z = mxCreateDoubleMatrix(Kest,N,mxREAL);
@@ -165,7 +166,12 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double *pW=mxGetPr(output_W);
     output_s2Y = mxCreateDoubleMatrix(D, 1,mxREAL);
     double *ps2Y=mxGetPr(output_s2Y);
-
+    
+    output_LIK = mxCreateDoubleMatrix(Nsim, 1,mxREAL);
+    double *pLIK=mxGetPr(output_LIK);
+    for (int it=0; it<Nsim; it++){
+         pLIK[it]=LIK[it];
+    }
     for (int d=0; d<D; d++){
          pMU[d]=mu[d];
          pW[d]=w[d];

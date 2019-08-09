@@ -101,7 +101,7 @@ def infer(data,hidden=dict(), params=dict()):
     tinit = time.time() # start counting time
 
     # RUN C++ routine
-    (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out) = \
+    (Z_out,B_out,Theta_out,mu_out,w_out,s2Y_out, LIK_out) = \
             GLFMlib.infer(Xin, tmp_data['C'], Zin, Fin, params['bias'], params['s2u'],\
             params['s2B'], params['alpha'], params['Niter'],\
             params['maxK'], params['missing'], params['verbose'])
@@ -119,6 +119,7 @@ def infer(data,hidden=dict(), params=dict()):
     hidden['mu'] = mu_out
     hidden['w'] = w_out
     hidden['s2Y'] = s2Y_out
+    hidden['LIK'] = LIK_out
 
     hidden['R'] = [None] * D
     for d in xrange(D):

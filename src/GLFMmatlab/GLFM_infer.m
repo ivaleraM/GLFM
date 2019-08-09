@@ -88,7 +88,7 @@ function hidden = GLFM_infer(data,varargin)
 
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w s2Y]= IBPsampler(data.X,data.C, hidden.Z, params.bias, func, ...
+    [Z B theta mu w s2Y LIK]= IBPsampler(data.X,data.C, hidden.Z, params.bias, func, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     fprintf('Elapsed time %.2f seconds.', hidden.time );
@@ -101,6 +101,7 @@ function hidden = GLFM_infer(data,varargin)
     hidden.w = w;
     hidden.s2Y = s2Y;
     hidden.R = ones(1,D);
+    hidden.LIK = LIK;
     for d=1:D
         if (data.C(d) == 'c') || (data.C(d) == 'o')
             hidden.R(d) = length(unique(data.X(data.X(:,d)~= params.missing,d) ));
