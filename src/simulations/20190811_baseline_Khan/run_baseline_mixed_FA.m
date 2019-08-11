@@ -12,8 +12,8 @@ function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id)
         BASEDIR = '/home/melanie/datasets/glfm/';
         RESDIR = '/home/melanie/results/glfm/';
     else
-        BASEDIR = '/n/home11/mfernandezpradier/';
-        RESDIR = '/home/melanie/results/glfm/';
+        BASEDIR = '/n/home11/mfernandezpradier/datasets/glfm/';
+        RESDIR = '/n/home11/mfernandezpradier/results/glfm/';
     end
     db_paths = {'SimClusterBioDeg','SimClusterGerman','SimClusterInternet',...
         'SimClusterNesarclighter', 'SimClusterWine'};
