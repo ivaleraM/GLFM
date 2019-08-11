@@ -6,9 +6,18 @@ function X_pred = complete_matrix(params,postDist)
     y_mu_post = (params.beta  * postDist.mean)';
     y_pred = mvnrnd(y_mu_post,postDist.noiseCovMat)'; % D x N
     %y_pred = postDist.y;
-    Dcon = size(params.betaCont,1);
-    Dcat = size(params.psi,1);
-    Ddis = length(params.A);
+    if isfield(params,'betaCont')
+        Dcon = size(params.betaCont,1);
+    else
+        Dcon = 0;
+    end
+    if isfield(params,'psi')
+        Dcat = size(params.psi,1);
+        Ddis = length(params.A);
+    else
+        Dcat = 0;
+        Ddis = 0;
+    end
     X_pred.continuous = nan * ones(Dcon,N);
     X_pred.categorical = nan * ones(Dcat,N);
     X_pred.discrete = nan * ones(Ddis,N);
