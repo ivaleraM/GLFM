@@ -11,10 +11,15 @@ function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id)
     if (inCluster == 0)
         BASEDIR = '/home/melanie/datasets/glfm/';
         RESDIR = '/home/melanie/results/glfm/';
+        GLFMDIR = '/home/melanie/git/GLFM/';
     else
         BASEDIR = '/n/home11/mfernandezpradier/datasets/glfm/';
         RESDIR = '/n/home11/mfernandezpradier/results/glfm/';
+        GLFMDIR = '/n/home11/mfernandezpradier/git/GLFM/';
     end
+    addpath(genpath(pwd));
+    addpath(genpath(fullfile(GLFMDIR,'/src/baselines/2010-NIPS-FA-code/')));
+    
     db_paths = {'SimClusterBioDeg','SimClusterGerman','SimClusterInternet',...
         'SimClusterNesarclighter', 'SimClusterWine'};
     db_files = {'bioDeg2','german','Internet2','Nesarc','Wine'};
