@@ -76,6 +76,6 @@ function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id, Dz)
     res.err = compute_glfm_errors(res.X_true,res.X_pred,res.X_miss,res.C, res.R);
     respath = fullfile(RESDIR,db_paths{db_id});
     mkdir(respath)
-    save(fullfile(respath,[db_files{db_id} '_' fn]),'res');
+    save(fullfile(respath,[db_files{db_id} '_' fn]),'res','-v7.3');
 
 end
