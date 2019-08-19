@@ -5,4 +5,4 @@ function y = df_p_1(x, mu, w)
     if (w == 0)
         error('scaling factor should never be 0');
     end
-    y = ( w.* exp(w.*(x-mu)) ) ./ ( exp(w.*(x-mu) - 1) );
+    y = ( w.* exp(w.*(x-mu)) ) ./ ( exp(w.*(x-mu)) - 1);
