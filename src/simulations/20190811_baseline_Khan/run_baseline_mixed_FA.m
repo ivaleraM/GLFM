@@ -2,7 +2,7 @@
 % Pmissing: percentage of missings
 % mask_seed: random seed for missing mask (note: name is misleading!)
 % Nsim: number of iterations to run
-function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id)
+function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id, Dz)
     tic;
     % load dataset and format accordingly
     if (db_id < 0 || db_id > 5)
@@ -14,12 +14,12 @@ function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id)
         GLFMDIR = '/home/melanie/git/GLFM/';
     else
         BASEDIR = '/n/home11/mfernandezpradier/datasets/glfm/';
-        RESDIR = '/n/home11/mfernandezpradier/results/glfm/';
+        RESDIR = ['/n/scratchlfs/doshi-velez_lab/melanie/results/glfm/Dz=',num2str(Dz)];
         GLFMDIR = '/n/home11/mfernandezpradier/git/GLFM/';
     end
     addpath(genpath(pwd));
     addpath(genpath(fullfile(GLFMDIR,'/src/baselines/2010-NIPS-FA-code/')));
-    
+
     db_paths = {'SimClusterBioDeg','SimClusterGerman','SimClusterInternet',...
         'SimClusterNesarclighter', 'SimClusterWine'};
     db_files = {'bioDeg2','german','Internet2','Nesarc','Wine'};
@@ -42,31 +42,30 @@ function run_baseline_mixed_FA(Pmissing, mask_seed, inCluster, db_id)
     for m=1:Dcat
         data.nClass(m) = length(unique(data.discrete(m,:)));
     end
-    
+
     % standardize data (Important! Before missing mask!)
-    data = standardize(data);    
-    
+    data = standardize(data);
+
     % apply missing mask
     Xmiss = data.X;
     Xmiss(data.miss) = nan;
     data.X_miss = Xmiss;
     data.continuous = Xmiss(:,data.idxs_continuous)';
     data.discrete = Xmiss(:,data.idxs_discrete)';
-    
+
     % run mixed_FA_miss
-    Dz = 5;
     res = wrapper_mixed_FA(data,Dz);
-    
+
     % revert data standardization
     res.X_pred_mixedFA_standardized = standardize_back(res.X_pred_mixedFA,data);
-    
+
     % change output format
     X_pred_ND = zeros(size(data.X_true));
     X_pred_ND(:,data.idxs_continuous) = res.X_pred_mixedFA_standardized.continuous';
     X_pred_ND(:,data.idxs_discrete) = res.X_pred_mixedFA_standardized.discrete';
     R = zeros(1,D);
     R(data.idxs_discrete) = data.nClass;
-    
+
     % save results
     res.X_pred = X_pred_ND;
     res.X_true = data.X_true;
