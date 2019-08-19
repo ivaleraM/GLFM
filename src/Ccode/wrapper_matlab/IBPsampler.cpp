@@ -44,8 +44,8 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     const mwSize* Cdim = mxGetDimensions(input_C);
 
     int N = Xdim[0];
-//     size_t D = Xdim[1];
-    int D = Xdim[1];
+    size_t D = Xdim[1];
+    //int D = Xdim[1];
     int K = Zdim[1];
     if (Cdim[1]!=D & Cdim[0]!=1){
         mexErrMsgTxt("Invalid number of dimensions for vector C\n");
@@ -95,7 +95,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
     double w[D],mu[D],s2Y[D];
     int R[D];
     printf("In C++: Transforming input data... ");
-    int maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w, s2Y);
+    size_t maxR=initialize_func (N,  D,  maxK, missing,  X, C, B, theta, R, f, mu,  w, s2Y);
     printf("done\n");
     //int maxR = 1;
     //for (int d=0; d<D; d++){
@@ -107,7 +107,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 
   //...............Inference Function.......................//
     printf("In C++: Running Inference Routine... ");
-   int Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, f, mu, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
+   size_t Kest = IBPsampler_func (missing, X, C, Z, B, theta, R, f, mu, w, maxR, bias, N, D, K, alpha, s2B, s2Y, s2u, maxK, Nsim);
 
    //...............SET OUTPUT POINTERS.......................//
     output_Z = mxCreateDoubleMatrix(Kest,N,mxREAL);
@@ -116,7 +116,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[] ) {
 //     size_t Kest2 = (size_t) Kest;
 //     size_t dimB[3]={D,Kest2,maxR};
 //     size_t dimB[3]={D,Kest,maxR};
-    int dimB[3]={D,Kest,maxR};
+    const size_t dimB[3]={D,Kest,maxR};
     output_B = mxCreateNumericArray(3,dimB,mxDOUBLE_CLASS,mxREAL);
     double *pB=mxGetPr(output_B);
 
