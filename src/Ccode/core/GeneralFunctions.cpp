@@ -36,6 +36,30 @@ double f_1(double x, double func, double mu, double w){
        return logFun(gsl_sf_exp(w*(x-mu))-1);
    }
 }
+double df_1(double x, double func, double mu, double w){
+//     printf("pos = %f ", logFun(gsl_sf_exp(w*(x-mu))-1));     y = ( w.* exp(w.*(x-mu)) ) ./ ( exp(w.*(x-mu) - 1) );
+   if (func==1){
+       return ( w*gsl_sf_exp(w*(x-mu)) ) / ( gsl_sf_exp(w*(x-mu) - 1) );
+   }else if(func==2){
+       return  0.5*w*pow(w*(x-mu),-0.5);
+   }else{
+       printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
+       return ( w*gsl_sf_exp(w*(x-mu)) ) / ( gsl_sf_exp(w*(x-mu) - 1) );
+   }
+}
+
+double fp(double y, double func, double mu, double w){
+//     printf("pos = %f ", logFun(gsl_sf_exp(w*(x-mu))-1));
+   if (func==1){
+       return logFun(gsl_sf_exp(y)+1)/w+mu;
+   }else if(func==2){
+       return  pow(y,2)/w+mu;
+   }else{
+       printf("error: unknown transformation function. Used default transformation log(exp(y)-1)");
+       return logFun(gsl_sf_exp(y)+1)/w+mu;
+   }
+}
+
 
 // Functions
 double compute_vector_mean(int N, double missing, gsl_vector *v){
@@ -92,7 +116,8 @@ double compute_vector_min(int N, double missing, gsl_vector *v){
 }
 double logFun(double x)
 {
-	if (x==0){fprintf(stderr, "logarithm of 0 is -inf \n"); return GSL_NEGINF;}
+	if (x==0){x=1e-100;//fprintf(stderr, "logarithm of 0 is -inf \n"); 
+        return  gsl_sf_log(x);}
     else if(x<0){fprintf(stderr, "Error: logarithm is not defined for negative numbers\n"); return -1;}
     else{return gsl_sf_log(x);}
 }

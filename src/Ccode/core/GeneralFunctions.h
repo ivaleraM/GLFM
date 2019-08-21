@@ -28,7 +28,8 @@
 //Transformations
 double fre_1(double x, double func, double mu, double w);
 double f_1(double x, double func, double mu, double w);
-// double f(double x, double w);
+double df_1(double x, double func, double mu, double w);
+double fp(double y, double func, double mu, double w);
 
 
 // General functions

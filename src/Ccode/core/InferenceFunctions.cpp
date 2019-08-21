@@ -15,7 +15,7 @@
 #include "gsl/gsl_randist.h"
 
 // Functions
-int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, double alpha, double s2B, double *s2Y, gsl_matrix **Y, gsl_matrix *Z, int *nest, gsl_matrix *P, gsl_matrix *Pnon, gsl_matrix **lambda, gsl_matrix **lambdanon,  double *LIK, int it){
+int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, double alpha, double s2B, double *s2Y, gsl_matrix **Y, gsl_matrix *Z, int *nest, gsl_matrix *P, gsl_matrix *Pnon, gsl_matrix **lambda, gsl_matrix **lambdanon){
    int flagErr=0;
    int TK=2;
    gsl_matrix_view Zn;
@@ -33,7 +33,6 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
    for (int d =0; d<D; d++){
         gsl_matrix_memcpy (lambdanon[d], lambda[d]);
     }
-   LIK[it] =0;
    for (int n=0; n<N; n++){
        double p[TK];
        // Pnon, LambdaNon
@@ -48,6 +47,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                Ydn= gsl_matrix_submatrix (Y[d], 0, n, R[d], 1);
                matrix_multiply(&Zn.matrix,&Ydn.matrix,&Lnon_view.matrix,-1,1,CblasNoTrans,CblasTrans);
        }
+       
        // Sampling znk for k=1...K
        for (int k=bias; k<K; k++){
           if (gsl_matrix_get(&Zn.matrix,k,0)==1){nest[k]--;}
@@ -74,7 +74,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
                        }
                    gsl_matrix_free(muy);
                }
-
+               
                // z_nk=1
                gsl_matrix_set (&Zn.matrix, k, 0, 1);
                matrix_multiply(&Zn.matrix,Snon,aux,1,0,CblasTrans,CblasNoTrans);
@@ -134,8 +134,7 @@ int AcceleratedGibbs (int maxK,int bias, int N, int D, int K, char *C,  int *R, 
            } 
        }
        gsl_matrix_free(Snon);
-       LIK[it]+=p[0];
-       //printf("likn=%f likT=%f", p[0], LIKit);
+       
        // remove empty features
        int flagDel=0;
        int Kdel=0;
@@ -564,14 +563,131 @@ int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_
     printf("Nsim=%d\n", Nsim);
     //....Body functions....//      
     for (int it=0; it<Nsim; it++){
-        double Kaux=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon, LIK, it);
-        //printf("likit = %f \n", LIK[it]);
+        double Kaux=AcceleratedGibbs (maxK,bias,N, D, Kest, C, R, alpha, s2B, s2Y, Y, Z, nest, P, Pnon, lambda, lambdanon);
+        //printf("%f", LIK[it]);
         if (Kaux==0){return Kest;}else{Kest= Kaux;}
         gsl_matrix_view P_view = gsl_matrix_submatrix (P, 0, 0, Kest, Kest);
         gsl_matrix *S= gsl_matrix_calloc(Kest,Kest);
         gsl_matrix_memcpy (S, &P_view.matrix);
         inverse(S, Kest);
         gsl_matrix *MuB = gsl_matrix_alloc(Kest,1);
+        
+        //Compute Likelihood
+        LIK[it]=0.0;
+        gsl_matrix_view Zn;
+        gsl_matrix_view Bd_view;
+        gsl_matrix *muy;
+        double xnd;
+        for (int d =0; d<D; d++){
+            switch(C[d]){
+            case 'g':
+                muy= gsl_matrix_alloc(1,1);
+                for (int n=0; n<N; n++){
+                    double lik_nd=0.0;
+                    xnd=gsl_matrix_get (X, d, n);
+                    Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
+                    Bd_view = gsl_matrix_submatrix (B[d], 0, 0, K, 1);
+                    matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
+                    if (xnd !=missing && !gsl_isnan(xnd)){
+                        lik_nd=0.5/(s2Y[d]+s2u)*pow((xnd- gsl_matrix_get(muy,0,0)),2)+0.5*gsl_sf_log(2*M_PI*(s2Y[d]+s2u));
+                    }
+                    LIK[it]+=lik_nd;
+                }
+                gsl_matrix_free(muy);    
+
+                break;
+
+            case 'p': 
+                muy= gsl_matrix_alloc(1,1);
+                for (int n=0; n<N; n++){
+                    double lik_nd=0.0;
+                    xnd=gsl_matrix_get (X, d, n);
+                    Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
+                    Bd_view = gsl_matrix_submatrix (B[d], 0, 0, K, 1);
+                    matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
+                    if (xnd !=missing && !gsl_isnan(xnd)){
+                        lik_nd=0.5/(s2Y[d]+s2u)*pow((f_1(xnd, f[d], mu[d], w[d])- gsl_matrix_get(muy,0,0)),2)+0.5*gsl_sf_log(2*M_PI*(s2Y[d]+s2u)) + gsl_sf_log_abs(df_1(xnd,f[d], mu[d], w[d]));
+                    }
+                    LIK[it]+=lik_nd;
+                }
+                gsl_matrix_free(muy);
+                break;
+
+            case 'n': 
+                muy= gsl_matrix_alloc(1,1);
+                for (int n=0; n<N; n++){
+                    double lik_nd=0.0;
+                    xnd=gsl_matrix_get (X, d, n);
+                    Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
+                    Bd_view = gsl_matrix_submatrix (B[d], 0, 0, K, 1);
+                    matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
+                    if (xnd !=missing && !gsl_isnan(xnd)){
+                        lik_nd= logFun(gsl_cdf_ugaussian_P((f_1(xnd+1, f[d], mu[d], w[d])- gsl_matrix_get(muy,0,0))/s2Y[d])-gsl_cdf_ugaussian_P((f_1(xnd, f[d], mu[d], w[d])- gsl_matrix_get(muy,0,0))/s2Y[d]));
+                    }
+                    LIK[it]+=lik_nd;
+                }
+                gsl_matrix_free(muy); 
+                break;
+
+            case 'c': 
+                
+                muy= gsl_matrix_alloc(1,R[d]);
+                for (int n=0; n<N; n++){
+                    xnd=gsl_matrix_get (X, d, n);
+                    Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
+                    Bd_view = gsl_matrix_submatrix (B[d], 0, 0, K, R[d]);
+                    matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
+                    if (xnd !=missing && !gsl_isnan(xnd)){
+                        double lik_nd=0.0;
+                        int nMC =100; 
+                        double prodL;
+                        for(int ss=0; ss<nMC; ss++){
+                            prodL=1.0;
+                            for(int r=0; r<R[d]; r++){
+                            if (r != xnd-1){
+                                    prodL*=gsl_cdf_ugaussian_P(gsl_ran_gaussian (seed, 1) + gsl_matrix_get(muy,0,xnd-1)-gsl_matrix_get(muy,0,r));
+                                    //printf("r:%d xnd:%f %f \n", R[d], xnd, prodL);                                   
+                                }
+                            }
+                            lik_nd+= prodL;
+                        }
+                        //printf("r:%d xnd:%f %f \n", R[d], xnd, lik_nd/nMC); 
+                        LIK[it]+=logFun(lik_nd/nMC);
+                    }
+                    
+                }
+                gsl_matrix_free(muy); 
+                break;
+         
+              case 'o': 
+                    muy= gsl_matrix_alloc(1,1);
+                    for (int n=0; n<N; n++){
+                        double lik_nd=0.0;
+                        xnd=gsl_matrix_get (X, d, n);
+                        Zn = gsl_matrix_submatrix (Z, 0, n, K, 1);
+                        Bd_view = gsl_matrix_submatrix (B[d], 0, 0, K, 1);
+
+                        matrix_multiply(&Zn.matrix,&Bd_view.matrix,muy,1,0,CblasTrans,CblasNoTrans); 
+                        if (xnd !=missing && !gsl_isnan(xnd)){ 
+                            if (xnd ==1){
+                                lik_nd = (gsl_cdf_ugaussian_P((gsl_vector_get (theta[d], xnd))));
+                                //printf("Rd:%d xnd:%f %f \n", R[d], xnd, lik_nd);
+                            }else if(xnd ==R[d]){
+                                lik_nd = (1-gsl_cdf_ugaussian_P((gsl_vector_get (theta[d], xnd-1)- gsl_matrix_get(muy,0,0))/s2Y[d]));
+                                //printf("Rd:%d xnd:%f %f \n", R[d], xnd, lik_nd);
+                            }else{
+                            	lik_nd = (gsl_cdf_ugaussian_P((gsl_vector_get (theta[d], xnd)- gsl_matrix_get(muy,0,0))/s2Y[d])-gsl_cdf_ugaussian_P((gsl_vector_get (theta[d], xnd-1)- gsl_matrix_get(muy,0,0))/s2Y[d]));
+                                //printf("Rd:%d xnd:%f %f \n", R[d], xnd, lik_nd);
+                            }
+                        }
+                         
+                        LIK[it]+=logFun(lik_nd);
+                }
+                gsl_matrix_free(muy); 
+                break;
+             }
+        }
+        //printf("%f", LIK[it]);
         
         for (int d =0; d<D; d++){
         //Sample Bs
