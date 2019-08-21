@@ -9,40 +9,44 @@ file_to_load = '/home/melanie/results/glfm/pseudo-obs/prostateRed_bias1_simId1_N
 
 
 load(file_to_load);
-n_dims = size(data.X);
+n_dims = size(data.transformed.X);
 dimensions = [1,2,3,4,5]; %1:5;
+hidden.mu = zeros(length(hidden.mu));
 for kk=dimensions
     figure(kk);
     hold off;
     if isempty(params.t_1{kk})
-        if (data.C(kk) == 'p')
-            [h, xx] = hist(f_p_1(data.X(:,kk), hidden.mu(kk), hidden.w(kk)), 20);
-        elseif  (data.C(kk) == 'n')
-            [h, xx] = hist(f_n_1(data.X(:,kk), hidden.mu(kk), hidden.w(kk)), 20);
-        elseif (data.C(kk) == 'c')
+        if (data.transformed.C(kk) == 'p')
+            y_vec = f_p_1(data.transformed.X(:,kk), hidden.mu(kk), hidden.w(kk));
+        elseif  (data.transformed.C(kk) == 'n')
+            %[h, xx] = hist(data.transformed.X(:,kk), 200);
+            %% scale empirical pdf
+            %h = h .* df_p_1(xx,hidden.mu(kk),hidden.w(kk));
+            y_vec = f_n_1(data.transformed.X(:,kk), hidden.mu(kk), hidden.w(kk));
+        elseif (data.transformed.C(kk) == 'c')
             B_vec = squeeze(hidden.B(kk,:,:)); % K x R
-            y_vec = zeros(size(data.X,1),1);
-            for n=1:size(data.X,1)
-                y_vec(n) = randn*sqrt(hidden.s2Y(kk)) + hidden.Z(n,:)* B_vec(:,data.X(n,kk));
+            y_vec = zeros(size(data.transformed.X,1),1);
+            for n=1:size(data.transformed.X,1)
+                y_vec(n) = randn*sqrt(hidden.s2Y(kk)) + hidden.Z(n,:)* B_vec(:,data.transformed.X(n,kk));
             end
-            [h, xx] = hist(y_vec,20);
-        elseif (data.C(kk) == 'o')
+        elseif (data.transformed.C(kk) == 'o')
             B_vec = squeeze(hidden.B(kk,:,1))'; % K x R
-            %y_vec = zeros(size(data.X,1),1);
-            %for n=1:size(data.X,1)
-            %    y_vec(n) = randn*sqrt(hidden.s2Y(kk)) + hidden.Z(n,:)* B_vec(:,data.X(n,kk));
+            %y_vec = zeros(size(data.transformed.X,1),1);
+            %for n=1:size(data.transformed.X,1)
+            %    y_vec(n) = randn*sqrt(hidden.s2Y(kk)) + hidden.Z(n,:)* B_vec(:,data.transformed.X(n,kk));
             %end
             y_vec = randn(N,1)*sqrt(hidden.s2Y(kk)) + hidden.Z* B_vec;
-            [h, xx] = hist(y_vec,20);
         end
     else
-        [h, xx] = hist(f_p_1(params.t_1{kk}(data.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
-        %if (data.C(kk) == 'p')
-        %    [h, xx] = hist(f_p_1(params.t_1{kk}(data.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
-        %elseif  (data.C(kk) == 'n')
-        %    [h, xx] = hist(f_n_1(params.t_1{kk}(data.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
+        y_vec = f_p_1(data.transformed.X(:,kk), hidden.mu(kk), hidden.w(kk));
+        %if (data.transformed.C(kk) == 'p')
+        %    [h, xx] = hist(f_p_1(params.t_1{kk}(data.transformed.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
+        %elseif  (data.transformed.C(kk) == 'n')
+        %    [h, xx] = hist(f_n_1(params.t_1{kk}(data.transformed.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
         %end
     end
+    %histogram(y_vec,'Normalization','probability');
+    [h,xx] = hist(y_vec,20);
     h = h ./ sum(h * (xx(2) - xx(1)));
     bar(xx, h);
     R = get(gca,'child');
@@ -83,13 +87,13 @@ for kk=dimensions
     %legend({'T: 1  0  0  0', 'T: 0  1  0  0'})
     %saveas(gca,strcat(savepath,['yhist-k=',str(kk),'.fig']))
     xlim([-3 6])
-    legend({'Empirical', '0 0 0 0', '0 1 0 0', '1 0 0 0', '0 0 1 0', '0 0 0 1', 'Predicted'})
-    legend('Location', 'Northwest')
-    title(data.ylabel(kk))
+    legend('off')
+    %legend({'Empirical', '0 0 0 0', '0 1 0 0', '1 0 0 0', '0 0 1 0', '0 0 0 1', 'Predicted'})
+    %legend('Location', 'Northwest')
+    title(data.transformed.ylabel(kk))
     %cleanfigure
     %matlab2tikz('figs/transform2/yhist.tikz')
-    
-    cleanfigure;
+        cleanfigure;
     matlab2tikz([savepath,'yhist-k=',num2str(kk),'.tikz'])
     
 end

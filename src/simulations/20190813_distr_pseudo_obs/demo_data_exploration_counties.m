@@ -8,6 +8,7 @@ rng(round(sum(1e5*clock)));
 %% LOAD DATA
 input_file = '../../../datasets/counties.mat';
 load(input_file);
+savePath = '/home/melanie/results/glfm/pseudo-obs/';
 
 %% ADAPT INPUT DATA --> put bias
 
@@ -48,7 +49,7 @@ params.missing = -1;
 params.s2u = .005;  % Auxiliary variance
 params.s2B = 1;     % Variance of the Gaussian prior of the weigting matrices B
 params.alpha = 1;   % Concentration parameter of the IBP
-params.Niter = 5000; % Number of iterations for the gibbs sampler
+%params.Niter = 10; % Number of iterations for the gibbs sampler
 params.maxK = 10;
 params.bias = 1;
 params.func = 1*ones(1,D);
@@ -68,10 +69,10 @@ end
 hidden.Z = Zini; % N*D
 
 %% Inference
-hidden = GLFM_infer(data, hidden, params);
+[hidden, data.transformed] = GLFM_infer(data, hidden, params);
 
 if params.save
-    output_file = sprintf( '/home/melanie/results/glfm/counties_bias%d_simId%d_Niter%d_s2B%.2f_alpha%d.mat', ...
+    output_file = sprintf( [savePath, 'counties_bias%d_simId%d_Niter%d_s2B%.2f_alpha%d.mat'], ...
         params.bias, params.simId, params.Niter, params.s2B, params.alpha);
     save(output_file);
 end

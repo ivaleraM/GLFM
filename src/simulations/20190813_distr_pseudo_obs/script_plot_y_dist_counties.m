@@ -7,7 +7,7 @@ savepath = './figs/resub3/counties/';
 %%%file_to_load = './results/no_transform_counties.mat';
 %%file_to_load = './results/counties_bias1_simId2_Niter10000_s2B1.00_alpha1.mat';
 %file_to_load = './results/transform_counties.mat';
-file_to_load = '/home/melanie/results/glfm/counties_bias1_simId11_Niter5000_s2B1.00_alpha1.mat';
+file_to_load = '/home/melanie/results/glfm/pseudo-obs/counties_bias1_simId1_Niter10000_s2B1.00_alpha1.mat';
 load(file_to_load);
 
 %% normalize data
@@ -44,47 +44,48 @@ load(file_to_load);
 %data.X = Xmiss;
 
 %% Compute histogram of pseudo-observations
-n_dims = size(data.X);
+n_dims = size(data.transformed.X);
 dimensions = 2:11;
 
 for kk=dimensions
+    %hidden.mu = min(data.transformed.X,[],1)';
+
     figure(kk);
     hold off;
     if isempty(params.t_1{kk})
-        if (data.C(kk) == 'p')
-            %f1x = f_p_1(data.X(:,kk), -3.6, hidden.w(kk));
-            f1x = f_p_1(data.X(:,kk), hidden.mu(kk,:), hidden.w(kk));
+        if (data.transformed.C(kk) == 'p')
+            %f1x = f_p_1(data.transformed.X(:,kk), -3.6, hidden.w(kk));
+            %f1x = f_p_1(data.transformed.X(:,kk), hidden.mu(kk), hidden.w(kk));
+            f1x = f_p_1(data.X(:,kk), hidden.mu(kk), hidden.w(kk));
             s2_y_post = 1.0/(1.0/hidden.s2Y(kk) + 1.0/params.s2u);
             mu_y_post = ((hidden.Z *hidden.B(kk,:,1)')/hidden.s2Y(kk) + ...
                f1x/params.s2u) * s2_y_post;
             y_vec = randn(N,1)*sqrt(s2_y_post) + mu_y_post;
             y_vec = f1x;
-            [h, xx] = hist(y_vec, 20);
-        elseif  (data.C(kk) == 'n')
-            %y_vec = f_n_1(data.X(:,kk), -3.6, hidden.w(kk));
-            y_vec = f_n_1(data.X(:,kk), hidden.mu(kk,:), hidden.w(kk));
-            [h, xx] = hist(y_vec, 20);
-        elseif (data.C(kk) == 'c')
+        elseif  (data.transformed.C(kk) == 'n')
+            %y_vec = f_n_1(data.transformed.X(:,kk), -3.6, hidden.w(kk));
+            y_vec = f_n_1(data.transformed.X(:,kk), hidden.mu(kk,:), hidden.w(kk));
+        elseif (data.transformed.C(kk) == 'c')
             continue;
         %    B_vec = squeeze(hidden.B(kk,:,:)); % K x R
-        %    y_vec = zeros(size(data.X,1),1);
-        %    for n=1:size(data.X,1)
-        %        y_vec(n) = randn*sqrt(hidden.s2Y(kk)) + hidden.Z(n,:)* B_vec(:,data.X(n,kk));
+        %    y_vec = zeros(size(data.transformed.X,1),1);
+        %    for n=1:size(data.transformed.X,1)
+        %        y_vec(n) = randn*sqrt(hidden.s2Y(kk)) + hidden.Z(n,:)* B_vec(:,data.transformed.X(n,kk));
         %    end
         %    [h, xx] = hist(y_vec,20);
         end
     else
-        %[h, xx] = hist(f_p_1(params.t_1{kk}(data.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
-        if (data.C(kk) == 'p')
-            %y_vec = f_p_1(params.t_1{kk}(data.X(:,kk)),-0.7, hidden.w(kk));
-            y_vec = f_p_1(params.t_1{kk}(data.X(:,kk)),hidden.mu(kk,:), hidden.w(kk));
-            [h, xx] = hist(y_vec, 20);
-        elseif  (data.C(kk) == 'n')
-            %y_vec = f_n_1(params.t_1{kk}(data.X(:,kk)),9.07, hidden.w(kk));
-            y_vec = f_n_1(params.t_1{kk}(data.X(:,kk)),hidden.mu(kk,:), hidden.w(kk));
-            [h, xx] = hist(y_vec, 20);
+        %[h, xx] = hist(f_p_1(params.t_1{kk}(data.transformed.X(:,kk)), hidden.mu(kk), hidden.w(kk)), 20);
+        if (data.transformed.C(kk) == 'p')
+            %y_vec = f_p_1(params.t_1{kk}(data.transformed.X(:,kk)),-0.7, hidden.w(kk));
+            y_vec = f_p_1(data.transformed.X(:,kk),hidden.mu(kk), hidden.w(kk));
+        elseif  (data.transformed.C(kk) == 'n')
+            %y_vec = f_n_1(params.t_1{kk}(data.transformed.X(:,kk)),9.07, hidden.w(kk));
+            y_vec = f_n_1(params.t_1{kk}(data.transformed.X(:,kk)),hidden.mu(kk,:), hidden.w(kk));
         end
     end
+    %histogram(y_vec,10,'Normalization','probability');
+    [h, xx] = hist(y_vec, 20);
     h = h ./ sum(h * (xx(2) - xx(1)));
     bar(xx, h);
     R = get(gca,'child');
@@ -128,7 +129,8 @@ for kk=dimensions
     xlim([-3 8])
     legend({'Empirical', '0  0  0', '1  0  0', '1  0  1', '0  1  0', '1  1  0', 'Predicted'})
     legend('Location', 'Northwest')
-    title(data.ylabel(kk))
+    %legend('off');
+    title(data.transformed.ylabel(kk))
     %cleanfigure
     %matlab2tikz('figs/transform2/yhist.tikz')
     
@@ -136,7 +138,7 @@ for kk=dimensions
     matlab2tikz([savepath,'yhist-k=',num2str(kk),'.tikz'])
     
 %     total_pdf2 = zeros(size(xx,1));
-%     for n=1:200%size(data.X,1)
+%     for n=1:200%size(data.transformed.X,1)
 %         total_pdf2 = 1.0/size(xx,1)*normpdf(xx,mu_y_post(n),sqrt(s2_y_post));
 %         plot(xx,total_pdf2, 'Linewidth', 2, 'Color', 'k','LineStyle', '-.');
 %     end
