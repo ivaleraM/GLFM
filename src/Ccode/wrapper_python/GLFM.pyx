@@ -15,7 +15,7 @@ cdef extern from "../core/InferenceFunctions.h":
     int initialize_func (int N, int D, int maxK, double missing, gsl_matrix *X, char *C, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu,  double *w, double *s2Y)
 
 cdef extern from "../core/InferenceFunctions.h":
-    int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u, int maxK,int Nsim)
+    int IBPsampler_func (double missing, gsl_matrix *X, char *C, gsl_matrix *Z, gsl_matrix **B, gsl_vector **theta, int *R, double *f, double *mu, double *w, int maxR, int bias, int N, int D, int K, double alpha, double s2B, double *s2Y, double s2u, int maxK,int Nsim, double *LIK)
     # This is the C++ function to perform inference for the GLFM model
     # Inputs:
     #           missing: value of missings, cannot be nan, should be an integer
@@ -122,6 +122,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
     cdef np.ndarray[double, ndim=1, mode="c"] mu = np.empty(D)
     cdef np.ndarray[double, ndim=1, mode="c"] s2Y = np.empty(D)
     cdef np.ndarray[np.int32_t, ndim=1, mode="c"] R = np.empty(D,dtype=np.int32)
+    cdef np.ndarray[double, ndim=1, mode="c"] LIK = np.empty(D)
     print "In C++: transforming input data..."
     cdef int maxR = initialize_func(N, D, maxK, missing, X, C, B, theta,\
             <int*> R.data, &Fin[0], &mu[0], &w[0], &s2Y[0])
@@ -136,7 +137,7 @@ def infer(np.ndarray[double, ndim=2, mode="c"] Xin not None,\
     print '\nEntering C++: Running Inference Routine...\n'
     cdef int Kest = IBPsampler_func(missing, X, C, Z, B, theta,\
             <int*> R.data, &Fin[0], &mu[0], &w[0],\
-            maxR, bias,  N, D, K, alpha, s2B, &s2Y[0], s2u, maxK, Nsim);
+            maxR, bias,  N, D, K, alpha, s2B, &s2Y[0], s2u, maxK, Nsim, &LIK[0]);
     print '\nBack to Python: OK\n'
 
     #print "w[0]=%.2f, w[1]=%.2f\n" % (float(w[0]), float(w[1]))
