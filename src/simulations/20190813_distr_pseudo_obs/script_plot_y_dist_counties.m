@@ -8,6 +8,7 @@ savepath = './figs/resub3/counties/';
 %%file_to_load = './results/counties_bias1_simId2_Niter10000_s2B1.00_alpha1.mat';
 %file_to_load = './results/transform_counties.mat';
 file_to_load = '/home/melanie/results/glfm/pseudo-obs/counties_bias1_simId1_Niter10000_s2B1.00_alpha1.mat';
+file_to_load = '/home/melanie/results/glfm/pseudo-obs/counties_bias1_simId2_Niter10000_s2B1.00_alpha1.mat';
 load(file_to_load);
 
 %% normalize data
@@ -43,14 +44,30 @@ load(file_to_load);
 %
 %data.X = Xmiss;
 
+
+%% check if transformed data is available:
+if ~isfield('transformed',data)
+    % compute transformed data
+    data.transformed = transform_dataset(data,params);
+end
+
 %% Compute histogram of pseudo-observations
 n_dims = size(data.transformed.X);
-dimensions = 2:11;
+dimensions = [2 10 3 5 4 6 7 8 9]; %2:11;
 
-for kk=dimensions
+figure;
+for kid=1:length(dimensions)
     %hidden.mu = min(data.transformed.X,[],1)';
-
-    figure(kk);
+    
+    kk = dimensions(kid);
+    subplot(3,3,kid);
+    %if (kk==10)
+    %    subplot(3,4,9:10);
+    %elseif (kk ==11)
+    %    subplot(3,4,11:12);
+    %else
+    %    subplot(3,4,kk-1);
+    %end
     hold off;
     if isempty(params.t_1{kk})
         if (data.transformed.C(kk) == 'p')
@@ -85,7 +102,7 @@ for kk=dimensions
         end
     end
     %histogram(y_vec,10,'Normalization','probability');
-    [h, xx] = hist(y_vec, 20);
+    [h, xx] = hist(y_vec, 100);
     h = h ./ sum(h * (xx(2) - xx(1)));
     bar(xx, h);
     R = get(gca,'child');
@@ -134,9 +151,6 @@ for kk=dimensions
     %cleanfigure
     %matlab2tikz('figs/transform2/yhist.tikz')
     
-    cleanfigure;
-    matlab2tikz([savepath,'yhist-k=',num2str(kk),'.tikz'])
-    
 %     total_pdf2 = zeros(size(xx,1));
 %     for n=1:200%size(data.transformed.X,1)
 %         total_pdf2 = 1.0/size(xx,1)*normpdf(xx,mu_y_post(n),sqrt(s2_y_post));
@@ -144,3 +158,10 @@ for kk=dimensions
 %     end
     
 end
+
+cleanfigure;
+pause; % do 3 adjustments by hand
+%xlim([-5,6])
+%legend('Location','Northeast')
+%legend('Location','Northeast')
+matlab2tikz([savepath,'yhist-k=',num2str(kk),'.tikz'])

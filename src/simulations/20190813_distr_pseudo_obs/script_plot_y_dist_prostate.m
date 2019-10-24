@@ -46,7 +46,7 @@ for kk=dimensions
         %end
     end
     %histogram(y_vec,'Normalization','probability');
-    [h,xx] = hist(y_vec,20);
+    [h,xx] = hist(y_vec,100);
     h = h ./ sum(h * (xx(2) - xx(1)));
     bar(xx, h);
     R = get(gca,'child');
