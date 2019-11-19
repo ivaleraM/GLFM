@@ -469,7 +469,6 @@ def get_feature_patterns_sorted(Z):
     idxs = L.argsort()
     idxs = np.flipud(idxs)
     L = L[idxs]
-    C = C[idxs]
     patterns = patterns[idxs,:]
 
     print '\n'
