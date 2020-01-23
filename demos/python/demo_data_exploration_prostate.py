@@ -18,7 +18,7 @@ import cPickle
 # ---------------------------------------------
 # 1. LOAD DATA TO BE EXPLORED
 # ---------------------------------------------
-print '\n 1. LOAD DATABASE TO EXPLORE\n'
+print('\n 1. LOAD DATABASE TO EXPLORE\n')
 
 with open('../../datasets/prostate.pk','rb') as f:
     data = cPickle.load(f)
@@ -26,9 +26,9 @@ with open('../../datasets/prostate.pk','rb') as f:
 # ---------------------------------------------
 # 2. INITIALIZATION FOR GLFM ALGORITHM
 # ---------------------------------------------
-print '\n 2. INITIALIZATION\n'
+print('\n 2. INITIALIZATION\n')
 
-print '\tSetting optional parameters for the GLFM model...'
+print('\tSetting optional parameters for the GLFM model...')
 
 [N, D] = data['X'].shape
 
@@ -54,7 +54,7 @@ params['alpha'] = 1     # Concentration parameter of the IBP
 params['maxK'] = 10     # maximum number of latent features for memory allocation
 params['bias'] = 1      # 1 = fix first feature to be active for all patients 
 
-print '\tInitializing Z...'
+print('\tInitializing Z...')
 
 Kinit = 2   # initial number of latent features
 prob = 0.2  # probability of feature activation in matrix Z
@@ -69,19 +69,19 @@ else:
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
-print '\n 3. INFERENCE\n'
+print('\n 3. INFERENCE\n')
 
-print '\tInfering latent features...'
+print('\tInfering latent features...')
 tic = time.time()
 hidden = GLFM.infer(data,hidden,params=params)
 toc = time.time()
 time = tic - toc
-print '\tElapsed: #.2f seconds.' # (toc-tic)
+print('\tElapsed: #.2f seconds.') # (toc-tic)
 
 # ---------------------------------------------
 # 4. PROCESS RESULTS
 # ---------------------------------------------
-print '\n 4. PROCESSING RESULTS\n'
+print('\n 4. PROCESSING RESULTS\n')
 
 ## Predict MAP estimate for the whole matrix X
 patterns = hidden['Z']
@@ -109,5 +109,5 @@ Zp[:,0] = 1 # bias active
 leg = ['F0','F1', 'F2', 'F3', 'F4'];
 GLFM.plotPatterns(data, hidden, params, Zp, [], [], leg)
 
-print "SUCCESSFUL"
+print("SUCCESSFUL")
 

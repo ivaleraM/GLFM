@@ -1,4 +1,4 @@
-## --------------------------------------------------
+# --------------------------------------------------
 # DEMO: Data exploration on counties database
 ## --------------------------------------------------
 
@@ -17,7 +17,7 @@ import pdb
 # ---------------------------------------------
 # 1. LOAD DATA TO BE EXPLORED
 # ---------------------------------------------
-print '\n 1. LOAD DATABASE TO EXPLORE\n'
+print('\n 1. LOAD DATABASE TO EXPLORE\n')
 
 with open('../../datasets/counties.pk','rb') as f:
     data = cPickle.load(f)
@@ -25,9 +25,9 @@ with open('../../datasets/counties.pk','rb') as f:
 # ---------------------------------------------
 # 2. INITIALIZATION FOR GLFM ALGORITHM
 # ---------------------------------------------
-print '\n 2. INITIALIZATION\n'
+print('\n 2. INITIALIZATION\n')
 
-print '\tSetting optional parameters for the GLFM model...'
+print('\tSetting optional parameters for the GLFM model...')
 
 params = dict()
 params['Niter'] = 100  # number of algorithm iterations (for Gibbs sampler)
@@ -56,10 +56,10 @@ params['t'][r] = lambda y: - np.exp(y) + 101    # inverse transform to recover r
 params['dt_1'][r] = lambda x: -1/(101 - x)      # derivative of inverse transform
 params['ext_dataType'][r] = 'p'                 # change type of data due to transformation
 
-params['maxK'] = 10     # maximum number of latent features for memory allocation
+params['maxK'] = 20     # maximum number of latent features for memory allocation
 params['bias'] = 1      # 1 = fix first feature to be active for all patients 
 
-print '\tInitializing Z...'
+print('\tInitializing Z...')
 
 Kinit = 2   # initial number of latent features
 prob = 0.2  # probability of feature activation in matrix Z
@@ -77,19 +77,19 @@ hidden['Z'] = Zini # N*K matrix of feature assignments
 # ---------------------------------------------
 # 3. RUN INFERENCE FOR GLFM ALGORITHM
 # ---------------------------------------------
-print '\n 3. INFERENCE\n'
+print('\n 3. INFERENCE\n')
 
-print '\tInfering latent features...'
+print('\tInfering latent features...')
 tic = time.time()
 hidden = GLFM.infer(data,hidden,params)
 toc = time.time()
 time = tic - toc
-print '\tElapsed: #.2f seconds.' # (toc-tic)
+print('\tElapsed: #.2f seconds.') # (toc-tic)
 
 # ---------------------------------------------
 # 4. PROCESS RESULTS
 # ---------------------------------------------
-print '\n 4. PROCESSING RESULTS\n'
+print('\n 4. PROCESSING RESULTS\n')
 
 Kest = hidden['B'].shape[1] # number of inferred latent features
 D = hidden['B'].shape[0]    # number of dimensions
@@ -132,5 +132,5 @@ styles = None
 GLFM.plotPatterns(data, hidden, params, Zp, colors=colors[:Zp.shape[0],:],idxD=idxD)
 # plot_all_dimensions(data, hidden, params, Zp, leg, colors, styles)
 
-print "SUCCESSFUL"
+print("SUCCESSFUL")
 

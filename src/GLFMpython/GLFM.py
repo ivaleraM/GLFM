@@ -110,7 +110,7 @@ def infer(data,hidden=dict(), params=dict()):
 
     hidden['time'] = tlast - tinit
     if params['verbose']:
-        print '\n\tElapsed time: %.2f seconds.\n' % hidden['time']
+        print('\n\tElapsed time: %.2f seconds.\n' % hidden['time'])
 
     # wrap output values inside hidden
     hidden['Z'] = Z_out.transpose()
@@ -172,7 +172,7 @@ def complete(data, hidden=dict(), params=dict()):
     assert(params['bias'] <= 1), "bias parameter misspecified: should be either 0 or 1."
 
     if sum( sum( (np.isnan(data['X'])) | (data['X']==params['missing']) )) == 0:
-        print "The input matrix X has no missing values to complete."
+        print("The input matrix X has no missing values to complete.")
         Xcompl = []
         return (Xcompl,hidden)
 
@@ -259,7 +259,7 @@ def computePDF(data, Zp, hidden, params, d):
     """
     Function to compute probability density function for dimension d
     """
-    print "dim=%d\n" % d
+    print("dim=%d\n" % d)
     tmp_data = copy.deepcopy(data) #np.copy(data).tolist()
     tmp_data['X'][np.isnan(tmp_data['X'][:,d]),d] = params['missing']
 
@@ -471,9 +471,9 @@ def get_feature_patterns_sorted(Z):
     L = L[idxs]
     patterns = patterns[idxs,:]
 
-    print '\n'
+    print('\n')
     for r in xrange(numP): # for each pattern
-        print '%d. %s: %d' % (r, str(patterns[r,:]), L[r])
+        print('%d. %s: %d' % (r, str(patterns[r,:]), L[r]))
 
     return (patterns,C,L)
 
