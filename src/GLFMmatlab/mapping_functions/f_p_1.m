@@ -4,5 +4,6 @@ function y = f_p_1(x, mu, w)
     if (w == 0)
         error('scaling factor should never be 0');
     end
-    y = log( exp(w.*(x-mu) - 1) );
+    %y = log( exp(w.*(x-mu) - 1) ); previous error
+    y = log( exp(w.*(x-mu) )- 1 );
 end

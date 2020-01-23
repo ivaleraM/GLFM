@@ -55,7 +55,7 @@ end
 hidden.Z = Zini; % N*K matrix of feature assignments
 
 %% Inference
-hidden = GLFM_infer(data, hidden, params);
+[hidden, data.transformed] = GLFM_infer(data, hidden, params);
 
 if params.save
     output_file = [savePath, sprintf('prostateRed_bias%d_simId%d_Niter%d_s2B%.2f_alpha%.2f.mat', ...

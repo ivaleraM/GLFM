@@ -1,4 +1,4 @@
-function hidden = GLFM_infer(data,varargin)
+function [hidden,data_transformed] = GLFM_infer(data,varargin)
     % Wrapper .m function to call .cpp MATLAB wrapper (simplifies call)
     % Three possible calls:
     %           hidden = GLFM_infer(data)
@@ -57,38 +57,39 @@ function hidden = GLFM_infer(data,varargin)
     end
 
     % replace missings
-    data.X(isnan(data.X)) = params.missing;
+    data_transformed = data;
+    data_transformed.X(isnan(data_transformed.X)) = params.missing;
 
     % change labels for categorical and ordinal vars such that > 0
     %V_offset = zeros(1,D);
     for d=1:D
-        if (data.C(d) == 'c') || (data.C(d) == 'o')
-            mask = data.X(:,d) ~= params.missing;
-            %V_offset(d) = min( data.X(mask,d) );
-            %data.X(mask,d) = data.X(mask,d) - V_offset(d) + 1;
-            uniqueVal= unique(data.X(mask,d));
+        if (data_transformed.C(d) == 'c') || (data_transformed.C(d) == 'o')
+            mask = data_transformed.X(:,d) ~= params.missing;
+            %V_offset(d) = min( data_transformed.X(mask,d) );
+            %data_transformed.X(mask,d) = data_transformed.X(mask,d) - V_offset(d) + 1;
+            uniqueVal= unique(data_transformed.X(mask,d));
             Xaux=[];
             for i=1:length(uniqueVal)
-                Xaux(data.X(:,d)==uniqueVal(i)) = i;
+                Xaux(data_transformed.X(:,d)==uniqueVal(i)) = i;
             end
             Xaux(~mask)=params.missing;
-            data.X(:,d)= Xaux;
+            data_transformed.X(:,d)= Xaux;
         end
     end
 
     % eventually, apply external transform
-    for r=1:size(data.X,2)
+    for r=1:size(data_transformed.X,2)
         if ~isempty(params.t{r})
-            data.X(:,r) = params.t_1{r}(data.X(:,r)); % work in logarithm space better
-            data.C(r) = params.ext_dataType{r};
+            data_transformed.X(:,r) = params.t_1{r}(data_transformed.X(:,r)); % work in logarithm space better
+            data_transformed.C(r) = params.ext_dataType{r};
         end
     end
 
-    func = 1*ones(1,size(data.X,2)); % type of internal transformation for positive real-valued data
+    func = 1*ones(1,size(data_transformed.X,2)); % type of internal transformation for positive real-valued data
 
     %% call .cpp wrapper function
     tic;
-    [Z B theta mu w s2Y]= IBPsampler(data.X,data.C, hidden.Z, params.bias, func, ...
+    [Z B theta mu w s2Y]= IBPsampler(data_transformed.X,data_transformed.C, hidden.Z, params.bias, func, ...
         params.s2u, params.s2B, params.alpha, params.Niter, params.maxK, params.missing);
     hidden.time = toc;
     fprintf('Elapsed time %.2f seconds.', hidden.time );
@@ -102,8 +103,8 @@ function hidden = GLFM_infer(data,varargin)
     hidden.s2Y = s2Y;
     hidden.R = ones(1,D);
     for d=1:D
-        if (data.C(d) == 'c') || (data.C(d) == 'o')
-            hidden.R(d) = length(unique(data.X(data.X(:,d)~= params.missing,d) ));
+        if (data_transformed.C(d) == 'c') || (data_transformed.C(d) == 'o')
+            hidden.R(d) = length(unique(data_transformed.X(data_transformed.X(:,d)~= params.missing,d) ));
         end
     end
     if params.verbose
