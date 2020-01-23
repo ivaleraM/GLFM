@@ -1,13 +1,13 @@
 BASEDIR_ALL = {'BioDeg','German','Internet','Nesarclighter','Wine'};
 FILEN_ALL = {'bioDeg2','german','Internet2','Nesarc','Wine'};
-DZ_ALL = {'50'};%,'20','50'};
+DZ_ALL = {'10','20','50'};
 
 %res_path = '/home/melanie/results/glfm/';
 res_path = '/n/scratchlfs/doshi-velez_lab/melanie/results/glfm/';
 
 for zz=1:length(DZ_ALL)
     Dz = DZ_ALL{zz};
-    for bb=4:length(BASEDIR_ALL)
+    for bb=5:length(BASEDIR_ALL)
     clearvars -except BASEDIR_ALL bb FILEN_ALL DZ_ALL zz Dz res_path
     BASEDIR1 = BASEDIR_ALL{bb};
     FILEN1 = FILEN_ALL{bb};
@@ -22,7 +22,7 @@ for zz=1:length(DZ_ALL)
         res
         pause;
     end
-    Nit=10;
+    Nit=20;
     Err=zeros(9,Nit);
     Err_D=zeros(D,9,Nit);
     nD=zeros(D,9,Nit);
