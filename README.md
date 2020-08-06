@@ -178,11 +178,13 @@ In order to run GLFM on your data, you need to:
 
     -For R:
         
-        - Go to R to make sure it recognises the GSL package you previously installed with brew: install.packages('gsl',type = source)
+        - First make sure R internally recognises the GSL package you previously installed, in R: install.packages('gsl',type = source)
         
-        - Go to "GLFM/src" and unzip RcppGSLExample.zip
+        - Go to the cloned repo "~/GLFM/src" and unzip RcppGSLExample.zip
         
-        - In terminal run: R build RcppGSLExample (this will create a .tar.gz file, called RcppGSLExample+_$VERSION+tar.gz, replace $VERSION with the name of your file)
+        - In terminal run: R build RcppGSLExample (this will create a .tar.gz file, called RcppGSLExample+_$VERSION+tar.gz, 
+          replace $VERSION with the name of your file)
+          
         - In terminal run: R install RcppGSLExample+_$VERSION+tar.gz
         
         - Open R and load the package: library("RcppGSLExample") 
