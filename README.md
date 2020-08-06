@@ -152,10 +152,11 @@ For Matlab:
     - GMP library
         In UBUNTU: sudo apt-get install libgmp3-dev
 
-For R (Mac OS):
+For R :
 
     - R or Rstudio
-    - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu, brew GSL or latest version of the GSL https://www.gnu.org/software/gsl/ )
+    - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu, latest version of the GSL https://www.gnu.org/software/gsl/ )
+          brew GSL
     - R packages: Rcpp, RcppGSL, matrixStats, ggplot2, R.matlab
 
 
@@ -175,12 +176,12 @@ In order to run GLFM on your data, you need to:
         - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
         - From matlab command window, execute command: mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
 
-    - For R:
-            Go to R to make sure it recognises the GSL package you previously installed with brew: install.packages('gsl',type = source)
-            Go to "GLFM/src" and unzip RcppGSLExample.zip
-            In terminal run: R build RcppGSLExample (this will create a .tar.gz file, called RcppGSLExample+_$VERSION+tar.gz, replace $VERSION with the name of your file)
-            In terminal run: R install RcppGSLExample+_$VERSION+tar.gz
-           Open R and load the package: library("RcppGSLExample") 
+    -For R:
+            - Go to R to make sure it recognises the GSL package you previously installed with brew: install.packages('gsl',type = source)
+            - Go to "GLFM/src" and unzip RcppGSLExample.zip
+            - In terminal run: R build RcppGSLExample (this will create a .tar.gz file, called RcppGSLExample+_$VERSION+tar.gz, replace $VERSION with the name of your file)
+            - In terminal run: R install RcppGSLExample+_$VERSION+tar.gz
+           - Open R and load the package: library("RcppGSLExample") 
 
 3) Check  the success of the installations by running the script 'demo_GLFM_test' available for Python, Matlab and R in the 'demos' folder. 
 
