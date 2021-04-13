@@ -132,7 +132,8 @@ and **params** is a list containing all simulation parameters and model
 
 Requirements
 ------------
-In general, the main requirements include a gcc compiler suitable for your OS and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/).
+In general, the main requirements include a gcc compiler suitable for your OS and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/). After you have downloaded GSL, open terminal 􏰫and run ./configure, make and make install. If you are using Windows, your windows terminal might not recognise the ./configure, make, make install instructions because these are Linux command line tools. You can use MinGW, see the [MinGW installation guide](https://people.eng.unimelb.edu.au/ammoffat/teaching/20005/Install-MinGW.pdf). In the MinGW shell run the ./configure, make, make install in the folder where you've downloaded the GSL library and it will recognise the instructions.
+
 
 For Python:
 
@@ -156,7 +157,7 @@ For R :
 
     - R or Rstudio
     - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu, latest version of the GSL https://www.gnu.org/software/gsl/ )
-          brew install GSL
+         
     - R packages: Rcpp, RcppGSL, matrixStats, ggplot2, R.matlab
 
 
