@@ -135,29 +135,25 @@ Requirements
 In general, the main requirements include a gcc compiler suitable for your OS and the  [GNU GSLlibrary](https://www.gnu.org/software/gsl/). After you have downloaded GSL, open terminal 􏰫and run ./configure, make and make install. If you are using Windows, your windows terminal might not recognise the ./configure, make, make install instructions because these are Linux command line tools. You can use MinGW, see the [MinGW installation guide](https://people.eng.unimelb.edu.au/ammoffat/teaching/20005/Install-MinGW.pdf). In the MinGW shell run the ./configure, make, make install in the folder where you've downloaded the GSL library and it will recognise the instructions.
 
 
-For Python:
+- For Python:
+     - Python 2.7
+     - Anaconda (install at https://www.anaconda.com/download/)
+     - gcc compiler and qt functionality (these modules are normally already available)
+       If not, it can be installed in Ubuntu as:
 
-        - Python 2.7
-        - Anaconda (install at https://www.anaconda.com/download/)
-        - gcc compiler and qt functionality (these modules are normally already available)
-          If not, it can be installed in Ubuntu as:
+           sudo apt-get install build-essential
+           sudo apt-get install python-qt4
 
-                sudo apt-get install build-essential
-                sudo apt-get install python-qt4
+- For Matlab:
+     - Matlab 2012b or higher
+     - GNU GSLlibrary
+          On Ubuntu: `sudo apt-get install libgsl0ldbl` or `sudo apt-get install libgsl0-dev`
+     - GMP library
+          On Ubuntu: `sudo apt-get install libgmp3-dev`
 
-For Matlab:
-
-    - Matlab 2012b or higher
-    - GNU GSLlibrary
-        In UBUNTU: sudo apt-get install libgsl0ldbl or sudo apt-get install libgsl0-dev
-    - GMP library
-        In UBUNTU: sudo apt-get install libgmp3-dev
-
-For R :
-
+- For R:
     - R or Rstudio
     - GNU GSL library (e.g. libgsl0-dev on Debian or Ubuntu, latest version of the GSL https://www.gnu.org/software/gsl/ )
-         
     - R packages: Rcpp, RcppGSL, matrixStats, ggplot2, R.matlab
 
 
@@ -171,26 +167,21 @@ In order to run GLFM on your data, you need to:
 2) Compile the C++ code as
 
     - For PYTHON (in a terminal, go to folder "GLFM/install/" and execute):
-            bash install_for_python.sh
+
+           bash install_for_python.sh
 
     - For MATLAB (in Matlab workspace):
         - Add path "GLFM/src/Ccode" and its children directories to Matlab workspace
-        - From matlab command window, execute command: mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp
+        - From matlab command window, execute command: `mex  -lgsl -lgmp -lgslcblas IBPsampler.cpp`
 
-    -For R:
-        
-        - First make sure R internally recognises the GSL package you previously installed, in R: install.packages('gsl',type = source)
-        
-        - Go to the cloned repo "~/GLFM/src" and unzip RcppGSLExample.zip
-        
-        - In terminal run: R build RcppGSLExample (this will create a .tar.gz file, called RcppGSLExample+_$VERSION+tar.gz, 
-          replace $VERSION with the name of your file)
-          
-        - In terminal run: R install RcppGSLExample+_$VERSION+tar.gz
-        
-        - Open R and load the package: library("RcppGSLExample") 
+    - For R:
+        - First make sure R internally recognises the GSL package you previously installed, in R: `install.packages('gsl',type = source)`
+        - Go to the cloned repo `~/GLFM/src` and unzip RcppGSLExample.zip
+        - In terminal run: `R CMD build RcppGSLExample` (this will create a .tar.gz file, called `RcppGSLExample+_$VERSION+tar.gz`, replace `$VERSION` with the name of your file)
+        - In terminal run: `R CMD INSTALL RcppGSLExample+_$VERSION+tar.gz`
+        - Open R and load the package: `library("RcppGSLExample")`
 
-3) Check  the success of the installations by running the script 'demo_GLFM_test' available for Python, Matlab and R in the 'demos' folder. 
+4) Check  the success of the installations by running the script 'demo_GLFM_test' available for Python, Matlab and R in the 'demos' folder. 
 
 ------------
 GLFM Demos
